@@ -4,10 +4,12 @@ import com.codecool.dungeoncrawl.logic.Cell;
 import com.codecool.dungeoncrawl.logic.actors.Character;
 import com.codecool.dungeoncrawl.logic.actors.Item;
 import com.codecool.dungeoncrawl.logic.actors.components.Inventory;
+import com.codecool.dungeoncrawl.logic.actors.items.Weapon;
 
 public class Player extends Character {
 
     private Inventory inventory;
+    private Weapon chosenWeapon;
 
     public Player(Cell cell) {
         super(cell);
@@ -30,5 +32,13 @@ public class Player extends Character {
 
     public String getTileName() {
         return "player";
+    }
+
+    public void setWeapon(Weapon chosenWeapon) {
+        this.chosenWeapon = chosenWeapon;
+    }
+
+    public Weapon getWeapon() {
+        return chosenWeapon;
     }
 }

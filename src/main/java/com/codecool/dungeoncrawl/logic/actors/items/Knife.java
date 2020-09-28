@@ -1,9 +1,8 @@
 package com.codecool.dungeoncrawl.logic.actors.items;
 
 import com.codecool.dungeoncrawl.logic.Cell;
-import com.codecool.dungeoncrawl.logic.actors.Item;
 
-public class Knife extends Item {
+public class Knife extends Weapon {
 
     private final int statistic = 3;
 
