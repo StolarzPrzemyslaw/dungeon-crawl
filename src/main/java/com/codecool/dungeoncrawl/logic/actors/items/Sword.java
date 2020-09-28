@@ -5,10 +5,12 @@ import com.codecool.dungeoncrawl.logic.actors.Item;
 
 public class Sword extends Item {
 
-    private int statistic = 10;
+    private final int statistic = 10;
 
     public Sword(Cell cell) {
         super(cell);
+        this.name = "Sword of +10 to swording";
+        this.obtainMessage = "You have obtained a sword!";
     }
 
     public String getTileName() {

@@ -5,6 +5,7 @@ import com.codecool.dungeoncrawl.logic.Drawable;
 
 public abstract class Actor implements Drawable {
     protected Cell cell;
+    protected String name;
 
     public Actor(Cell cell) {
         this.cell = cell;
@@ -21,5 +22,9 @@ public abstract class Actor implements Drawable {
 
     public int getY() {
         return cell.getY();
+    }
+
+    public String getName() {
+        return name;
     }
 }

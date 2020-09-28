@@ -4,16 +4,14 @@ import com.codecool.dungeoncrawl.logic.Cell;
 
 public abstract class Item extends Actor {
 
+    protected String obtainMessage;
+
     public Item(Cell cell) {
         super(cell);
     }
 
-    public void getItemFromFloor() {
-
-    }
-
-    public void useItem() {
-
+    public String getObtainMessage() {
+        return this.obtainMessage;
     }
 
 }
