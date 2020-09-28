@@ -1,4 +1,4 @@
-package com.codecool.dungeoncrawl.logic.actors.characters.components;
+package com.codecool.dungeoncrawl.logic.actors.components;
 
 import com.codecool.dungeoncrawl.logic.actors.Item;
 

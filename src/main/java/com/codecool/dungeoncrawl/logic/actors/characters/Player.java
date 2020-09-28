@@ -3,7 +3,7 @@ package com.codecool.dungeoncrawl.logic.actors.characters;
 import com.codecool.dungeoncrawl.logic.Cell;
 import com.codecool.dungeoncrawl.logic.actors.Character;
 import com.codecool.dungeoncrawl.logic.actors.Item;
-import com.codecool.dungeoncrawl.logic.actors.characters.components.Inventory;
+import com.codecool.dungeoncrawl.logic.actors.components.Inventory;
 
 public class Player extends Character {
 
