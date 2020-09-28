@@ -3,14 +3,14 @@ package com.codecool.dungeoncrawl.logic.actors.items;
 import com.codecool.dungeoncrawl.logic.Cell;
 import com.codecool.dungeoncrawl.logic.actors.Item;
 
-public class Sword extends Item {
+public class Knife extends Item {
 
-    private final int statistic = 10;
+    private final int statistic = 3;
 
-    public Sword(Cell cell) {
+    public Knife(Cell cell) {
         super(cell);
-        this.name = "Sword +10";
-        this.obtainMessage = "You have obtained a sword!";
+        this.name = "Knife +3";
+        this.obtainMessage = "You have obtained a knife!";
     }
 
     public String getTileName() {

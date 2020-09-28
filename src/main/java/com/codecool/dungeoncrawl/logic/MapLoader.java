@@ -39,7 +39,7 @@ public class MapLoader {
                             cell.setType(CellType.FLOOR);
                             break;
                         case 'i':
-                            cell.setType(CellType.ITEM);
+                            cell.setType(CellType.WEAPON);
                             itemsOnMap.add(new Sword(cell));
                             break;
                         case 'k':
