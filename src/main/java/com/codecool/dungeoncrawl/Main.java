@@ -6,10 +6,7 @@ import com.codecool.dungeoncrawl.logic.GameMap;
 import com.codecool.dungeoncrawl.logic.MapLoader;
 import com.codecool.dungeoncrawl.logic.actors.Item;
 import javafx.application.Application;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -18,7 +15,6 @@ import javafx.scene.control.Label;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
@@ -30,6 +26,7 @@ public class Main extends Application {
     GraphicsContext context = canvas.getGraphicsContext2D();
     Label healthLabel = new Label();
     Label inventoryLabel = new Label();
+    Button pickUpButton;
 
     public static void main(String[] args) {
         launch(args);
@@ -53,7 +50,8 @@ public class Main extends Application {
         buttonPanel.setPrefHeight(50);
         buttonPanel.setPadding(new Insets(10));
 
-        buttonPanel.add(getPickUpButton(), 0, 0);
+        setPickUpButton();
+        buttonPanel.add(pickUpButton, 0, 0);
 
         BorderPane borderPane = new BorderPane();
 
@@ -70,12 +68,12 @@ public class Main extends Application {
         primaryStage.show();
     }
 
-    private Button getPickUpButton() {
-        Button newButton = new Button();
-        newButton.setText("Pick up item!");
-        newButton.setOnAction(event -> handlePickUpButtonPress());
-        newButton.setFocusTraversable(false);
-        return newButton;
+    private void setPickUpButton() {
+        pickUpButton = new Button();
+        pickUpButton.setText("Pick up item!");
+        pickUpButton.setOnAction(event -> handlePickUpButtonPress());
+        pickUpButton.setFocusTraversable(false);
+        pickUpButton.setVisible(false);
     }
 
     private void onKeyPressed(KeyEvent keyEvent) {
@@ -100,18 +98,38 @@ public class Main extends Application {
     }
 
     private void handlePickUpButtonPress() {
-        Item itemToRemove = null;
+        Item itemToRemoveFromMap = null;
         for (Item item : map.getItemsOnMap()) {
             if (item.getX() == map.getPlayer().getX() && item.getY() == map.getPlayer().getY()) {
-                map.getCell(item.getX(), item.getY()).setType(CellType.FLOOR);
-                map.getPlayer().getItemFromTheFloor(item);
-                itemToRemove = item;
+                itemToRemoveFromMap = addItemToInventoryFromGround(item);
                 refresh();
             }
         }
-        if (itemToRemove != null) {
-            map.getItemsOnMap().remove(itemToRemove);
+        removeItemFromMapAndHideButton(itemToRemoveFromMap);
+    }
+
+    private void removeItemFromMapAndHideButton(Item itemToRemoveFromMap) {
+        if (itemToRemoveFromMap != null) {
+            map.getItemsOnMap().remove(itemToRemoveFromMap);
         }
+        pickUpButton.setVisible(false);
+    }
+
+    private Item addItemToInventoryFromGround(Item item) {
+        Item itemToRemove;
+        map.getCell(item.getX(), item.getY()).setType(CellType.FLOOR);
+        map.getPlayer().getItemFromTheFloor(item);
+        itemToRemove = item;
+        return itemToRemove;
+    }
+
+    private boolean isPlayerStandingOnItem() {
+        for (Item item : map.getItemsOnMap()) {
+            if (item.getX() == map.getPlayer().getX() && item.getY() == map.getPlayer().getY()) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private void refresh() {
@@ -129,12 +147,16 @@ public class Main extends Application {
                 }
             }
         }
-        healthLabel.setText("" + map.getPlayer().getHealth() + "\n");
 
+        pickUpButton.setVisible(isPlayerStandingOnItem());
+        createInventoryText(inventoryText);
+        inventoryLabel.setText(inventoryText.toString());
+        healthLabel.setText("" + map.getPlayer().getHealth() + "\n");
+    }
+
+    private void createInventoryText(StringBuilder inventoryText) {
         for (String itemName : map.getPlayer().getInventory().getAllItemNames()) {
             inventoryText.append(itemName).append("\n");
         }
-
-        inventoryLabel.setText(inventoryText.toString());
     }
 }
