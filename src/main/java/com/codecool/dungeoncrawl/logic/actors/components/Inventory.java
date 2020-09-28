@@ -26,11 +26,7 @@ public class Inventory {
 
     public List<String> getAllItemNames() {
         List<String> listOfNames = new ArrayList<>();
-
-        for (Item item : listOfItems) {
-            listOfNames.add(item.getName());
-        }
-
+        listOfItems.forEach(item -> listOfNames.add(item.getName()));
         return listOfNames;
     }
 }

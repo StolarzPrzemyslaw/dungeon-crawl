@@ -17,7 +17,6 @@ public class Player extends Character {
 
     public Player(Cell cell, Inventory inventory) {
         super(cell);
-        this.name = "Player.";
         this.inventory = inventory;
     }
 
