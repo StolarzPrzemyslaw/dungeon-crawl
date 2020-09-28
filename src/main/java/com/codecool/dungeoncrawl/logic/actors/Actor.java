@@ -2,10 +2,12 @@ package com.codecool.dungeoncrawl.logic.actors;
 
 import com.codecool.dungeoncrawl.logic.Cell;
 import com.codecool.dungeoncrawl.logic.CellType;
+import com.codecool.dungeoncrawl.logic.Combat;
 import com.codecool.dungeoncrawl.logic.Drawable;
 
 public abstract class Actor implements Drawable {
     private Cell cell;
+    public Combat combat = new Combat();
     private int health = 10;
     private int playerStrength = 5;
 
@@ -16,20 +18,21 @@ public abstract class Actor implements Drawable {
 
     public void move(int dx, int dy) {
         Cell nextCell = cell.getNeighbor(dx, dy);
-        if (!(nextCell.getType() == CellType.WALL)) {
+        if (!(nextCell.getType() == CellType.WALL) && !(nextCell.getType() == CellType.EMPTY)) {
             checkPossibleEncounter(nextCell);
         }
     }
 
     private void checkPossibleEncounter(Cell nextCell) {
-        if (!(nextCell.getActor() == null) && nextCell.getActor().getHealth() > playerStrength){
-            nextCell.getActor().setHealth(nextCell.getActor().getHealth() - 5);
-            System.out.println(nextCell.getActor().getTileName() + " health: " + nextCell.getActor().getHealth());
-        } else {
-            cell.setActor(null);
-            nextCell.setActor(this);
-            cell = nextCell;
+        if ((!(nextCell.getActor() == null) && combat.simulateFight(nextCell, cell)) || nextCell.getActor() == null) {
+            updatePosition(nextCell);
         }
+    }
+
+    private void updatePosition(Cell nextCell) {
+        cell.setActor(null);
+        nextCell.setActor(this);
+        cell = nextCell;
     }
 
     public int getHealth() {
@@ -52,4 +55,11 @@ public abstract class Actor implements Drawable {
         return cell.getY();
     }
 
+    public int getPlayerStrength() {
+        return playerStrength;
+    }
+
+    public void setPlayerStrength(int playerStrength) {
+        this.playerStrength = playerStrength;
+    }
 }
