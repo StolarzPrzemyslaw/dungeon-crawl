@@ -31,6 +31,12 @@ public class MapLoader {
                         case '.':
                             cell.setType(CellType.FLOOR);
                             break;
+                        case 'i':
+                            cell.setType(CellType.ITEM);
+                            break;
+                        case 'k':
+                            cell.setType(CellType.KEY);
+                            break;
                         case 's':
                             cell.setType(CellType.FLOOR);
                             new Skeleton(cell);
