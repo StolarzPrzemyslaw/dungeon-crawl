@@ -9,7 +9,7 @@ public class Key extends Item {
 
     public Key(Cell cell) {
         super(cell);
-        this.name = "Key to open doors. Entrance only version.";
+        this.name = "Key";
         this.obtainMessage = "You have obtained a key!";
     }
 

@@ -20,11 +20,6 @@ public abstract class Character extends Actor {
         cell = nextCell;
     }
 
-    public void getItemFromTheFloor(Item obtainedItem) {
-        // TO DO
-        System.out.println(obtainedItem.getObtainMessage());
-    }
-
     public int getHealth() {
         return health;
     }

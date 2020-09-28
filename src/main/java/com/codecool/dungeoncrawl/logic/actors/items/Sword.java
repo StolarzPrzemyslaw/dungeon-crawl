@@ -9,7 +9,7 @@ public class Sword extends Item {
 
     public Sword(Cell cell) {
         super(cell);
-        this.name = "Sword of +10 to swording";
+        this.name = "Sword +10";
         this.obtainMessage = "You have obtained a sword!";
     }
 
