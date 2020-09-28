@@ -1,0 +1,113 @@
+@startuml
+namespace dungeoncrawl {
+  class App {
+    {static} + main() : void
+  }
+
+  class Main {
+    {static} + main() : void
+    + start() : void
+    + onKeyPressed() : void
+    + refresh() : void
+  }
+
+  class Tiles {
+    {static} + TILE_WIDTH : int
+    {static} - tileset : Image
+    {static} - tileMap : Map<String, Tile>
+    {static} + drawTile() : void
+  }
+
+  class Tile {
+    + x : int
+    + y : int
+    + w : int
+    + h : int
+    + Tile()
+  }
+
+  Tiles <|.. Tile
+}
+
+namespace dungeoncrawl.logic {
+  interface Drawable {
+    {abstract} getTileName() : String
+  }
+
+  class GameMap {
+    - width : int
+    - height : int
+    - cells : Cell[][]
+    - player : Player
+    + GameMap()
+    + getCell() : Cell
+    + setPlayer() : void
+    + getPlayer() : Player
+    + getWidth() : int
+    + getHeight() : int
+  }
+
+  class MapLoader {
+    {static} + loadMap() : GameMap
+  }
+
+  class Cell {
+    - type : CellType
+    - actor : Actor
+    - gameMap : GameMap
+    - x : int
+    - y : int
+    + Cell()
+    + getType() : CellType
+    + setType() : void
+    + setActor() : void
+    + getActor() : Actor
+    + getNeighbor() : Cell
+    + getTileName() : String
+    + getX() : int
+    + getY() : int
+  }
+
+  enum CellType {
+    EMPTY
+    FLOOR
+    WALL
+    ----
+    - tileName : String
+    ----
+    + CellType()
+    + getTileName() : String
+  }
+
+  GameMap "1" *-- "*.." Cell
+  Cell <|.. dungeoncrawl.logic.Drawable
+  GameMap --* MapLoader
+}
+
+namespace dungeoncrawl.logic.actors {
+  abstract Actor {
+    - cell : Cell
+    - health : int
+    + Actor()
+    + move() : void
+    + getHealth() : int
+    + getCell() : Cell
+    + getX() : int
+    + getY() : int
+  }
+
+  class Player {
+    + Player()
+    + getTileName() : String
+  }
+
+  class Skeleton {
+    + Skeleton()
+    + getTileName() : String
+  }
+
+  Actor "1" <|-- "1" Player
+  Actor "1" <|-- "*" Skeleton
+  dungeoncrawl.logic.Drawable <|.. Actor
+}
+@enduml
