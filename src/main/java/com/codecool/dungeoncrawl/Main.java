@@ -28,12 +28,12 @@ public class Main extends Application {
     }
 
     @Override
-    public void start(Stage primaryStage) throws Exception {
+    public void start(Stage primaryStage) {
         GridPane ui = new GridPane();
         ui.setPrefWidth(200);
         ui.setPadding(new Insets(10));
 
-        ui.add(new Label("Health: "), 0, 0);
+        ui.add(new Label("Health: "), 0, 0);;
         ui.add(healthLabel, 1, 0);
 
         BorderPane borderPane = new BorderPane();
