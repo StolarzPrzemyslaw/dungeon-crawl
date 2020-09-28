@@ -1,11 +1,14 @@
 package com.codecool.dungeoncrawl.logic;
 
+import com.codecool.dungeoncrawl.logic.actors.Item;
 import com.codecool.dungeoncrawl.logic.actors.characters.Player;
 import com.codecool.dungeoncrawl.logic.actors.characters.Skeleton;
 import com.codecool.dungeoncrawl.logic.actors.items.Key;
 import com.codecool.dungeoncrawl.logic.actors.items.Sword;
 
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class MapLoader {
@@ -14,6 +17,8 @@ public class MapLoader {
         Scanner scanner = new Scanner(is);
         int width = scanner.nextInt();
         int height = scanner.nextInt();
+
+        List<Item> itemsOnMap = new ArrayList<>();
 
         scanner.nextLine(); // empty line
 
@@ -35,11 +40,11 @@ public class MapLoader {
                             break;
                         case 'i':
                             cell.setType(CellType.ITEM);
-                            new Sword(cell);
+                            itemsOnMap.add(new Sword(cell));
                             break;
                         case 'k':
                             cell.setType(CellType.KEY);
-                            new Key(cell);
+                            itemsOnMap.add(new Key(cell));
                             break;
                         case 's':
                             cell.setType(CellType.FLOOR);
@@ -55,6 +60,7 @@ public class MapLoader {
                 }
             }
         }
+        map.setItemsOnMap(itemsOnMap);
         return map;
     }
 
