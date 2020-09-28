@@ -1,8 +1,11 @@
 package com.codecool.dungeoncrawl;
 
 import com.codecool.dungeoncrawl.logic.Cell;
+import com.codecool.dungeoncrawl.logic.CellType;
 import com.codecool.dungeoncrawl.logic.GameMap;
 import com.codecool.dungeoncrawl.logic.MapLoader;
+import com.codecool.dungeoncrawl.logic.actors.Actor;
+import com.codecool.dungeoncrawl.logic.actors.Item;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
@@ -67,6 +70,20 @@ public class Main extends Application {
             case RIGHT:
                 map.getPlayer().move(1,0);
                 refresh();
+                break;
+            case SPACE:
+                Item itemToRemove = null;
+                for (Item item : map.getItemsOnMap()) {
+                    if (item.getX() == map.getPlayer().getX() && item.getY() == map.getPlayer().getY()) {
+                        map.getCell(item.getX(), item.getY()).setType(CellType.FLOOR);
+                        map.getPlayer().getItemFromTheFloor(item);
+                        itemToRemove = item;
+                        refresh();
+                    }
+                }
+                if (itemToRemove != null) {
+                    map.getItemsOnMap().remove(itemToRemove);
+                }
                 break;
         }
     }
