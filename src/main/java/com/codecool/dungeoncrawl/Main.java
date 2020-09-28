@@ -4,17 +4,21 @@ import com.codecool.dungeoncrawl.logic.Cell;
 import com.codecool.dungeoncrawl.logic.CellType;
 import com.codecool.dungeoncrawl.logic.GameMap;
 import com.codecool.dungeoncrawl.logic.MapLoader;
-import com.codecool.dungeoncrawl.logic.actors.Actor;
 import com.codecool.dungeoncrawl.logic.actors.Item;
 import javafx.application.Application;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
@@ -25,6 +29,7 @@ public class Main extends Application {
             map.getHeight() * Tiles.TILE_WIDTH);
     GraphicsContext context = canvas.getGraphicsContext2D();
     Label healthLabel = new Label();
+    Label inventoryLabel = new Label();
 
     public static void main(String[] args) {
         launch(args);
@@ -36,13 +41,25 @@ public class Main extends Application {
         ui.setPrefWidth(200);
         ui.setPadding(new Insets(10));
 
+        ui.add(new Label(new String(new char[38]).replace("\0", " ")), 0, 0);
+
         ui.add(new Label("Health: "), 0, 0);
         ui.add(healthLabel, 1, 0);
+
+        ui.add(new Label("Inventory: "), 0, 1);
+        ui.add(inventoryLabel, 0, 2);
+
+        GridPane buttonPanel = new GridPane();
+        buttonPanel.setPrefHeight(50);
+        buttonPanel.setPadding(new Insets(10));
+
+        buttonPanel.add(getPickUpButton(), 0, 0);
 
         BorderPane borderPane = new BorderPane();
 
         borderPane.setCenter(canvas);
         borderPane.setRight(ui);
+        borderPane.setBottom(buttonPanel);
 
         Scene scene = new Scene(borderPane);
         primaryStage.setScene(scene);
@@ -51,6 +68,14 @@ public class Main extends Application {
 
         primaryStage.setTitle("Dungeon Crawl");
         primaryStage.show();
+    }
+
+    private Button getPickUpButton() {
+        Button newButton = new Button();
+        newButton.setText("Pick up item!");
+        newButton.setOnAction(event -> handlePickUpButtonPress());
+        newButton.setFocusTraversable(false);
+        return newButton;
     }
 
     private void onKeyPressed(KeyEvent keyEvent) {
@@ -71,24 +96,27 @@ public class Main extends Application {
                 map.getPlayer().move(1,0);
                 refresh();
                 break;
-            case SPACE:
-                Item itemToRemove = null;
-                for (Item item : map.getItemsOnMap()) {
-                    if (item.getX() == map.getPlayer().getX() && item.getY() == map.getPlayer().getY()) {
-                        map.getCell(item.getX(), item.getY()).setType(CellType.FLOOR);
-                        map.getPlayer().getItemFromTheFloor(item);
-                        itemToRemove = item;
-                        refresh();
-                    }
-                }
-                if (itemToRemove != null) {
-                    map.getItemsOnMap().remove(itemToRemove);
-                }
-                break;
+        }
+    }
+
+    private void handlePickUpButtonPress() {
+        Item itemToRemove = null;
+        for (Item item : map.getItemsOnMap()) {
+            if (item.getX() == map.getPlayer().getX() && item.getY() == map.getPlayer().getY()) {
+                map.getCell(item.getX(), item.getY()).setType(CellType.FLOOR);
+                map.getPlayer().getItemFromTheFloor(item);
+                itemToRemove = item;
+                refresh();
+            }
+        }
+        if (itemToRemove != null) {
+            map.getItemsOnMap().remove(itemToRemove);
         }
     }
 
     private void refresh() {
+        StringBuilder inventoryText = new StringBuilder();
+
         context.setFill(Color.BLACK);
         context.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
         for (int x = 0; x < map.getWidth(); x++) {
@@ -101,6 +129,12 @@ public class Main extends Application {
                 }
             }
         }
-        healthLabel.setText("" + map.getPlayer().getHealth());
+        healthLabel.setText("" + map.getPlayer().getHealth() + "\n");
+
+        for (String itemName : map.getPlayer().getInventory().getAllItemNames()) {
+            inventoryText.append(itemName).append("\n");
+        }
+
+        inventoryLabel.setText(inventoryText.toString());
     }
 }
