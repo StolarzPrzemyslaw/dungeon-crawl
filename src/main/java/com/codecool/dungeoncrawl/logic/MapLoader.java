@@ -1,6 +1,7 @@
 package com.codecool.dungeoncrawl.logic;
 
 import com.codecool.dungeoncrawl.logic.actors.characters.Cow;
+import com.codecool.dungeoncrawl.logic.actors.items.Door;
 import com.codecool.dungeoncrawl.logic.actors.items.Item;
 import com.codecool.dungeoncrawl.logic.actors.characters.Player;
 import com.codecool.dungeoncrawl.logic.actors.characters.Skeleton;
@@ -38,6 +39,10 @@ public class MapLoader {
                             break;
                         case '.':
                             cell.setType(CellType.FLOOR);
+                            break;
+                        case 'd':
+                            cell.setType(CellType.FLOOR);
+                            new Door(cell);
                             break;
                         case 'i':
                             cell.setType(CellType.WEAPON);
