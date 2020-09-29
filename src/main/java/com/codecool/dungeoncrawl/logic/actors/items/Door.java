@@ -4,9 +4,9 @@ import com.codecool.dungeoncrawl.logic.Cell;
 
 public class Door extends Item {
 
-    private State state;
+    private DoorState state;
 
-    private enum State {
+    private enum DoorState {
         OPEN,
         CLOSED
     }
@@ -14,23 +14,20 @@ public class Door extends Item {
     public Door(Cell cell) {
         super(cell);
         name = "Door";
-        state = State.CLOSED;
+        state = DoorState.CLOSED;
     }
 
     @Override
     public String getTileName() {
+        if (isOpen()) return "openDoor";
         return "closedDoor";
     }
 
-    public State getState() {
-        return state;
-    }
-
-    public void setState(State state) {
+    public void setState(DoorState state) {
         this.state = state;
     }
 
     public boolean isOpen() {
-        return state.equals(State.OPEN);
+        return state.equals(DoorState.OPEN);
     }
 }

@@ -45,7 +45,10 @@ public class Player extends Person {
     }
 
     public int getStrengthBasedOnWeapon() {
-        return chosenWeapon.getStatistic() + strength;
+        if (chosenWeapon != null) {
+            return chosenWeapon.getStatistic() + strength;
+        }
+        return strength;
     }
 
     @Override

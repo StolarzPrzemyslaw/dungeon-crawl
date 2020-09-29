@@ -41,8 +41,8 @@ public class MapLoader {
                             cell.setType(CellType.FLOOR);
                             break;
                         case 'd':
-                            cell.setType(CellType.FLOOR);
-                            new Door(cell);
+                            cell.setType(CellType.CLOSED_DOOR);
+                            itemsOnMap.add(new Door(cell));
                             break;
                         case 'i':
                             cell.setType(CellType.WEAPON);
