@@ -2,14 +2,14 @@ package com.codecool.dungeoncrawl.logic.actors.items;
 
 import com.codecool.dungeoncrawl.logic.Cell;
 
-public class Sword extends Weapon {
+public class Axe extends Weapon {
 
-    private final int statistic = 10;
+    private final int statistic = 7;
 
-    public Sword(Cell cell) {
+    public Axe(Cell cell) {
         super(cell);
-        this.name = "Sword +10";
-        this.obtainMessage = "You have obtained a sword!";
+        this.name = "Axe +7";
+        this.obtainMessage = "You have obtained a axe!";
     }
 
     public String getTileName() {
