@@ -3,6 +3,7 @@ package com.codecool.dungeoncrawl.logic.actors.characters;
 import com.codecool.dungeoncrawl.logic.Cell;
 import com.codecool.dungeoncrawl.logic.CellType;
 import com.codecool.dungeoncrawl.logic.actors.Actor;
+import com.codecool.dungeoncrawl.logic.actors.obstacles.Door;
 
 public abstract class Person extends Actor {
     protected int health = 10;
@@ -13,7 +14,10 @@ public abstract class Person extends Actor {
 
     public void move(int dx, int dy) {
         Cell nextCell = cell.getNeighbor(dx, dy);
-        if (!(nextCell.getType() == CellType.WALL) && !(nextCell.getType() == CellType.EMPTY)) {
+        boolean isWall = nextCell.getType() == CellType.WALL;
+        boolean isEmpty = nextCell.getType() == CellType.EMPTY;
+        boolean isClosedDoor = cell.getActor() instanceof Door && !((Door) cell.getActor()).isOpen();
+        if (!isWall && !isEmpty) {
             checkPossibleEncounter(nextCell);
         }
     }

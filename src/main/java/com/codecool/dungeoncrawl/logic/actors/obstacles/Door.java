@@ -1,8 +1,8 @@
-package com.codecool.dungeoncrawl.logic.actors.items;
+package com.codecool.dungeoncrawl.logic.actors.obstacles;
 
 import com.codecool.dungeoncrawl.logic.Cell;
 
-public class Door extends Item {
+public class Door extends Obstacle {
 
     private DoorState state;
 
