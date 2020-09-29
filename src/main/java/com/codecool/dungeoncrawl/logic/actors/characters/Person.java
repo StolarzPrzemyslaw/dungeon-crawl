@@ -4,10 +4,10 @@ import com.codecool.dungeoncrawl.logic.Cell;
 import com.codecool.dungeoncrawl.logic.CellType;
 import com.codecool.dungeoncrawl.logic.actors.Actor;
 
-public abstract class Character extends Actor {
+public abstract class Person extends Actor {
     protected int health = 10;
 
-    public Character(Cell cell) {
+    public Person(Cell cell) {
         super(cell);
     }
 
@@ -45,4 +45,6 @@ public abstract class Character extends Actor {
     public void setStrength(int strength) {
         this.strength = strength;
     }
+
+    public abstract void actionAfterDefeat(Actor actorWhichDefeatedCow);
 }

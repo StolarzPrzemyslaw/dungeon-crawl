@@ -1,11 +1,12 @@
 package com.codecool.dungeoncrawl.logic.actors.characters;
 
 import com.codecool.dungeoncrawl.logic.Cell;
+import com.codecool.dungeoncrawl.logic.actors.Actor;
 import com.codecool.dungeoncrawl.logic.actors.items.Item;
 import com.codecool.dungeoncrawl.logic.actors.components.Inventory;
 import com.codecool.dungeoncrawl.logic.actors.items.Weapon;
 
-public class Player extends Character {
+public class Player extends Person {
 
     private Inventory inventory;
     private Weapon chosenWeapon;
@@ -41,5 +42,10 @@ public class Player extends Character {
 
     public Weapon getWeapon() {
         return chosenWeapon;
+    }
+
+    @Override
+    public void actionAfterDefeat(Actor actorWhichDefeatedPlayer) {
+        // show message after defeat
     }
 }
