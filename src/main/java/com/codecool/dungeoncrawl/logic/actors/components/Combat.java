@@ -17,6 +17,7 @@ public class Combat {
             }
 
             enemy.actionAfterDefeat(player);
+            nextCell.setActor(null);
             return true;
         }
 

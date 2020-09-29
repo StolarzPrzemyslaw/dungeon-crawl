@@ -102,6 +102,7 @@ public class Main extends Application {
         Item itemToRemoveFromMap = null;
         for (Item item : map.getItemsOnMap()) {
             if (item.getX() == map.getPlayer().getX() && item.getY() == map.getPlayer().getY()) {
+                map.getPlayer().setBackgroundCellActor(null);
                 itemToRemoveFromMap = addItemToInventoryFromGround(item);
                 refresh();
             }
@@ -148,7 +149,6 @@ public class Main extends Application {
                 }
             }
         }
-
         pickUpButton.setVisible(isPlayerStandingOnItem());
         createInventoryText(inventoryText);
         inventoryLabel.setText(inventoryText.toString());

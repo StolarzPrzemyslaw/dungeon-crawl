@@ -7,6 +7,7 @@ import com.codecool.dungeoncrawl.logic.actors.obstacles.Door;
 
 public abstract class Person extends Actor {
     protected int health = 10;
+    protected Actor backgroundCellActor;
 
     public Person(Cell cell) {
         super(cell);
@@ -35,8 +36,10 @@ public abstract class Person extends Actor {
     }
 
     protected void updatePosition(Cell nextCell) {
-        cell.setActor(null);
+        cell.setActor(backgroundCellActor);
+        backgroundCellActor = nextCell.getActor();
         nextCell.setActor(this);
+        if (backgroundCellActor != null) System.out.println("Background actor: " + backgroundCellActor.getName());
         cell = nextCell;
     }
 
@@ -61,6 +64,11 @@ public abstract class Person extends Actor {
 
     public void setStrength(int strength) {
         this.strength = strength;
+    }
+
+
+    public void setBackgroundCellActor(Actor backgroundCellActor) {
+        this.backgroundCellActor = backgroundCellActor;
     }
 
     public abstract void actionAfterDefeat(Actor actorWhichDefeatedCow);
