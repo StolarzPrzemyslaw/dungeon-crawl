@@ -16,8 +16,8 @@ public abstract class Person extends Actor {
         Cell nextCell = cell.getNeighbor(dx, dy);
         boolean isWall = nextCell.getType() == CellType.WALL;
         boolean isEmpty = nextCell.getType() == CellType.EMPTY;
-        boolean isClosedDoor = cell.getActor() instanceof Door && !((Door) cell.getActor()).isOpen();
-        if (!isWall && !isEmpty) {
+        boolean isClosedDoor = nextCell.getActor() instanceof Door && !((Door) nextCell.getActor()).isOpen();
+        if (!isWall && !isEmpty && !isClosedDoor) {
             checkPossibleEncounter(nextCell);
         }
     }
