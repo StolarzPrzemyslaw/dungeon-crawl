@@ -1,13 +1,16 @@
 package com.codecool.dungeoncrawl;
 
 import com.codecool.dungeoncrawl.logic.Cell;
+import com.codecool.dungeoncrawl.logic.CellType;
 import com.codecool.dungeoncrawl.logic.GameMap;
 import com.codecool.dungeoncrawl.logic.MapLoader;
+import com.codecool.dungeoncrawl.logic.actors.Item;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
@@ -22,6 +25,8 @@ public class Main extends Application {
             map.getHeight() * Tiles.TILE_WIDTH);
     GraphicsContext context = canvas.getGraphicsContext2D();
     Label healthLabel = new Label();
+    Label inventoryLabel = new Label();
+    Button pickUpButton;
 
     public static void main(String[] args) {
         launch(args);
@@ -33,13 +38,26 @@ public class Main extends Application {
         ui.setPrefWidth(200);
         ui.setPadding(new Insets(10));
 
+        ui.add(new Label(new String(new char[38]).replace("\0", " ")), 0, 0);
+
         ui.add(new Label("Health: "), 0, 0);
         ui.add(healthLabel, 1, 0);
+
+        ui.add(new Label("Inventory: "), 0, 1);
+        ui.add(inventoryLabel, 0, 2);
+
+        GridPane buttonPanel = new GridPane();
+        buttonPanel.setPrefHeight(50);
+        buttonPanel.setPadding(new Insets(10));
+
+        setPickUpButton();
+        buttonPanel.add(pickUpButton, 0, 0);
 
         BorderPane borderPane = new BorderPane();
 
         borderPane.setCenter(canvas);
         borderPane.setRight(ui);
+        borderPane.setBottom(buttonPanel);
 
         Scene scene = new Scene(borderPane);
         primaryStage.setScene(scene);
@@ -48,6 +66,14 @@ public class Main extends Application {
 
         primaryStage.setTitle("Dungeon Crawl");
         primaryStage.show();
+    }
+
+    private void setPickUpButton() {
+        pickUpButton = new Button();
+        pickUpButton.setText("Pick up item!");
+        pickUpButton.setOnAction(event -> handlePickUpButtonPress());
+        pickUpButton.setFocusTraversable(false);
+        pickUpButton.setVisible(false);
     }
 
     private void onKeyPressed(KeyEvent keyEvent) {
@@ -71,7 +97,44 @@ public class Main extends Application {
         }
     }
 
+    private void handlePickUpButtonPress() {
+        Item itemToRemoveFromMap = null;
+        for (Item item : map.getItemsOnMap()) {
+            if (item.getX() == map.getPlayer().getX() && item.getY() == map.getPlayer().getY()) {
+                itemToRemoveFromMap = addItemToInventoryFromGround(item);
+                refresh();
+            }
+        }
+        removeItemFromMapAndHideButton(itemToRemoveFromMap);
+    }
+
+    private void removeItemFromMapAndHideButton(Item itemToRemoveFromMap) {
+        if (itemToRemoveFromMap != null) {
+            map.getItemsOnMap().remove(itemToRemoveFromMap);
+        }
+        pickUpButton.setVisible(false);
+    }
+
+    private Item addItemToInventoryFromGround(Item item) {
+        Item itemToRemove;
+        map.getCell(item.getX(), item.getY()).setType(CellType.FLOOR);
+        map.getPlayer().getItemFromTheFloor(item);
+        itemToRemove = item;
+        return itemToRemove;
+    }
+
+    private boolean isPlayerStandingOnItem() {
+        for (Item item : map.getItemsOnMap()) {
+            if (item.getX() == map.getPlayer().getX() && item.getY() == map.getPlayer().getY()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     private void refresh() {
+        StringBuilder inventoryText = new StringBuilder();
+
         context.setFill(Color.BLACK);
         context.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
         for (int x = 0; x < map.getWidth(); x++) {
@@ -84,6 +147,16 @@ public class Main extends Application {
                 }
             }
         }
-        healthLabel.setText("" + map.getPlayer().getHealth());
+
+        pickUpButton.setVisible(isPlayerStandingOnItem());
+        createInventoryText(inventoryText);
+        inventoryLabel.setText(inventoryText.toString());
+        healthLabel.setText("" + map.getPlayer().getHealth() + "\n");
+    }
+
+    private void createInventoryText(StringBuilder inventoryText) {
+        for (String itemName : map.getPlayer().getInventory().getAllItemNames()) {
+            inventoryText.append(itemName).append("\n");
+        }
     }
 }
