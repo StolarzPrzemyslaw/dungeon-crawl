@@ -7,6 +7,7 @@ import com.codecool.dungeoncrawl.logic.actors.characters.Skeleton;
 import com.codecool.dungeoncrawl.logic.actors.items.Key;
 import com.codecool.dungeoncrawl.logic.actors.items.Sword;
 import com.codecool.dungeoncrawl.logic.actors.obstacles.Door;
+import com.codecool.dungeoncrawl.logic.actors.obstacles.Obstacle;
 
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -41,7 +42,7 @@ public class MapLoader {
                             cell.setType(CellType.FLOOR);
                             break;
                         case 'd':
-                            cell.setType(CellType.CLOSED_DOOR);
+                            cell.setType(CellType.OPEN_DOOR);
                             new Door(cell);
                             break;
                         case 'i':

@@ -26,7 +26,7 @@ public abstract class Person extends Actor {
     protected boolean isNextFieldEmpty(Cell nextCell) {
         boolean isWallType = nextCell.getType() == CellType.WALL;
         boolean isEmptyType = nextCell.getType() == CellType.EMPTY;
-        boolean isClosedDoor = nextCell.getActor() instanceof Door && !((Door) nextCell.getActor()).isOpen();
+        boolean isClosedDoor = isNextFieldClosedDoor(nextCell);
         return !isWallType && !isEmptyType && !isClosedDoor;
     }
 
@@ -38,6 +38,10 @@ public abstract class Person extends Actor {
         cell.setActor(null);
         nextCell.setActor(this);
         cell = nextCell;
+    }
+
+    protected boolean isNextFieldClosedDoor(Cell nextCell) {
+        return nextCell.getActor() instanceof Door && !((Door) nextCell.getActor()).isOpen();
     }
 
     public int getHealth() {

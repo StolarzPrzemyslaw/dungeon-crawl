@@ -23,8 +23,8 @@ public class Door extends Obstacle {
         return "closedDoor";
     }
 
-    public void setState(DoorState state) {
-        this.state = state;
+    public void open() {
+        state = DoorState.OPEN;
     }
 
     public boolean isOpen() {

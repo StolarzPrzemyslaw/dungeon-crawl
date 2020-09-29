@@ -5,6 +5,7 @@ import com.codecool.dungeoncrawl.logic.actors.Actor;
 import com.codecool.dungeoncrawl.logic.actors.components.Inventory;
 import com.codecool.dungeoncrawl.logic.actors.items.Item;
 import com.codecool.dungeoncrawl.logic.actors.items.Weapon;
+import com.codecool.dungeoncrawl.logic.actors.obstacles.Door;
 
 public class Player extends Person {
 
@@ -62,9 +63,27 @@ public class Player extends Person {
         if (isNextFieldEmpty(nextCell) && isEncounterDone(nextCell)) {
             updatePosition(nextCell);
         }
+        checkDoorCondition(nextCell);
     }
 
-    public void openDoor() {
+    private void checkDoorCondition(Cell nextCell) {
+        if (isNextFieldClosedDoor(nextCell)) {
+            if (isKeyInInventory()) {
+                openDoor(nextCell);
+                removeKey();
+            }
+        }
+    }
 
+    private void openDoor(Cell nextCell) {
+        ((Door) nextCell.getActor()).open();
+    }
+
+    private void removeKey() {
+        inventory.removeItemFromInventory(inventory.getItemByName("Key"));
+    }
+
+    private boolean isKeyInInventory() {
+        return inventory.getAllItemNames().contains("Key");
     }
 }
