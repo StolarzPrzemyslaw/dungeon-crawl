@@ -44,6 +44,10 @@ public class Player extends Person {
         return chosenWeapon;
     }
 
+    public int getStrengthBasedOnWeapon() {
+        return chosenWeapon.getStatistic() + strength;
+    }
+
     @Override
     public void actionAfterDefeat(Actor actorWhichDefeatedPlayer) {
         // show message after defeat

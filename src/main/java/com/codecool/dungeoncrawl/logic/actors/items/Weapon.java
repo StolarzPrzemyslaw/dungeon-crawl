@@ -9,4 +9,8 @@ public abstract class Weapon extends Item {
     public Weapon(Cell cell) {
         super(cell);
     }
+
+    public int getStatistic() {
+        return statistic;
+    }
 }

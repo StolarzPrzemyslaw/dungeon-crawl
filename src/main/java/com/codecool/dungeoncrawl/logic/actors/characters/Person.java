@@ -39,6 +39,9 @@ public abstract class Person extends Actor {
     }
 
     public int getStrength() {
+        if (this instanceof Player) {
+            return ((Player) this).getStrengthBasedOnWeapon();
+        }
         return strength;
     }
 
