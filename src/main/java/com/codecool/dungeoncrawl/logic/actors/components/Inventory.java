@@ -1,6 +1,6 @@
 package com.codecool.dungeoncrawl.logic.actors.components;
 
-import com.codecool.dungeoncrawl.logic.actors.Item;
+import com.codecool.dungeoncrawl.logic.actors.items.Item;
 
 import java.util.ArrayList;
 import java.util.List;

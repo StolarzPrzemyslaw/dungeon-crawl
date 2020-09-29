@@ -1,8 +1,7 @@
 package com.codecool.dungeoncrawl.logic.actors.characters;
 
 import com.codecool.dungeoncrawl.logic.Cell;
-import com.codecool.dungeoncrawl.logic.actors.Character;
-import com.codecool.dungeoncrawl.logic.actors.Item;
+import com.codecool.dungeoncrawl.logic.actors.items.Item;
 import com.codecool.dungeoncrawl.logic.actors.components.Inventory;
 import com.codecool.dungeoncrawl.logic.actors.items.Weapon;
 
@@ -13,7 +12,9 @@ public class Player extends Character {
 
     public Player(Cell cell) {
         super(cell);
-        this.name = "Player.";
+        this.name = "Player";
+        this.strength = 5;
+        this.health = 10;
         this.inventory = new Inventory();
     }
 
