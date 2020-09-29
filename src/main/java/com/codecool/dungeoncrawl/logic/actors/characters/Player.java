@@ -55,4 +55,16 @@ public class Player extends Person {
     public void actionAfterDefeat(Actor actorWhichDefeatedPlayer) {
         // show message after defeat
     }
+
+    @Override
+    public void move(int dx, int dy) {
+        Cell nextCell = getNextCell(dx, dy);
+        if (isNextFieldEmpty(nextCell) && isEncounterDone(nextCell)) {
+            updatePosition(nextCell);
+        }
+    }
+
+    public void openDoor() {
+
+    }
 }

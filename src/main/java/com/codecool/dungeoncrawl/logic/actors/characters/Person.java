@@ -13,22 +13,28 @@ public abstract class Person extends Actor {
     }
 
     public void move(int dx, int dy) {
-        Cell nextCell = cell.getNeighbor(dx, dy);
-        boolean isWall = nextCell.getType() == CellType.WALL;
-        boolean isEmpty = nextCell.getType() == CellType.EMPTY;
-        boolean isClosedDoor = nextCell.getActor() instanceof Door && !((Door) nextCell.getActor()).isOpen();
-        if (!isWall && !isEmpty && !isClosedDoor) {
-            checkPossibleEncounter(nextCell);
-        }
-    }
-
-    private void checkPossibleEncounter(Cell nextCell) {
-        if (nextCell.getActor() == null || combat.simulateFight(nextCell, cell)) {
+        Cell nextCell = getNextCell(dx, dy);
+        if (isNextFieldEmpty(nextCell)) {
             updatePosition(nextCell);
         }
     }
 
-    private void updatePosition(Cell nextCell) {
+    protected Cell getNextCell(int dx, int dy) {
+        return cell.getNeighbor(dx, dy);
+    }
+
+    protected boolean isNextFieldEmpty(Cell nextCell) {
+        boolean isWallType = nextCell.getType() == CellType.WALL;
+        boolean isEmptyType = nextCell.getType() == CellType.EMPTY;
+        boolean isClosedDoor = nextCell.getActor() instanceof Door && !((Door) nextCell.getActor()).isOpen();
+        return !isWallType && !isEmptyType && !isClosedDoor;
+    }
+
+    protected boolean isEncounterDone(Cell nextCell) {
+        return combat.simulateFight(nextCell, cell);
+    }
+
+    protected void updatePosition(Cell nextCell) {
         cell.setActor(null);
         nextCell.setActor(this);
         cell = nextCell;
