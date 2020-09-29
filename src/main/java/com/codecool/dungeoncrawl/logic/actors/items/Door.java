@@ -19,7 +19,7 @@ public class Door extends Item {
 
     @Override
     public String getTileName() {
-        return "door";
+        return "closedDoor";
     }
 
     public State getState() {
