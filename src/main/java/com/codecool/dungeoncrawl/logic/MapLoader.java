@@ -53,6 +53,12 @@ public class MapLoader {
                             cell.setType(CellType.KEY);
                             itemsOnMap.add(new Key(cell));
                             break;
+                        case 'd':
+                            cell.setType(CellType.DOOR);
+                            break;
+                        case 'f':
+                            cell.setType(CellType.STAIRS);
+                            break;
                         case 'c':
                             cell.setType(CellType.FLOOR);
                             new Cow(cell);
