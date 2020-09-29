@@ -1,8 +1,9 @@
 package com.codecool.dungeoncrawl.logic.actors.characters;
 
 import com.codecool.dungeoncrawl.logic.Cell;
+import com.codecool.dungeoncrawl.logic.actors.Actor;
 
-public class Skeleton extends Character {
+public class Skeleton extends Person {
 
     public Skeleton(Cell cell) {
         super(cell);
@@ -13,5 +14,10 @@ public class Skeleton extends Character {
 
     public String getTileName() {
         return "skeleton";
+    }
+
+    @Override
+    public void actionAfterDefeat(Actor actorWhichDefeatedSkeleton) {
+        // show message after defeat
     }
 }
