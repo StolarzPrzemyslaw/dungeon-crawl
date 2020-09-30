@@ -1,6 +1,5 @@
 package com.codecool.dungeoncrawl.view;
 
-import com.codecool.dungeoncrawl.view.Main;
 import com.codecool.dungeoncrawl.logic.CellType;
 import com.codecool.dungeoncrawl.logic.GameMap;
 import com.codecool.dungeoncrawl.logic.actors.items.Item;
@@ -19,10 +18,10 @@ public class SidePanel {
     private int heroStatsRowNumber = 0;
     private final int PARAMETERS_POSITION = 0;
     private int inventoryItemRowNumber = 1;
-    private Main main;
+    private Game game;
 
-    public SidePanel(Main main) {
-        this.main = main;
+    public SidePanel(Game game) {
+        this.game = game;
     }
 
     public VBox createSidePanel(Label healthLabel, Label strengthLabel, Label weaponLabel, Label heroName) {
@@ -156,7 +155,7 @@ public class SidePanel {
             if (item.getX() == map.getPlayer().getX() && item.getY() == map.getPlayer().getY()) {
                 map.getPlayer().setBackgroundCellActor(null);
                 itemToRemoveFromMap = addItemToInventoryFromGround(item, map);
-                main.refresh();
+                game.refresh();
             }
         }
         removeItemFromMapAndHideButton(itemToRemoveFromMap, map, pickUpButton);

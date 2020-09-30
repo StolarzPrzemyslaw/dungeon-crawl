@@ -22,7 +22,7 @@ import javafx.stage.Stage;
 
 import java.awt.*;
 
-public class Main extends Application {
+public class Game extends Application {
     private final int MAP_WIDTH_TO_DISPLAY = 25;
     private final int MAP_HEIGHT_TO_DISPLAY = 17;
 
