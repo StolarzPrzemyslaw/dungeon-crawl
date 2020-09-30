@@ -61,7 +61,8 @@ public class Player extends Person {
     @Override
     public void actionAfterDefeat(Actor actorWhichDefeatedPlayer) {
         Alert loseScreen = new Alert(Alert.AlertType.INFORMATION);
-        loseScreen.setContentText("You lose! You are defeated by " + actorWhichDefeatedPlayer.getName());
+        loseScreen.setHeaderText("You lose!");
+        loseScreen.setContentText("You are defeated by " + actorWhichDefeatedPlayer.getName());
         loseScreen.showAndWait();
         Platform.exit();
         System.exit(0);
