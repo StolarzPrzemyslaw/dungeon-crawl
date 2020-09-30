@@ -20,10 +20,14 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 public class Main extends Application {
+    private final int MAP_WIDTH = 20;
+    private final int MAP_HEIGHT = 20;
+
+
     GameMap map = MapLoader.loadMap();
     Canvas canvas = new Canvas(
-            map.getWidth() * Tiles.TILE_WIDTH,
-            map.getHeight() * Tiles.TILE_WIDTH);
+            MAP_WIDTH * Tiles.TILE_WIDTH,
+            MAP_HEIGHT * Tiles.TILE_WIDTH);
     GraphicsContext context = canvas.getGraphicsContext2D();
     Label healthLabel = new Label();
     Label inventoryLabel = new Label();
@@ -139,20 +143,35 @@ public class Main extends Application {
 
         context.setFill(Color.BLACK);
         context.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
-        for (int x = 0; x < map.getWidth(); x++) {
-            for (int y = 0; y < map.getHeight(); y++) {
-                Cell cell = map.getCell(x, y);
-                if (cell.getActor() != null) {
-                    Tiles.drawTile(context, cell.getActor(), x, y);
-                } else {
-                    Tiles.drawTile(context, cell, x, y);
-                }
-            }
-        }
+        drawAllTilesWithShift();
         pickUpButton.setVisible(isPlayerStandingOnItem());
         createInventoryText(inventoryText);
         inventoryLabel.setText(inventoryText.toString());
         healthLabel.setText("" + map.getPlayer().getHealth() + "\n");
+    }
+
+    private void drawAllTilesWithShift() {
+        for (int x = 0; x < map.getWidth(); x++) {
+            for (int y = 0; y < map.getHeight(); y++) {
+                if (isCellInsideMap(x, y)) {
+                    Cell cell = map.getCell(x + map.getPlayer().getX(), y + map.getPlayer().getY());
+                    if (cell.getActor() != null) {
+                        Tiles.drawTile(context, cell.getActor(), x, y);
+                    } else {
+                        Tiles.drawTile(context, cell, x, y);
+                    }
+                } else {
+                    Tiles.drawTile(context, null, x, y);
+                }
+            }
+        }
+    }
+
+    private boolean isCellInsideMap(int x, int y) {
+        return x + map.getPlayer().getX() >= 0
+                && y + map.getPlayer().getY() >= 0
+                && x + map.getPlayer().getX() < map.getWidth()
+                && y + map.getPlayer().getY() < map.getHeight();
     }
 
     private void createInventoryText(StringBuilder inventoryText) {
