@@ -124,7 +124,7 @@ public class SidePanel {
     }
 
     private HBox generateChooseButton(Button chooseItem) {
-        HBox useItem = new HBox();
+        HBox useItem = new HBox(chooseItem);
         chooseItem.setText("Use selected item");
         useItem.setPrefWidth(300);
         useItem.setPadding(new Insets(10));
