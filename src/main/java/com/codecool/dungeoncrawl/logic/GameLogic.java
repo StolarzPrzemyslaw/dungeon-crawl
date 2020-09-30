@@ -1,11 +1,11 @@
 package com.codecool.dungeoncrawl.logic;
 
 import com.codecool.dungeoncrawl.logic.actors.Actor;
+import com.codecool.dungeoncrawl.logic.actors.characters.Enemy;
 import com.codecool.dungeoncrawl.logic.actors.characters.Person;
 import com.codecool.dungeoncrawl.logic.actors.characters.Player;
 import com.codecool.dungeoncrawl.logic.actors.components.Combat;
 import com.codecool.dungeoncrawl.logic.actors.items.Item;
-import com.codecool.dungeoncrawl.logic.actors.obstacles.Door;
 import com.codecool.dungeoncrawl.view.Game;
 import javafx.scene.input.KeyEvent;
 
@@ -21,7 +21,7 @@ public class GameLogic {
     }
 
     public GameLogic(Game game, String playerName, GameMap gameMap) {
-        super();
+        this(game, playerName);
         this.map = gameMap;
     }
 
@@ -52,12 +52,12 @@ public class GameLogic {
         Cell nextCell = map.getPlayer().getCell().getNeighbor(dx, dy);
         Actor nearActor = map.getPlayer().getCell().getNeighbor(dx, dy).getActor();
 
-        if (nextCell.isOccupiedByEnemy()) {
+        if (nextCell.isOccupiedByClass(Enemy.class)) {
             combat.simulateCombat(player, (Person) nearActor);
             if (map.getPlayer().getHealth() <= 0) {
                 ui.generateLoseScreen(player, (Person) nearActor);
             }
-        } else if (nextCell.isEmptyField()) {
+        } else if (nextCell.isMovePossible()) {
             player.move(dx, dy);
         }
         ui.refresh();
