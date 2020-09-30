@@ -7,4 +7,6 @@ public abstract class Enemy extends Person {
     public Enemy(Cell cell) {
         super(cell);
     }
+
+    public abstract void runActionAfterDefeat(Player player);
 }
