@@ -14,7 +14,7 @@ public class Player extends Person {
 
     public Player(Cell cell) {
         super(cell);
-        this.name = "Player";
+        this.name = "Hero Name";
         this.strength = 5;
         this.health = 10;
         this.inventory = new Inventory();

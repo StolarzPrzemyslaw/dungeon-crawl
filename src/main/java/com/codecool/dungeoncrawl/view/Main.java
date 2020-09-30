@@ -1,4 +1,4 @@
-package com.codecool.dungeoncrawl;
+package com.codecool.dungeoncrawl.view;
 
 import com.codecool.dungeoncrawl.logic.Cell;
 import com.codecool.dungeoncrawl.logic.CellType;
@@ -6,62 +6,57 @@ import com.codecool.dungeoncrawl.logic.GameMap;
 import com.codecool.dungeoncrawl.logic.MapLoader;
 import com.codecool.dungeoncrawl.logic.actors.items.Item;
 import com.codecool.dungeoncrawl.logic.actors.obstacles.Door;
+import com.codecool.dungeoncrawl.view.SidePanel;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
+import java.awt.*;
+
 public class Main extends Application {
-    private final int MAP_WIDTH_TO_DISPLAY = 23;
-    private final int MAP_HEIGHT_TO_DISPLAY = 15;
+    private final int MAP_WIDTH_TO_DISPLAY = 25;
+    private final int MAP_HEIGHT_TO_DISPLAY = 17;
 
     GameMap map = MapLoader.loadMap();
     Canvas canvas = new Canvas(
             MAP_WIDTH_TO_DISPLAY * Tiles.TILE_WIDTH,
             MAP_HEIGHT_TO_DISPLAY * Tiles.TILE_WIDTH);
     GraphicsContext context = canvas.getGraphicsContext2D();
+
+    Label heroName = new Label();
     Label healthLabel = new Label();
+    Label strengthLabel = new Label();
+    Label weaponLabel = new Label();
     Label inventoryLabel = new Label();
-    Button pickUpButton;
+    Button pickUpButton = new Button();
+    Button chooseItem = new Button();
+    Button openDoor = new Button();
+    ChoiceBox itemsList = new ChoiceBox();
 
     public static void main(String[] args) {
         launch(args);
     }
 
     @Override
-    public void start(Stage primaryStage) {
-        GridPane ui = new GridPane();
-        ui.setPrefWidth(200);
-        ui.setPadding(new Insets(10));
-
-        ui.add(new Label("Health: "), 0, 0);;
-        ui.add(new Label(new String(new char[38]).replace("\0", " ")), 0, 0);
-
-        ui.add(healthLabel, 1, 0);
-
-        ui.add(new Label("Inventory: "), 0, 1);
-        ui.add(inventoryLabel, 0, 2);
-
-        GridPane buttonPanel = new GridPane();
-        buttonPanel.setPrefHeight(50);
-        buttonPanel.setPadding(new Insets(10));
-
-        setPickUpButton();
-        buttonPanel.add(pickUpButton, 0, 0);
+    public void start(Stage primaryStage) throws Exception {
+        SidePanel sidePanel = new SidePanel(this);
+        VBox descriptionContainer = sidePanel.createSidePanel(healthLabel, strengthLabel, weaponLabel, heroName);
+        descriptionContainer.getChildren().add(sidePanel.createUserInterface(pickUpButton, itemsList, map, chooseItem, openDoor));
+        descriptionContainer.getChildren().add(sidePanel.generateInventory(inventoryLabel));
 
         BorderPane borderPane = new BorderPane();
 
         borderPane.setCenter(canvas);
-        borderPane.setRight(ui);
-        borderPane.setBottom(buttonPanel);
+        borderPane.setRight(descriptionContainer);
 
         Scene scene = new Scene(borderPane);
         primaryStage.setScene(scene);
@@ -72,60 +67,25 @@ public class Main extends Application {
         primaryStage.show();
     }
 
-    private void setPickUpButton() {
-        pickUpButton = new Button();
-        pickUpButton.setText("Pick up item!");
-        pickUpButton.setOnAction(event -> handlePickUpButtonPress());
-        pickUpButton.setFocusTraversable(false);
-        pickUpButton.setVisible(false);
-    }
-
     private void onKeyPressed(KeyEvent keyEvent) {
         switch (keyEvent.getCode()) {
-            case UP:
+            case W:
                 map.getPlayer().move(0, -1);
                 refresh();
                 break;
-            case DOWN:
+            case S:
                 map.getPlayer().move(0, 1);
                 refresh();
                 break;
-            case LEFT:
+            case A:
                 map.getPlayer().move(-1, 0);
                 refresh();
                 break;
-            case RIGHT:
+            case D:
                 map.getPlayer().move(1,0);
                 refresh();
                 break;
         }
-    }
-
-    private void handlePickUpButtonPress() {
-        Item itemToRemoveFromMap = null;
-        for (Item item : map.getItemsOnMap()) {
-            if (item.getX() == map.getPlayer().getX() && item.getY() == map.getPlayer().getY()) {
-                map.getPlayer().setBackgroundCellActor(null);
-                itemToRemoveFromMap = addItemToInventoryFromGround(item);
-                refresh();
-            }
-        }
-        removeItemFromMapAndHideButton(itemToRemoveFromMap);
-    }
-
-    private void removeItemFromMapAndHideButton(Item itemToRemoveFromMap) {
-        if (itemToRemoveFromMap != null) {
-            map.getItemsOnMap().remove(itemToRemoveFromMap);
-        }
-        pickUpButton.setVisible(false);
-    }
-
-    private Item addItemToInventoryFromGround(Item item) {
-        Item itemToRemove;
-        map.getCell(item.getX(), item.getY()).setType(CellType.FLOOR);
-        map.getPlayer().getItemFromTheFloor(item);
-        itemToRemove = item;
-        return itemToRemove;
     }
 
     private boolean isPlayerStandingOnItem() {
@@ -137,7 +97,7 @@ public class Main extends Application {
         return false;
     }
 
-    private void refresh() {
+    public void refresh() {
         StringBuilder inventoryText = new StringBuilder();
 
         context.setFill(Color.BLACK);
@@ -145,10 +105,14 @@ public class Main extends Application {
 
         drawAllTilesWithShift();
 
-        pickUpButton.setVisible(isPlayerStandingOnItem());
+        heroName.setText("" + map.getPlayer().getName().toUpperCase() + "\n");
+        pickUpButton.setDisable(!isPlayerStandingOnItem());
         createInventoryText(inventoryText);
         inventoryLabel.setText(inventoryText.toString());
         healthLabel.setText("" + map.getPlayer().getHealth() + "\n");
+        strengthLabel.setText("" + map.getPlayer().getStrength() + "\n");
+        String weaponName = map.getPlayer().getWeapon() == null ? "Basic sword" : map.getPlayer().getWeapon().getName();
+        weaponLabel.setText("" + weaponName + "\n");
     }
 
     private void drawAllTilesWithShift() {
