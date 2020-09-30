@@ -87,4 +87,28 @@ public class Cell implements Drawable {
         return getActor() instanceof Item;
     }
 
+    public boolean isDoorOneOfTheNeighbors() {
+        return isDoorNextToPlayer(-1, 0) != null
+                || isDoorNextToPlayer(1, 0) != null
+                || isDoorNextToPlayer(0, -1) != null
+                || isDoorNextToPlayer(0, 1) != null;
+    }
+
+    public Door isDoorNextToPlayer(int dx, int dy) {
+        return getNeighbor(dx, dy).getActor() instanceof Door ? (Door) getNeighbor(dx, dy).getActor() : null;
+    }
+
+    public void openDoorNextToPlayer() {
+        openDoorNextToPlayerBasedOnNextCell(-1, 0);
+        openDoorNextToPlayerBasedOnNextCell(1, 0);
+        openDoorNextToPlayerBasedOnNextCell(0, -1);
+        openDoorNextToPlayerBasedOnNextCell(0, 1);
+        gameMap.getPlayer().getInventory().removeItemByName("Key");
+    }
+
+    public void openDoorNextToPlayerBasedOnNextCell(int dx, int dy) {
+        if (isDoorNextToPlayer(dx, dy) != null) {
+            ((Door) getNeighbor(dx, dy).getActor()).open();
+        }
+    }
 }

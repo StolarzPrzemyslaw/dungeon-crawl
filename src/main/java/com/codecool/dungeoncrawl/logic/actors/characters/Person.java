@@ -2,12 +2,10 @@ package com.codecool.dungeoncrawl.logic.actors.characters;
 
 import com.codecool.dungeoncrawl.logic.Cell;
 import com.codecool.dungeoncrawl.logic.actors.Actor;
-import com.codecool.dungeoncrawl.logic.actors.components.Combat;
 
 public abstract class Person extends Actor {
     protected int health = 10;
     protected int strength = 5;
-    protected Combat combat = new Combat();
     protected Actor backgroundCellActor;
 
     public Person(Cell cell) {
@@ -15,21 +13,7 @@ public abstract class Person extends Actor {
     }
 
     public void move(int dx, int dy) {
-        Cell nextCell = getNextCell(dx, dy);
-        if (nextCell.isEmptyField()) {
-            updatePosition(nextCell);
-        }
-    }
-
-    protected Cell getNextCell(int dx, int dy) {
-        return cell.getNeighbor(dx, dy);
-    }
-
-    protected boolean isEncounterDone(Cell nextCell) {
-        return combat.simulateFight(nextCell, cell);
-    }
-
-    protected void updatePosition(Cell nextCell) {
+        Cell nextCell = cell.getNeighbor(dx, dy);
         cell.setActor(backgroundCellActor);
         backgroundCellActor = nextCell.getActor();
         nextCell.setActor(this);
@@ -45,16 +29,8 @@ public abstract class Person extends Actor {
     }
 
     public int getStrength() {
-        if (this instanceof Player) {
-            return ((Player) this).getStrengthBasedOnWeapon();
-        }
-        return strength;
+        return this instanceof Player ? ((Player) this).getStrengthBasedOnWeapon() : strength;
     }
-
-    public void setStrength(int strength) {
-        this.strength = strength;
-    }
-
 
     public void setBackgroundCellActor(Actor backgroundCellActor) {
         this.backgroundCellActor = backgroundCellActor;
@@ -63,6 +39,4 @@ public abstract class Person extends Actor {
     public Actor getBackgroundCellActor() {
         return backgroundCellActor;
     }
-
-    public abstract void actionAfterDefeat(Actor actorWhichDefeatedCow);
 }

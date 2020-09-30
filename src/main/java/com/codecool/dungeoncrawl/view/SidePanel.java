@@ -116,8 +116,7 @@ public class SidePanel {
         HBox buttonPanel = new HBox();
         styleHBox(buttonPanel);
         setPickUpButton(pickUpButton, map);
-        openDoor.setText("Open Door");
-        openDoor.setDisable(true);
+        setOpenDoorButton(openDoor, map);
         buttonPanel.getChildren().addAll(openDoor, pickUpButton);
         return buttonPanel;
     }
@@ -144,8 +143,20 @@ public class SidePanel {
     private void setPickUpButton(Button pickUpButton, GameMap map) {
         pickUpButton.setText("Pick up item!");
         pickUpButton.setOnAction(event -> handlePickUpButtonPress(map, pickUpButton));
-        pickUpButton.setFocusTraversable(false);
         pickUpButton.setDisable(true);
+    }
+
+    private void setOpenDoorButton(Button openDoorButton, GameMap map) {
+        openDoorButton.setText("Open Door");
+        openDoorButton.setDisable(true);
+        openDoorButton.setOnAction(event -> handleOpenDoorButton(map, openDoorButton));
+        openDoorButton.setDisable(true);
+    }
+
+    private void handleOpenDoorButton(GameMap map, Button openDoorButton) {
+        map.getPlayer().getCell().openDoorNextToPlayer();
+        openDoorButton.setDisable(true);
+        game.refresh();
     }
 
     private void handlePickUpButtonPress(GameMap map, Button pickUpButton) {

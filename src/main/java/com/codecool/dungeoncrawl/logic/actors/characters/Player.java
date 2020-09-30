@@ -48,53 +48,20 @@ public class Player extends Person {
     }
 
     public int getStrengthBasedOnWeapon() {
-        if (chosenWeapon != null) {
-            return chosenWeapon.getStatistic() + strength;
-        }
-        return strength;
+        return chosenWeapon != null ? chosenWeapon.getStatistic() + strength : strength;
     }
 
     public void setPlayerName(String name) {
         this.name = name;
     }
 
-    @Override
-    public void actionAfterDefeat(Actor actorWhichDefeatedPlayer) {
-        Alert loseScreen = new Alert(Alert.AlertType.INFORMATION);
-        loseScreen.setHeaderText("You lose!");
-        loseScreen.setContentText("You are defeated by " + actorWhichDefeatedPlayer.getName());
-        loseScreen.showAndWait();
-        Platform.exit();
-        System.exit(0);
-    }
-
-    @Override
-    public void move(int dx, int dy) {
-        Cell nextCell = getNextCell(dx, dy);
-        if (nextCell.isEmptyField() && isEncounterDone(nextCell)) {
-            updatePosition(nextCell);
-        }
-        checkDoorCondition(nextCell);
-    }
-
-    private void checkDoorCondition(Cell nextCell) {
-        if (nextCell.isClosedDoor()) {
-            if (isItemInInventory("Key")) {
-                openDoor(nextCell);
-                removeItemFromInventory("Key");
-            }
-        }
-    }
-
-    private void openDoor(Cell nextCell) {
-        ((Door) nextCell.getActor()).open();
-    }
-
-    private void removeItemFromInventory(String itemName) {
-        inventory.removeItemByName(itemName);
-    }
-
-    private boolean isItemInInventory(String itemName) {
-        return inventory.containsItem(itemName);
-    }
+//    @Override
+//    public void actionAfterDefeat(Actor actorWhichDefeatedPlayer) {
+//        Alert loseScreen = new Alert(Alert.AlertType.INFORMATION);
+//        loseScreen.setHeaderText("You lose!");
+//        loseScreen.setContentText("You are defeated by " + actorWhichDefeatedPlayer.getName());
+//        loseScreen.showAndWait();
+//        Platform.exit();
+//        System.exit(0);
+//    }
 }

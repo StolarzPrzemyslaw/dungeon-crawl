@@ -15,9 +15,4 @@ public class Skeleton extends Enemy {
     public String getTileName() {
         return "skeleton";
     }
-
-    @Override
-    public void actionAfterDefeat(Actor actorWhichDefeatedSkeleton) {
-        // show message after defeat
-    }
 }
