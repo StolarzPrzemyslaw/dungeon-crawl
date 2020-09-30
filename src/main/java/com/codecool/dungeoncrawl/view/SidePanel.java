@@ -2,6 +2,7 @@ package com.codecool.dungeoncrawl.view;
 
 import com.codecool.dungeoncrawl.logic.GameMap;
 import com.codecool.dungeoncrawl.logic.actors.items.Item;
+import com.codecool.dungeoncrawl.logic.actors.items.Weapon;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -12,12 +13,16 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class SidePanel {
 
     private int heroStatsRowNumber = 0;
     private final int PARAMETERS_POSITION = 0;
     private int inventoryItemRowNumber = 1;
     private Game game;
+    private List<Item> playerInventory = new ArrayList<>();
 
     public SidePanel(Game game) {
         this.game = game;
@@ -105,7 +110,7 @@ public class SidePanel {
         UIName.setPadding(new Insets(10));
 
         HBox chooseItems = generateChooseSection(itemsList);
-        HBox useItem = generateChooseButton(chooseItem);
+        HBox useItem = generateChooseButton(chooseItem, map, itemsList);
         HBox buttonPanel = generateButtonPanel(pickUpButton, map, openDoor, itemsList);
 
         UIContainer.getChildren().addAll(UIName, chooseItems, useItem, buttonPanel);
@@ -121,13 +126,33 @@ public class SidePanel {
         return buttonPanel;
     }
 
-    private HBox generateChooseButton(Button chooseItem) {
+    private HBox generateChooseButton(Button chooseItem, GameMap map, ChoiceBox itemsList) {
         HBox useItem = new HBox(chooseItem);
         chooseItem.setText("Use selected item");
         useItem.setPrefWidth(300);
         useItem.setPadding(new Insets(10));
         useItem.setAlignment(Pos.BASELINE_CENTER);
+        chooseItem.setOnAction(event -> setChooseButton(map, itemsList));
         return useItem;
+    }
+
+    private void setChooseButton(GameMap map, ChoiceBox itemsList) {
+        for (Item item: playerInventory) {
+            if (item.getName() == itemsList.getValue()) {
+                if (item instanceof Weapon) {
+//                    Item previousItem = (Item) map.getPlayer().getBackgroundCellActor();
+//                    System.out.println(previousItem.toString());
+//                    itemsList.getItems().add("Basic sword");
+                    map.getPlayer().setWeapon((Weapon) item);
+                    itemsList.getItems().remove(item.getName());
+                    map.getPlayer().getInventory().removeItemByName(item.getName());
+//                    System.out.println(map.getPlayer().getWeapon().getName());
+
+                }
+
+            }
+        }
+        game.refresh();
     }
 
     private HBox generateChooseSection(ChoiceBox itemsList) {
@@ -161,8 +186,10 @@ public class SidePanel {
 
     private void handlePickUpButtonPress(GameMap map, Button pickUpButton, ChoiceBox itemsList) {
         Item item = (Item) map.getPlayer().getBackgroundCellActor();
-        System.out.println(item.getName());
-        itemsList.getItems().add(item.getName());
+        if (item instanceof Weapon) {
+            playerInventory.add(item);
+            itemsList.getItems().add(item.toString());
+        }
         map.getPlayer().getItemFromTheFloor(item);
         map.getPlayer().setBackgroundCellActor(null);
         pickUpButton.setDisable(true);
