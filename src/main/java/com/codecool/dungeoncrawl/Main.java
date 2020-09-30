@@ -154,7 +154,7 @@ public class Main extends Application {
         for (int x = 0; x < map.getWidth(); x++) {
             for (int y = 0; y < map.getHeight(); y++) {
                 if (isCellInsideMap(x, y)) {
-                    Cell cell = map.getCell(x + map.getPlayer().getX(), y + map.getPlayer().getY());
+                    Cell cell = map.getCell(x + map.getPlayer().getX() - 10, y + map.getPlayer().getY() - 10);
                     if (cell.getActor() != null) {
                         Tiles.drawTile(context, cell.getActor(), x, y);
                     } else {
@@ -168,10 +168,10 @@ public class Main extends Application {
     }
 
     private boolean isCellInsideMap(int x, int y) {
-        return x + map.getPlayer().getX() >= 0
-                && y + map.getPlayer().getY() >= 0
-                && x + map.getPlayer().getX() < map.getWidth()
-                && y + map.getPlayer().getY() < map.getHeight();
+        return x + map.getPlayer().getX() - 10 >= 0
+                && y + map.getPlayer().getY() - 10 >= 0
+                && x + map.getPlayer().getX() - 10 < map.getWidth()
+                && y + map.getPlayer().getY() - 10 < map.getHeight();
     }
 
     private void createInventoryText(StringBuilder inventoryText) {
