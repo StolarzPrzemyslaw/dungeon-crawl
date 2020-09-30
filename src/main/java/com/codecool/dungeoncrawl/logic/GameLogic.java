@@ -1,13 +1,14 @@
 package com.codecool.dungeoncrawl.logic;
 
 import com.codecool.dungeoncrawl.logic.actors.Actor;
-import com.codecool.dungeoncrawl.logic.actors.characters.Enemy;
-import com.codecool.dungeoncrawl.logic.actors.characters.Person;
-import com.codecool.dungeoncrawl.logic.actors.characters.Player;
+import com.codecool.dungeoncrawl.logic.actors.characters.*;
 import com.codecool.dungeoncrawl.logic.actors.components.Combat;
 import com.codecool.dungeoncrawl.logic.actors.items.Item;
 import com.codecool.dungeoncrawl.view.Game;
 import javafx.scene.input.KeyEvent;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class GameLogic {
 
@@ -59,8 +60,50 @@ public class GameLogic {
             }
         } else if (nextCell.isMovePossible()) {
             player.move(dx, dy);
+            enemiesTurn();
         }
         ui.refresh();
+    }
+
+    private void enemiesTurn() {
+        moveAllSkeletons();
+        moveAllCows();
+    }
+
+    private void moveAllSkeletons() {
+        List<Actor> skeletons = map.getAllEnemiesOnMap(Skeleton.class);
+        skeletons.forEach(this::validateCoordinatesInEveryDirection);
+    }
+
+    private void validateCoordinatesInEveryDirection(Actor actor) {
+        final int FIRST_COORDINATE = 0;
+        final int SECOND_COORDINATE = 1;
+        Skeleton skeleton = ((Skeleton) actor);
+
+        List<int[]> directions = getDirectionsOptions(skeleton);
+        if (directions.size() != 0) {
+            int randomDirection = (int) (Math.random() * directions.size());
+            skeleton.move(directions.get(randomDirection)[FIRST_COORDINATE], directions.get(randomDirection)[SECOND_COORDINATE]);
+        }
+    }
+
+    private List<int[]> getDirectionsOptions(Skeleton skeleton) {
+        List<int[]> directions = new ArrayList<>();
+        checkMoveAndAdd(skeleton.getCell(), directions, 0, -1);
+        checkMoveAndAdd(skeleton.getCell(), directions, -1, 0);
+        checkMoveAndAdd(skeleton.getCell(), directions, 0, 1);
+        checkMoveAndAdd(skeleton.getCell(), directions, 1, 0);
+        return directions;
+    }
+
+    private void checkMoveAndAdd(Cell cell, List<int[]> directions, int dx, int dy) {
+        if (cell.getNeighbor(dx, dy).isMovePossible()) {
+            directions.add(new int[]{dx, dy});
+        }
+    }
+
+    private void moveAllCows() {
+
     }
 
     public boolean isPlayerStandingOnItem() {
