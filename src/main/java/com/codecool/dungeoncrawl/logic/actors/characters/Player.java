@@ -9,7 +9,7 @@ import com.codecool.dungeoncrawl.logic.actors.obstacles.Door;
 
 public class Player extends Person {
 
-    private Inventory inventory;
+    private final Inventory inventory;
     private Weapon chosenWeapon;
 
     public Player(Cell cell) {
@@ -68,9 +68,9 @@ public class Player extends Person {
 
     private void checkDoorCondition(Cell nextCell) {
         if (isNextFieldClosedDoor(nextCell)) {
-            if (isKeyInInventory()) {
+            if (isItemInInventory("Key")) {
                 openDoor(nextCell);
-                removeKey();
+                removeItemFromInventory("Key");
             }
         }
     }
@@ -79,11 +79,11 @@ public class Player extends Person {
         ((Door) nextCell.getActor()).open();
     }
 
-    private void removeKey() {
-        inventory.removeItemFromInventory(inventory.getItemByName("Key"));
+    private void removeItemFromInventory(String itemName) {
+        inventory.removeItemByName(itemName);
     }
 
-    private boolean isKeyInInventory() {
-        return inventory.getAllItemNames().contains("Key");
+    private boolean isItemInInventory(String itemName) {
+        return inventory.containsItem(itemName);
     }
 }
