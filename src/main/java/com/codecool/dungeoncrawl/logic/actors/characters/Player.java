@@ -52,6 +52,10 @@ public class Player extends Person {
         return strength;
     }
 
+    public void setPlayerName(String name) {
+        this.name = name;
+    }
+
     @Override
     public void actionAfterDefeat(Actor actorWhichDefeatedPlayer) {
         // show message after defeat
