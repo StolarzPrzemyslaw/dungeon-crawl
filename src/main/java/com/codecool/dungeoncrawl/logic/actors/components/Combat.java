@@ -13,9 +13,12 @@ public class Combat {
             if (enemy.getHealth() > player.getStrength()) {
                 enemy.setHealth(enemy.getHealth() - player.getStrength());
                 player.setHealth(player.getHealth() - enemy.getStrength());
+                if (player.getHealth() <= 0) {
+                    player.actionAfterDefeat(enemy);
+                    return false;
+                }
                 return false;
             }
-
             enemy.actionAfterDefeat(player);
             finishEnemy(nextCell);
             return true;

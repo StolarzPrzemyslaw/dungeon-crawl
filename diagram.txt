@@ -1,11 +1,11 @@
 @startuml
 namespace dungeoncrawl {
   class App {
-    {static} + main() : void
+    {static} + game() : void
   }
 
   class Main {
-    {static} + main() : void
+    {static} + game() : void
     + start() : void
     + onKeyPressed() : void
     + refresh() : void
