@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Inventory {
-    private List<Item> listOfItems;
+    private final List<Item> listOfItems;
 
     public Inventory() {
         this.listOfItems = new ArrayList<>();
@@ -22,6 +22,13 @@ public class Inventory {
 
     public void removeItemFromInventory(Item item) {
         listOfItems.remove(item);
+    }
+
+    public Item getItemByName(String itemName) {
+        for (Item item: listOfItems) {
+            if (item.getName().equals(itemName)) return item;
+        }
+        return null;
     }
 
     public List<String> getAllItemNames() {

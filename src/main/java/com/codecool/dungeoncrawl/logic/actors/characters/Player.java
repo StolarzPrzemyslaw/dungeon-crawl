@@ -2,9 +2,10 @@ package com.codecool.dungeoncrawl.logic.actors.characters;
 
 import com.codecool.dungeoncrawl.logic.Cell;
 import com.codecool.dungeoncrawl.logic.actors.Actor;
-import com.codecool.dungeoncrawl.logic.actors.items.Item;
 import com.codecool.dungeoncrawl.logic.actors.components.Inventory;
+import com.codecool.dungeoncrawl.logic.actors.items.Item;
 import com.codecool.dungeoncrawl.logic.actors.items.Weapon;
+import com.codecool.dungeoncrawl.logic.actors.obstacles.Door;
 
 public class Player extends Person {
 
@@ -54,5 +55,35 @@ public class Player extends Person {
     @Override
     public void actionAfterDefeat(Actor actorWhichDefeatedPlayer) {
         // show message after defeat
+    }
+
+    @Override
+    public void move(int dx, int dy) {
+        Cell nextCell = getNextCell(dx, dy);
+        if (isNextFieldEmpty(nextCell) && isEncounterDone(nextCell)) {
+            updatePosition(nextCell);
+        }
+        checkDoorCondition(nextCell);
+    }
+
+    private void checkDoorCondition(Cell nextCell) {
+        if (isNextFieldClosedDoor(nextCell)) {
+            if (isKeyInInventory()) {
+                openDoor(nextCell);
+                removeKey();
+            }
+        }
+    }
+
+    private void openDoor(Cell nextCell) {
+        ((Door) nextCell.getActor()).open();
+    }
+
+    private void removeKey() {
+        inventory.removeItemFromInventory(inventory.getItemByName("Key"));
+    }
+
+    private boolean isKeyInInventory() {
+        return inventory.getAllItemNames().contains("Key");
     }
 }

@@ -5,6 +5,7 @@ import com.codecool.dungeoncrawl.logic.CellType;
 import com.codecool.dungeoncrawl.logic.GameMap;
 import com.codecool.dungeoncrawl.logic.MapLoader;
 import com.codecool.dungeoncrawl.logic.actors.items.Item;
+import com.codecool.dungeoncrawl.logic.actors.obstacles.Door;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
@@ -101,6 +102,7 @@ public class Main extends Application {
         Item itemToRemoveFromMap = null;
         for (Item item : map.getItemsOnMap()) {
             if (item.getX() == map.getPlayer().getX() && item.getY() == map.getPlayer().getY()) {
+                map.getPlayer().setBackgroundCellActor(null);
                 itemToRemoveFromMap = addItemToInventoryFromGround(item);
                 refresh();
             }
@@ -147,7 +149,6 @@ public class Main extends Application {
                 }
             }
         }
-
         pickUpButton.setVisible(isPlayerStandingOnItem());
         createInventoryText(inventoryText);
         inventoryLabel.setText(inventoryText.toString());

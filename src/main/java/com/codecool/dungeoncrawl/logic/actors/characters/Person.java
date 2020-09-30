@@ -3,31 +3,47 @@ package com.codecool.dungeoncrawl.logic.actors.characters;
 import com.codecool.dungeoncrawl.logic.Cell;
 import com.codecool.dungeoncrawl.logic.CellType;
 import com.codecool.dungeoncrawl.logic.actors.Actor;
+import com.codecool.dungeoncrawl.logic.actors.obstacles.Door;
 
 public abstract class Person extends Actor {
     protected int health = 10;
+    protected Actor backgroundCellActor;
 
     public Person(Cell cell) {
         super(cell);
     }
 
     public void move(int dx, int dy) {
-        Cell nextCell = cell.getNeighbor(dx, dy);
-        if (!(nextCell.getType() == CellType.WALL) && !(nextCell.getType() == CellType.EMPTY)) {
-            checkPossibleEncounter(nextCell);
-        }
-    }
-
-    private void checkPossibleEncounter(Cell nextCell) {
-        if (nextCell.getActor() == null || combat.simulateFight(nextCell, cell)) {
+        Cell nextCell = getNextCell(dx, dy);
+        if (isNextFieldEmpty(nextCell)) {
             updatePosition(nextCell);
         }
     }
 
-    private void updatePosition(Cell nextCell) {
-        cell.setActor(null);
+    protected Cell getNextCell(int dx, int dy) {
+        return cell.getNeighbor(dx, dy);
+    }
+
+    protected boolean isNextFieldEmpty(Cell nextCell) {
+        boolean isWallType = nextCell.getType() == CellType.WALL;
+        boolean isEmptyType = nextCell.getType() == CellType.EMPTY;
+        boolean isClosedDoor = isNextFieldClosedDoor(nextCell);
+        return !isWallType && !isEmptyType && !isClosedDoor;
+    }
+
+    protected boolean isEncounterDone(Cell nextCell) {
+        return combat.simulateFight(nextCell, cell);
+    }
+
+    protected void updatePosition(Cell nextCell) {
+        cell.setActor(backgroundCellActor);
+        backgroundCellActor = nextCell.getActor();
         nextCell.setActor(this);
         cell = nextCell;
+    }
+
+    protected boolean isNextFieldClosedDoor(Cell nextCell) {
+        return nextCell.getActor() instanceof Door && !((Door) nextCell.getActor()).isOpen();
     }
 
     public int getHealth() {
@@ -47,6 +63,11 @@ public abstract class Person extends Actor {
 
     public void setStrength(int strength) {
         this.strength = strength;
+    }
+
+
+    public void setBackgroundCellActor(Actor backgroundCellActor) {
+        this.backgroundCellActor = backgroundCellActor;
     }
 
     public abstract void actionAfterDefeat(Actor actorWhichDefeatedCow);
