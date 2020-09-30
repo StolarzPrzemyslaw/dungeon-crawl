@@ -5,6 +5,7 @@ import com.codecool.dungeoncrawl.logic.CellType;
 import com.codecool.dungeoncrawl.logic.GameMap;
 import com.codecool.dungeoncrawl.logic.MapLoader;
 import com.codecool.dungeoncrawl.logic.actors.Item;
+import com.codecool.dungeoncrawl.logic.actors.items.Weapon;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
@@ -28,6 +29,7 @@ public class Main extends Application {
             map.getHeight() * Tiles.TILE_WIDTH);
     GraphicsContext context = canvas.getGraphicsContext2D();
 
+    Label heroName = new Label();
     Label healthLabel = new Label();
     Label strengthLabel = new Label();
     Label weaponLabel = new Label();
@@ -43,8 +45,8 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        SidePanel sidePanel = new SidePanel();
-        VBox descriptionContainer = sidePanel.createSidePanel(healthLabel, strengthLabel, weaponLabel);
+        SidePanel sidePanel = new SidePanel(this);
+        VBox descriptionContainer = sidePanel.createSidePanel(healthLabel, strengthLabel, weaponLabel, heroName);
         descriptionContainer.getChildren().add(sidePanel.createUserInterface(pickUpButton, itemsList, map, chooseItem, openDoor));
         descriptionContainer.getChildren().add(sidePanel.generateInventory(inventoryLabel));
 
@@ -134,12 +136,14 @@ public class Main extends Application {
             }
         }
 
-        pickUpButton.setVisible(isPlayerStandingOnItem());
+        heroName.setText("" + map.getPlayer().getName().toUpperCase() + "\n");
+        pickUpButton.setDisable(!isPlayerStandingOnItem());
         createInventoryText(inventoryText);
         inventoryLabel.setText(inventoryText.toString());
         healthLabel.setText("" + map.getPlayer().getHealth() + "\n");
         strengthLabel.setText("aaaa" + "\n");
-        weaponLabel.setText("" + map.getPlayer().getWeapon() + "\n");
+        String weaponName = map.getPlayer().getWeapon() == null ? "Basic sword" : map.getPlayer().getWeapon().getName();
+        weaponLabel.setText("" + weaponName + "\n");
     }
 
     private void createInventoryText(StringBuilder inventoryText) {

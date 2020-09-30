@@ -13,7 +13,7 @@ public class Player extends Character {
 
     public Player(Cell cell) {
         super(cell);
-        this.name = "Player.";
+        this.name = "Hero Name";
         this.inventory = new Inventory();
     }
 
