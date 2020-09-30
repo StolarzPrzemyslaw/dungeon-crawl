@@ -106,16 +106,16 @@ public class SidePanel {
 
         HBox chooseItems = generateChooseSection(itemsList);
         HBox useItem = generateChooseButton(chooseItem);
-        HBox buttonPanel = generateButtonPanel(pickUpButton, map, openDoor);
+        HBox buttonPanel = generateButtonPanel(pickUpButton, map, openDoor, itemsList);
 
         UIContainer.getChildren().addAll(UIName, chooseItems, useItem, buttonPanel);
         return UIContainer;
     }
 
-    private HBox generateButtonPanel(Button pickUpButton, GameMap map, Button openDoor) {
+    private HBox generateButtonPanel(Button pickUpButton, GameMap map, Button openDoor, ChoiceBox itemLists) {
         HBox buttonPanel = new HBox();
         styleHBox(buttonPanel);
-        setPickUpButton(pickUpButton, map);
+        setPickUpButton(pickUpButton, map, itemLists);
         setOpenDoorButton(openDoor, map);
         buttonPanel.getChildren().addAll(openDoor, pickUpButton);
         return buttonPanel;
@@ -140,9 +140,9 @@ public class SidePanel {
         return chooseItems;
     }
 
-    private void setPickUpButton(Button pickUpButton, GameMap map) {
+    private void setPickUpButton(Button pickUpButton, GameMap map, ChoiceBox itemsList) {
         pickUpButton.setText("Pick up item!");
-        pickUpButton.setOnAction(event -> handlePickUpButtonPress(map, pickUpButton));
+        pickUpButton.setOnAction(event -> handlePickUpButtonPress(map, pickUpButton, itemsList));
         pickUpButton.setDisable(true);
     }
 
@@ -159,8 +159,11 @@ public class SidePanel {
         game.refresh();
     }
 
-    private void handlePickUpButtonPress(GameMap map, Button pickUpButton) {
-        map.getPlayer().getItemFromTheFloor((Item) map.getPlayer().getBackgroundCellActor());
+    private void handlePickUpButtonPress(GameMap map, Button pickUpButton, ChoiceBox itemsList) {
+        Item item = (Item) map.getPlayer().getBackgroundCellActor();
+        System.out.println(item.getName());
+        itemsList.getItems().add(item.getName());
+        map.getPlayer().getItemFromTheFloor(item);
         map.getPlayer().setBackgroundCellActor(null);
         pickUpButton.setDisable(true);
         game.refresh();
