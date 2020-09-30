@@ -103,7 +103,36 @@ public class GameLogic {
     }
 
     private void moveAllCows() {
+        List<Actor> cows = map.getAllEnemiesOnMap(Cow.class);
+        cows.forEach(this::validateCowMove);
+    }
 
+    private void validateCowMove(Actor actor) {
+        Cow cow = ((Cow) actor);
+        if (cow.getStepsLeft() > 0) {
+            if (cow.isMovingLeft()) {
+                moveCowOrSwapDirection(cow, -1, 0);
+            } else {
+                moveCowOrSwapDirection(cow, 1, 0);
+            }
+        }
+        if (cow.getStepsLeft() <= 0) {
+            swapDirection(cow);
+        }
+    }
+
+    private void moveCowOrSwapDirection(Cow cow, int dx, int dy) {
+        if (cow.getCell().getNeighbor(dx, dy).isMovePossible()) {
+            cow.decreaseStepsLeft();
+            cow.move(dx, dy);
+        } else {
+            swapDirection(cow);
+        }
+    }
+
+    private void swapDirection(Cow cow) {
+        cow.resetStepsLeft();
+        cow.swapDirectionOfMoving();
     }
 
     public boolean isPlayerStandingOnItem() {
