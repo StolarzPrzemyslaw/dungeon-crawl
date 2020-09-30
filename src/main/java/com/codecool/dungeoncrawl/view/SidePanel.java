@@ -198,7 +198,7 @@ public class SidePanel {
 
     private void handlePickUpButtonPress(GameMap map, Button pickUpButton, ChoiceBox itemsList) {
         Item item = (Item) map.getPlayer().getBackgroundCellActor();
-        if (item instanceof Weapon) {
+        if (item instanceof Item && item.getName() != "Key") {
             playerInventory.add(item);
             itemsList.getItems().add(item.toString());
         }
