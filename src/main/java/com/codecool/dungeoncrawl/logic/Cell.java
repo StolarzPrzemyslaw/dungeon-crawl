@@ -1,6 +1,8 @@
 package com.codecool.dungeoncrawl.logic;
 
 import com.codecool.dungeoncrawl.logic.actors.Actor;
+import com.codecool.dungeoncrawl.logic.actors.characters.Enemy;
+import com.codecool.dungeoncrawl.logic.actors.items.Item;
 import com.codecool.dungeoncrawl.logic.actors.obstacles.Door;
 
 public class Cell implements Drawable {
@@ -50,14 +52,27 @@ public class Cell implements Drawable {
     }
 
     public boolean isEmptyField() {
-        boolean isWallType = getType() == CellType.WALL;
-        boolean isEmptyType = getType() == CellType.EMPTY;
-        boolean isClosedDoor = isClosedDoor();
-        return !isWallType && !isEmptyType && !isClosedDoor;
+        return !isTypeWall() && !isTypeEmpty() && !isClosedDoor();
     }
 
     public boolean isClosedDoor() {
         return getActor() instanceof Door && !((Door) getActor()).isOpen();
+    }
+
+    public boolean isTypeWall() {
+        return getType() == CellType.WALL;
+    }
+
+    public boolean isTypeEmpty() {
+        return getType() == CellType.EMPTY;
+    }
+
+    public boolean isOccupiedByEnemy() {
+        return getActor() instanceof Enemy;
+    }
+
+    public boolean isOccupiedByItem() {
+        return getActor() instanceof Item;
     }
 
 }
