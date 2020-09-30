@@ -153,8 +153,11 @@ public class Main extends Application {
     private void drawAllTilesWithShift() {
         for (int x = 0; x < map.getWidth(); x++) {
             for (int y = 0; y < map.getHeight(); y++) {
-                if (isCellInsideMap(x, y)) {
-                    Cell cell = map.getCell(x + map.getPlayer().getX() - 10, y + map.getPlayer().getY() - 10);
+                int xPositionWithShift = x + map.getPlayer().getX() - (MAP_WIDTH / 2);
+                int yPositionWithShift = y + map.getPlayer().getY() - (MAP_HEIGHT / 2);
+
+                if (isCellInsideMap(xPositionWithShift, yPositionWithShift)) {
+                    Cell cell = map.getCell(xPositionWithShift, yPositionWithShift);
                     if (cell.getActor() != null) {
                         Tiles.drawTile(context, cell.getActor(), x, y);
                     } else {
@@ -167,11 +170,11 @@ public class Main extends Application {
         }
     }
 
-    private boolean isCellInsideMap(int x, int y) {
-        return x + map.getPlayer().getX() - 10 >= 0
-                && y + map.getPlayer().getY() - 10 >= 0
-                && x + map.getPlayer().getX() - 10 < map.getWidth()
-                && y + map.getPlayer().getY() - 10 < map.getHeight();
+    private boolean isCellInsideMap(int xPositionWithShift, int yPositionWithShift) {
+        return xPositionWithShift >= 0
+                && yPositionWithShift >= 0
+                && xPositionWithShift < map.getWidth()
+                && yPositionWithShift < map.getHeight();
     }
 
     private void createInventoryText(StringBuilder inventoryText) {
