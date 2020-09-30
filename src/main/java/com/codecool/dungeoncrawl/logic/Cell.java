@@ -3,6 +3,7 @@ package com.codecool.dungeoncrawl.logic;
 import com.codecool.dungeoncrawl.logic.actors.Actor;
 
 public class Cell implements Drawable {
+    private boolean xDirection = true;
     private CellType type;
     private Actor actor;
     private GameMap gameMap;
@@ -32,7 +33,18 @@ public class Cell implements Drawable {
     }
 
     public Cell getNeighbor(int dx, int dy) {
-        return gameMap.getCell(x + dx, y + dy);
+        return gameMap.getCell(validatePosition(dx, xDirection), validatePosition(dy, !xDirection));
+    }
+
+    private int validatePosition(int shift, boolean direction) {
+        int currentPosition = direction ? x : y;
+        int mapSizeDirection = direction ? gameMap.getWidth() : gameMap.getHeight();
+
+        if (currentPosition + shift >= mapSizeDirection || currentPosition + shift < 0) {
+            return  currentPosition;
+        } else {
+            return currentPosition + shift;
+        }
     }
 
     @Override

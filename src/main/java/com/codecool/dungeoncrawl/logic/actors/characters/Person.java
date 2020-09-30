@@ -18,9 +18,10 @@ public abstract class Person extends Actor {
 
     public void move(int dx, int dy) {
         Cell nextCell = getNextCell(dx, dy);
-        if (isNextFieldEmpty(nextCell)) {
-            updatePosition(nextCell);
-        }
+        updatePosition(nextCell);
+//        if (isNextFieldEmpty(nextCell)) {
+//            updatePosition(nextCell);
+//        }
     }
 
     protected Cell getNextCell(int dx, int dy) {
