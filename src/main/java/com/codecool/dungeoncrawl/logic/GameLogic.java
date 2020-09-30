@@ -21,7 +21,7 @@ public class GameLogic {
     }
 
     public GameLogic(Game game, String playerName, GameMap gameMap) {
-        super();
+        this(game, playerName);
         this.map = gameMap;
     }
 
