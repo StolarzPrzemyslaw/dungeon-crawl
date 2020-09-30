@@ -4,10 +4,9 @@ import com.codecool.dungeoncrawl.logic.Cell;
 
 public class Knife extends Weapon {
 
-    private final int statistic = 3;
-
     public Knife(Cell cell) {
         super(cell);
+        this.statistic = 3;
         this.name = "Knife +3";
         this.obtainMessage = "You have obtained a knife!";
     }

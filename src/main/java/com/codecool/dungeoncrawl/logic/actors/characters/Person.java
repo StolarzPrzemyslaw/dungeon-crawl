@@ -3,10 +3,13 @@ package com.codecool.dungeoncrawl.logic.actors.characters;
 import com.codecool.dungeoncrawl.logic.Cell;
 import com.codecool.dungeoncrawl.logic.CellType;
 import com.codecool.dungeoncrawl.logic.actors.Actor;
+import com.codecool.dungeoncrawl.logic.actors.components.Combat;
 import com.codecool.dungeoncrawl.logic.actors.obstacles.Door;
 
 public abstract class Person extends Actor {
     protected int health = 10;
+    protected int strength = 5;
+    protected Combat combat = new Combat();
     protected Actor backgroundCellActor;
 
     public Person(Cell cell) {

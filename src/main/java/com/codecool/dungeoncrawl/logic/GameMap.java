@@ -6,9 +6,9 @@ import com.codecool.dungeoncrawl.logic.actors.characters.Player;
 import java.util.List;
 
 public class GameMap {
-    private int width;
-    private int height;
-    private Cell[][] cells;
+    private final int width;
+    private final int height;
+    private final Cell[][] cells;
 
     private Player player;
     private List<Item> itemsOnMap;
