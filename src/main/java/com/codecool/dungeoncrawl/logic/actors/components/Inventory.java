@@ -31,6 +31,14 @@ public class Inventory {
         return null;
     }
 
+    public void removeItemByName(String itemName) {
+        removeItemFromInventory(getItemByName(itemName));
+    }
+
+    public boolean containsItem(String itemName) {
+        return getAllItemNames().contains(itemName);
+    }
+
     public List<String> getAllItemNames() {
         List<String> listOfNames = new ArrayList<>();
         listOfItems.forEach(item -> listOfNames.add(item.getName()));

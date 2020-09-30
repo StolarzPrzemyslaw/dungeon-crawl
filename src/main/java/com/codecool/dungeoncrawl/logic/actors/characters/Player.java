@@ -11,7 +11,7 @@ import javafx.scene.control.Alert;
 
 public class Player extends Person {
 
-    private Inventory inventory;
+    private final Inventory inventory;
     private Weapon chosenWeapon;
 
     public Player(Cell cell) {
@@ -71,17 +71,17 @@ public class Player extends Person {
     @Override
     public void move(int dx, int dy) {
         Cell nextCell = getNextCell(dx, dy);
-        if (isNextFieldEmpty(nextCell) && isEncounterDone(nextCell)) {
+        if (nextCell.isEmptyField() && isEncounterDone(nextCell)) {
             updatePosition(nextCell);
         }
         checkDoorCondition(nextCell);
     }
 
     private void checkDoorCondition(Cell nextCell) {
-        if (isNextFieldClosedDoor(nextCell)) {
-            if (isKeyInInventory()) {
+        if (nextCell.isClosedDoor()) {
+            if (isItemInInventory("Key")) {
                 openDoor(nextCell);
-                removeKey();
+                removeItemFromInventory("Key");
             }
         }
     }
@@ -90,11 +90,11 @@ public class Player extends Person {
         ((Door) nextCell.getActor()).open();
     }
 
-    private void removeKey() {
-        inventory.removeItemFromInventory(inventory.getItemByName("Key"));
+    private void removeItemFromInventory(String itemName) {
+        inventory.removeItemByName(itemName);
     }
 
-    private boolean isKeyInInventory() {
-        return inventory.getAllItemNames().contains("Key");
+    private boolean isItemInInventory(String itemName) {
+        return inventory.containsItem(itemName);
     }
 }

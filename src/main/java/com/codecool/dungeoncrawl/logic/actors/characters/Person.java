@@ -1,10 +1,8 @@
 package com.codecool.dungeoncrawl.logic.actors.characters;
 
 import com.codecool.dungeoncrawl.logic.Cell;
-import com.codecool.dungeoncrawl.logic.CellType;
 import com.codecool.dungeoncrawl.logic.actors.Actor;
 import com.codecool.dungeoncrawl.logic.actors.components.Combat;
-import com.codecool.dungeoncrawl.logic.actors.obstacles.Door;
 
 public abstract class Person extends Actor {
     protected int health = 10;
@@ -18,20 +16,13 @@ public abstract class Person extends Actor {
 
     public void move(int dx, int dy) {
         Cell nextCell = getNextCell(dx, dy);
-        if (isNextFieldEmpty(nextCell)) {
+        if (nextCell.isEmptyField()) {
             updatePosition(nextCell);
         }
     }
 
     protected Cell getNextCell(int dx, int dy) {
         return cell.getNeighbor(dx, dy);
-    }
-
-    protected boolean isNextFieldEmpty(Cell nextCell) {
-        boolean isWallType = nextCell.getType() == CellType.WALL;
-        boolean isEmptyType = nextCell.getType() == CellType.EMPTY;
-        boolean isClosedDoor = isNextFieldClosedDoor(nextCell);
-        return !isWallType && !isEmptyType && !isClosedDoor;
     }
 
     protected boolean isEncounterDone(Cell nextCell) {
@@ -43,10 +34,6 @@ public abstract class Person extends Actor {
         backgroundCellActor = nextCell.getActor();
         nextCell.setActor(this);
         cell = nextCell;
-    }
-
-    protected boolean isNextFieldClosedDoor(Cell nextCell) {
-        return nextCell.getActor() instanceof Door && !((Door) nextCell.getActor()).isOpen();
     }
 
     public int getHealth() {
