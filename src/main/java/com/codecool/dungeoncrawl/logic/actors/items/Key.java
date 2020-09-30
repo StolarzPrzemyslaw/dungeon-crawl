@@ -4,8 +4,6 @@ import com.codecool.dungeoncrawl.logic.Cell;
 
 public class Key extends Item {
 
-    private boolean used = false;
-
     public Key(Cell cell) {
         super(cell);
         this.name = "Key";

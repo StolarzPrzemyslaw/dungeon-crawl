@@ -4,10 +4,9 @@ import com.codecool.dungeoncrawl.logic.Cell;
 
 public class Sword extends Weapon {
 
-    private final int statistic = 10;
-
     public Sword(Cell cell) {
         super(cell);
+        this.statistic = 10;
         this.name = "Sword +10";
         this.obtainMessage = "You have obtained a sword!";
     }

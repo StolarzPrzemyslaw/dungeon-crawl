@@ -89,12 +89,7 @@ public class Game extends Application {
     }
 
     private boolean isPlayerStandingOnItem() {
-        for (Item item : map.getItemsOnMap()) {
-            if (item.getX() == map.getPlayer().getX() && item.getY() == map.getPlayer().getY()) {
-                return true;
-            }
-        }
-        return false;
+        return map.getPlayer().getBackgroundCellActor() instanceof Item;
     }
 
     public void refresh() {

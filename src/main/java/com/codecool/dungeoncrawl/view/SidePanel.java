@@ -1,6 +1,5 @@
 package com.codecool.dungeoncrawl.view;
 
-import com.codecool.dungeoncrawl.logic.CellType;
 import com.codecool.dungeoncrawl.logic.GameMap;
 import com.codecool.dungeoncrawl.logic.actors.items.Item;
 import javafx.geometry.Insets;
@@ -150,29 +149,9 @@ public class SidePanel {
     }
 
     private void handlePickUpButtonPress(GameMap map, Button pickUpButton) {
-        Item itemToRemoveFromMap = null;
-        for (Item item : map.getItemsOnMap()) {
-            if (item.getX() == map.getPlayer().getX() && item.getY() == map.getPlayer().getY()) {
-                map.getPlayer().setBackgroundCellActor(null);
-                itemToRemoveFromMap = addItemToInventoryFromGround(item, map);
-                game.refresh();
-            }
-        }
-        removeItemFromMapAndHideButton(itemToRemoveFromMap, map, pickUpButton);
-    }
-
-    private void removeItemFromMapAndHideButton(Item itemToRemoveFromMap, GameMap map, Button pickUpButton) {
-        if (itemToRemoveFromMap != null) {
-            map.getItemsOnMap().remove(itemToRemoveFromMap);
-        }
+        map.getPlayer().getItemFromTheFloor((Item) map.getPlayer().getBackgroundCellActor());
+        map.getPlayer().setBackgroundCellActor(null);
         pickUpButton.setDisable(true);
-    }
-
-    private Item addItemToInventoryFromGround(Item item, GameMap map) {
-        Item itemToRemove;
-        map.getCell(item.getX(), item.getY()).setType(CellType.FLOOR);
-        map.getPlayer().getItemFromTheFloor(item);
-        itemToRemove = item;
-        return itemToRemove;
+        game.refresh();
     }
 }
