@@ -139,20 +139,32 @@ public class SidePanel {
     private void setChooseButton(GameMap map, ChoiceBox itemsList) {
         for (Item item: playerInventory) {
             if (item.getName() == itemsList.getValue()) {
-                if (item instanceof Weapon) {
-//                    Item previousItem = (Item) map.getPlayer().getBackgroundCellActor();
-//                    System.out.println(previousItem.toString());
-//                    itemsList.getItems().add("Basic sword");
-                    map.getPlayer().setWeapon((Weapon) item);
-                    itemsList.getItems().remove(item.getName());
-                    map.getPlayer().getInventory().removeItemByName(item.getName());
-//                    System.out.println(map.getPlayer().getWeapon().getName());
-
-                }
-
+                armPlayerWithItem(map, itemsList, item);
+                itemsList.getItems().add("Basic dagger");
+            } else {
+                setBasicDaggerIfSelected(map, itemsList);
             }
         }
+        itemsList.getSelectionModel().selectFirst();
         game.refresh();
+    }
+
+    private void armPlayerWithItem(GameMap map, ChoiceBox itemsList, Item item) {
+        if (item instanceof Weapon) {
+            map.getPlayer().setWeapon((Weapon) item);
+            itemsList.getItems().remove(item.getName());
+            map.getPlayer().getInventory().removeItemByName(item.getName());
+        }
+    }
+
+    private void setBasicDaggerIfSelected(GameMap map, ChoiceBox itemsList) {
+        Item currentItem = map.getPlayer().getWeapon();
+        if (itemsList.getValue() == "Basic dagger" || itemsList.getValue() == null) {
+            map.getPlayer().setWeapon(null);
+            map.getPlayer().getInventory().addItemToInventory(currentItem);
+            itemsList.getItems().add(currentItem.toString());
+            itemsList.getItems().remove("Basic dagger");
+        }
     }
 
     private HBox generateChooseSection(ChoiceBox itemsList) {

@@ -13,6 +13,7 @@ public class Player extends Person {
 
     private final Inventory inventory;
     private Weapon chosenWeapon;
+    private final int INITIAL_STRENGTH = 5;
 
     public Player(Cell cell) {
         super(cell);
@@ -48,14 +49,14 @@ public class Player extends Person {
     }
 
     public int getStrengthBasedOnWeapon() {
-        return chosenWeapon != null ? chosenWeapon.getStatistic() + strength : strength;
+        return chosenWeapon != null ? chosenWeapon.getStatistic() + strength : INITIAL_STRENGTH;
     }
 
     public void setPlayerName(String name) {
         this.name = name;
     }
 
-//    @Override
+    //    @Override
 //    public void actionAfterDefeat(Actor actorWhichDefeatedPlayer) {
 //        Alert loseScreen = new Alert(Alert.AlertType.INFORMATION);
 //        loseScreen.setHeaderText("You lose!");
