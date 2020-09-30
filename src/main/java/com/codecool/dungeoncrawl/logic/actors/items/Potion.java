@@ -19,5 +19,6 @@ public class Potion extends Item  {
 
     public void consume(Player player) {
         player.healUp(healthRestored);
+        player.getInventory().removeItemFromInventory(this);
     }
 }
