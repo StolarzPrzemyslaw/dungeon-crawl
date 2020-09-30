@@ -23,10 +23,13 @@ import javafx.stage.Stage;
 import java.awt.*;
 
 public class Main extends Application {
+    private final int MAP_WIDTH_TO_DISPLAY = 25;
+    private final int MAP_HEIGHT_TO_DISPLAY = 17;
+
     GameMap map = MapLoader.loadMap();
     Canvas canvas = new Canvas(
-            map.getWidth() * Tiles.TILE_WIDTH,
-            map.getHeight() * Tiles.TILE_WIDTH);
+            MAP_WIDTH_TO_DISPLAY * Tiles.TILE_WIDTH,
+            MAP_HEIGHT_TO_DISPLAY * Tiles.TILE_WIDTH);
     GraphicsContext context = canvas.getGraphicsContext2D();
 
     Label heroName = new Label();
@@ -99,16 +102,8 @@ public class Main extends Application {
 
         context.setFill(Color.BLACK);
         context.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
-        for (int x = 0; x < map.getWidth(); x++) {
-            for (int y = 0; y < map.getHeight(); y++) {
-                Cell cell = map.getCell(x, y);
-                if (cell.getActor() != null) {
-                    Tiles.drawTile(context, cell.getActor(), x, y);
-                } else {
-                    Tiles.drawTile(context, cell, x, y);
-                }
-            }
-        }
+
+        drawAllTilesWithShift();
 
         heroName.setText("" + map.getPlayer().getName().toUpperCase() + "\n");
         pickUpButton.setDisable(!isPlayerStandingOnItem());
@@ -118,6 +113,42 @@ public class Main extends Application {
         strengthLabel.setText("" + map.getPlayer().getStrength() + "\n");
         String weaponName = map.getPlayer().getWeapon() == null ? "Basic sword" : map.getPlayer().getWeapon().getName();
         weaponLabel.setText("" + weaponName + "\n");
+    }
+
+    private void drawAllTilesWithShift() {
+        for (int x = 0; x < map.getWidth(); x++) {
+            for (int y = 0; y < map.getHeight(); y++) {
+                drawTileWithShift(x, y);
+            }
+        }
+    }
+
+    private void drawTileWithShift(int x, int y) {
+        int xPositionWithShift = x + map.getPlayer().getX() - (MAP_WIDTH_TO_DISPLAY / 2);
+        int yPositionWithShift = y + map.getPlayer().getY() - (MAP_HEIGHT_TO_DISPLAY / 2);
+
+        if (isCellInsideMap(xPositionWithShift, yPositionWithShift)) {
+            Cell cell = map.getCell(xPositionWithShift, yPositionWithShift);
+            if (cell.getActor() != null) {
+                Tiles.drawTile(context, cell.getActor(), x, y);
+            } else {
+                Tiles.drawTile(context, cell, x, y);
+            }
+        } else {
+            Tiles.drawTile(context, null, x, y);
+        }
+    }
+
+    private boolean isCellInsideMap(int xPositionWithShift, int yPositionWithShift) {
+        return isCellXCoordinateValid(xPositionWithShift) && isCellYCoordinateValid(yPositionWithShift);
+    }
+
+    private boolean isCellXCoordinateValid(int xPositionWithShift) {
+        return xPositionWithShift >= 0 && xPositionWithShift < map.getWidth();
+    }
+
+    private boolean isCellYCoordinateValid(int yPositionWithShift) {
+        return yPositionWithShift >= 0 && yPositionWithShift < map.getHeight();
     }
 
     private void createInventoryText(StringBuilder inventoryText) {
