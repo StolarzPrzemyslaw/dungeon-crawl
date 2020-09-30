@@ -39,7 +39,6 @@ public abstract class Person extends Actor {
         cell.setActor(backgroundCellActor);
         backgroundCellActor = nextCell.getActor();
         nextCell.setActor(this);
-        if (backgroundCellActor != null) System.out.println("Background actor: " + backgroundCellActor.getName());
         cell = nextCell;
     }
 
