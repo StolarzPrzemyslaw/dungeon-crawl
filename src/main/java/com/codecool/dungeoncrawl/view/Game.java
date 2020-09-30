@@ -93,7 +93,7 @@ public class Game {
         pickUpButton.setDisable(!gameLogic.isPlayerStandingOnItem());
         createInventoryText(inventoryText);
         inventoryLabel.setText(inventoryText.toString());
-        healthLabel.setText("" + gameMap.getPlayer().getHealth() + "\n");
+        healthLabel.setText("" + gameMap.getPlayer().getCurrentHealth() + "\n");
         strengthLabel.setText("" + gameMap.getPlayer().getStrength() + "\n");
         String weaponName = gameMap.getPlayer().getWeapon() == null ? "Basic sword" : gameMap.getPlayer().getWeapon().getName();
         weaponLabel.setText("" + weaponName + "\n");

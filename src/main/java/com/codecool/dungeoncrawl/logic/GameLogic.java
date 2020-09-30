@@ -54,7 +54,7 @@ public class GameLogic {
 
         if (nextCell.isOccupiedByClass(Enemy.class)) {
             combat.simulateCombat(player, (Person) nearActor);
-            if (map.getPlayer().getHealth() <= 0) {
+            if (map.getPlayer().getCurrentHealth() <= 0) {
                 ui.generateLoseScreen(player, (Person) nearActor);
             }
         } else if (nextCell.isMovePossible()) {
