@@ -116,8 +116,8 @@ public class Main extends Application {
     }
 
     private void drawAllTilesWithShift() {
-        for (int x = 0; x < map.getWidth(); x++) {
-            for (int y = 0; y < map.getHeight(); y++) {
+        for (int x = 0; x < MAP_WIDTH_TO_DISPLAY; x++) {
+            for (int y = 0; y < MAP_HEIGHT_TO_DISPLAY; y++) {
                 drawTileWithShift(x, y);
             }
         }
