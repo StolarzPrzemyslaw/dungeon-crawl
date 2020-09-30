@@ -1,13 +1,9 @@
 package com.codecool.dungeoncrawl.logic.actors.characters;
 
 import com.codecool.dungeoncrawl.logic.Cell;
-import com.codecool.dungeoncrawl.logic.actors.Actor;
 import com.codecool.dungeoncrawl.logic.actors.components.Inventory;
 import com.codecool.dungeoncrawl.logic.actors.items.Item;
 import com.codecool.dungeoncrawl.logic.actors.items.Weapon;
-import com.codecool.dungeoncrawl.logic.actors.obstacles.Door;
-import javafx.application.Platform;
-import javafx.scene.control.Alert;
 
 public class Player extends Person {
 
