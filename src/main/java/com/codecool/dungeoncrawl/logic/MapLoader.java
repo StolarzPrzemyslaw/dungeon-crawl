@@ -35,6 +35,9 @@ public class MapLoader {
                         case '.':
                             cell.setType(CellType.FLOOR);
                             break;
+                        case '~':
+                            cell.setType(CellType.RIVER);
+                            break;
                         case 'd':
                             cell.setType(CellType.FLOOR);
                             new Door(cell);
