@@ -1,5 +1,6 @@
 package com.codecool.dungeoncrawl.view;
 
+import com.codecool.dungeoncrawl.logic.GameLogic;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -54,8 +55,11 @@ public class Main extends Application {
     private void startNewGame() {
         if (validation()) {
             Game game = new Game();
-            game.setPlayerName(inputNameOfCharacter.getText());
-            stage = game.generateGame(stage);
+            String playerName = inputNameOfCharacter.getText();
+            GameLogic gameLogic = new GameLogic(game, playerName);
+            game.setUpReferenceLogicForGetDataFromGame(gameLogic);
+
+            stage = game.generateUI(stage);
             stage.show();
         }
     }

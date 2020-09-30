@@ -1,8 +1,12 @@
 package com.codecool.dungeoncrawl.view;
 
 import com.codecool.dungeoncrawl.logic.Cell;
+import com.codecool.dungeoncrawl.logic.GameLogic;
 import com.codecool.dungeoncrawl.logic.GameMap;
 import com.codecool.dungeoncrawl.logic.MapLoader;
+import com.codecool.dungeoncrawl.logic.actors.characters.Enemy;
+import com.codecool.dungeoncrawl.logic.actors.characters.Person;
+import com.codecool.dungeoncrawl.logic.actors.characters.Player;
 import com.codecool.dungeoncrawl.logic.actors.items.Item;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
@@ -21,7 +25,9 @@ public class Game {
     private final int MAP_WIDTH_TO_DISPLAY = 25;
     private final int MAP_HEIGHT_TO_DISPLAY = 17;
 
-    GameMap map = MapLoader.loadMap();
+    GameMap gameMap;
+    GameLogic gameLogic;
+    Scene scene;
     Canvas canvas = new Canvas(
             MAP_WIDTH_TO_DISPLAY * Tiles.TILE_WIDTH,
             MAP_HEIGHT_TO_DISPLAY * Tiles.TILE_WIDTH);
@@ -37,28 +43,27 @@ public class Game {
     Button openDoor = new Button();
     ChoiceBox itemsList = new ChoiceBox();
 
-    public Stage generateGame(Stage primaryStage) {
-        SidePanel sidePanel = new SidePanel(this);
-        VBox descriptionContainer = sidePanel.createSidePanel(healthLabel, strengthLabel, weaponLabel, heroName);
-        descriptionContainer.getChildren().add(sidePanel.createUserInterface(pickUpButton, itemsList, map, chooseItem, openDoor));
-        descriptionContainer.getChildren().add(sidePanel.generateInventory(inventoryLabel));
 
-        BorderPane borderPane = new BorderPane();
-
-        borderPane.setCenter(canvas);
-        borderPane.setRight(descriptionContainer);
-
-        Scene scene = new Scene(borderPane);
-        primaryStage.setScene(scene);
-        refresh();
-        scene.setOnKeyPressed(this::onKeyPressed);
-        centerStage(primaryStage, borderPane);
-        primaryStage.setTitle("Dungeon Crawl");
-        return primaryStage;
+    public void setUpReferenceLogicForGetDataFromGame(GameLogic gameLogic) {
+        this.gameLogic = gameLogic;
+        this.gameMap = gameLogic.getGameMap();
     }
 
-    public void setPlayerName(String name) {
-        map.getPlayer().setPlayerName(name);
+    public Stage generateUI(Stage primaryStage) {
+        SidePanel sidePanel = new SidePanel(this);
+        VBox descriptionContainer = sidePanel.createSidePanel(healthLabel, strengthLabel, weaponLabel, heroName);
+        descriptionContainer.getChildren().add(sidePanel.createUserInterface(pickUpButton, itemsList, gameMap, chooseItem, openDoor));
+        descriptionContainer.getChildren().add(sidePanel.generateInventory(inventoryLabel));
+        BorderPane borderPane = new BorderPane();
+        borderPane.setCenter(canvas);
+        borderPane.setRight(descriptionContainer);
+        scene = new Scene(borderPane);
+        primaryStage.setScene(scene);
+        scene.setOnKeyPressed(gameLogic::onKeyPressed);
+        centerStage(primaryStage, borderPane);
+        primaryStage.setTitle("Dungeon Crawl");
+        refresh();
+        return primaryStage;
     }
 
     private void centerStage(Stage stage, BorderPane borderPane) {
@@ -67,29 +72,8 @@ public class Game {
         stage.setY((screenBounds.getHeight() - borderPane.getHeight()) / 2);
     }
 
-    private void onKeyPressed(KeyEvent keyEvent) {
-        switch (keyEvent.getCode()) {
-            case W:
-                map.getPlayer().move(0, -1);
-                refresh();
-                break;
-            case S:
-                map.getPlayer().move(0, 1);
-                refresh();
-                break;
-            case A:
-                map.getPlayer().move(-1, 0);
-                refresh();
-                break;
-            case D:
-                map.getPlayer().move(1,0);
-                refresh();
-                break;
-        }
-    }
+    public void generateLoseScreen(Player player, Person enemy) {
 
-    private boolean isPlayerStandingOnItem() {
-        return map.getPlayer().getBackgroundCellActor() instanceof Item;
     }
 
     public void refresh() {
@@ -100,13 +84,14 @@ public class Game {
 
         drawAllTilesWithShift();
 
-        heroName.setText("" + map.getPlayer().getName().toUpperCase() + "\n");
-        pickUpButton.setDisable(!isPlayerStandingOnItem());
+        heroName.setText("" + gameMap.getPlayer().getName().toUpperCase() + "\n");
+        openDoor.setDisable(!gameLogic.isPlayerHoldingAKey() || !gameLogic.isPlayerNearDoor());
+        pickUpButton.setDisable(!gameLogic.isPlayerStandingOnItem());
         createInventoryText(inventoryText);
         inventoryLabel.setText(inventoryText.toString());
-        healthLabel.setText("" + map.getPlayer().getHealth() + "\n");
-        strengthLabel.setText("" + map.getPlayer().getStrength() + "\n");
-        String weaponName = map.getPlayer().getWeapon() == null ? "Basic sword" : map.getPlayer().getWeapon().getName();
+        healthLabel.setText("" + gameMap.getPlayer().getHealth() + "\n");
+        strengthLabel.setText("" + gameMap.getPlayer().getStrength() + "\n");
+        String weaponName = gameMap.getPlayer().getWeapon() == null ? "Basic sword" : gameMap.getPlayer().getWeapon().getName();
         weaponLabel.setText("" + weaponName + "\n");
     }
 
@@ -119,11 +104,11 @@ public class Game {
     }
 
     private void drawTileWithShift(int x, int y) {
-        int xPositionWithShift = x + map.getPlayer().getX() - (MAP_WIDTH_TO_DISPLAY / 2);
-        int yPositionWithShift = y + map.getPlayer().getY() - (MAP_HEIGHT_TO_DISPLAY / 2);
+        int xPositionWithShift = x + gameMap.getPlayer().getX() - (MAP_WIDTH_TO_DISPLAY / 2);
+        int yPositionWithShift = y + gameMap.getPlayer().getY() - (MAP_HEIGHT_TO_DISPLAY / 2);
 
         if (isCellInsideMap(xPositionWithShift, yPositionWithShift)) {
-            Cell cell = map.getCell(xPositionWithShift, yPositionWithShift);
+            Cell cell = gameMap.getCell(xPositionWithShift, yPositionWithShift);
             if (cell.getActor() != null) {
                 Tiles.drawTile(context, cell.getActor(), x, y);
             } else {
@@ -139,15 +124,15 @@ public class Game {
     }
 
     private boolean isCellXCoordinateValid(int xPositionWithShift) {
-        return xPositionWithShift >= 0 && xPositionWithShift < map.getWidth();
+        return xPositionWithShift >= 0 && xPositionWithShift < gameMap.getWidth();
     }
 
     private boolean isCellYCoordinateValid(int yPositionWithShift) {
-        return yPositionWithShift >= 0 && yPositionWithShift < map.getHeight();
+        return yPositionWithShift >= 0 && yPositionWithShift < gameMap.getHeight();
     }
 
     private void createInventoryText(StringBuilder inventoryText) {
-        for (String itemName : map.getPlayer().getInventory().getAllItemNames()) {
+        for (String itemName : gameMap.getPlayer().getInventory().getAllItemNames()) {
             inventoryText.append(itemName).append("\n");
         }
     }
