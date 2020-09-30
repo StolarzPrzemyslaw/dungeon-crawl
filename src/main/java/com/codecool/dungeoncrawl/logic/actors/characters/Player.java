@@ -60,14 +60,14 @@ public class Player extends Person {
     @Override
     public void move(int dx, int dy) {
         Cell nextCell = getNextCell(dx, dy);
-        if (isNextFieldEmpty(nextCell) && isEncounterDone(nextCell)) {
+        if (nextCell.isEmptyField() && isEncounterDone(nextCell)) {
             updatePosition(nextCell);
         }
         checkDoorCondition(nextCell);
     }
 
     private void checkDoorCondition(Cell nextCell) {
-        if (isNextFieldClosedDoor(nextCell)) {
+        if (nextCell.isClosedDoor()) {
             if (isItemInInventory("Key")) {
                 openDoor(nextCell);
                 removeItemFromInventory("Key");
