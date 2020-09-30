@@ -63,24 +63,20 @@ public class Cell implements Drawable {
         return y;
     }
 
-    public boolean isEmptyField() {
+    public boolean isMovePossible() {
         return isCellTypePassable() && !isClosedDoor();
     }
 
     public boolean isClosedDoor() {
-        return getActor() instanceof Door && !((Door) getActor()).isOpen();
+        return isOccupiedByClass(Door.class) && !((Door) getActor()).isOpen();
     }
 
     public boolean isCellTypePassable() {
         return getType().isPassable();
     }
 
-    public boolean isOccupiedByEnemy() {
-        return getActor() instanceof Enemy;
-    }
-
-    public boolean isOccupiedByItem() {
-        return getActor() instanceof Item;
+    public boolean isOccupiedByClass(Class<?> actorClass) {
+        return actorClass.isInstance(getActor());
     }
 
     public boolean isDoorOneOfTheNeighbors() {

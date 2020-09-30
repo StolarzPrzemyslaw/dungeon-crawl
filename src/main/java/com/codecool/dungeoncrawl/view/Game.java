@@ -8,10 +8,12 @@ import com.codecool.dungeoncrawl.logic.actors.characters.Enemy;
 import com.codecool.dungeoncrawl.logic.actors.characters.Person;
 import com.codecool.dungeoncrawl.logic.actors.characters.Player;
 import com.codecool.dungeoncrawl.logic.actors.items.Item;
+import javafx.application.Platform;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
@@ -73,7 +75,12 @@ public class Game {
     }
 
     public void generateLoseScreen(Player player, Person enemy) {
-
+        Alert loseScreen = new Alert(Alert.AlertType.INFORMATION);
+        loseScreen.setHeaderText("You lose!");
+        loseScreen.setContentText("You are defeated by " + enemy.getName());
+        loseScreen.showAndWait();
+        Platform.exit();
+        System.exit(0);
     }
 
     public void refresh() {

@@ -54,14 +54,4 @@ public class Player extends Person {
     public void setPlayerName(String name) {
         this.name = name;
     }
-
-//    @Override
-//    public void actionAfterDefeat(Actor actorWhichDefeatedPlayer) {
-//        Alert loseScreen = new Alert(Alert.AlertType.INFORMATION);
-//        loseScreen.setHeaderText("You lose!");
-//        loseScreen.setContentText("You are defeated by " + actorWhichDefeatedPlayer.getName());
-//        loseScreen.showAndWait();
-//        Platform.exit();
-//        System.exit(0);
-//    }
 }
