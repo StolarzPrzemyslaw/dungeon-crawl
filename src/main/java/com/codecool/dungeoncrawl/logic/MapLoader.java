@@ -1,11 +1,13 @@
 package com.codecool.dungeoncrawl.logic;
 
+import com.codecool.dungeoncrawl.logic.actors.characters.BridgeGuardian;
 import com.codecool.dungeoncrawl.logic.actors.characters.Cow;
 import com.codecool.dungeoncrawl.logic.actors.characters.Player;
 import com.codecool.dungeoncrawl.logic.actors.characters.Skeleton;
 import com.codecool.dungeoncrawl.logic.actors.items.Key;
 import com.codecool.dungeoncrawl.logic.actors.items.Sword;
 import com.codecool.dungeoncrawl.logic.actors.obstacles.Door;
+import com.codecool.dungeoncrawl.logic.actors.obstacles.Stairs;
 
 import java.io.InputStream;
 import java.util.Scanner;
@@ -17,7 +19,7 @@ public class MapLoader {
         int width = scanner.nextInt();
         int height = scanner.nextInt();
 
-        scanner.nextLine(); // empty line
+        scanner.nextLine();
 
         GameMap map = new GameMap(width, height, CellType.EMPTY);
         for (int y = 0; y < height; y++) {
@@ -56,6 +58,14 @@ public class MapLoader {
                         case 'c':
                             cell.setType(CellType.FLOOR);
                             new Cow(cell);
+                            break;
+                        case 'b':
+                            cell.setType(CellType.FLOOR);
+                            new BridgeGuardian(cell);
+                            break;
+                        case 'e':
+                            cell.setType(CellType.FLOOR);
+                            new Stairs(cell);
                             break;
                         case 's':
                             cell.setType(CellType.FLOOR);
