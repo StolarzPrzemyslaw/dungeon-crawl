@@ -7,6 +7,7 @@ public enum CellType {
     KEY("key"),
     WALL("wall"),
     RIVER("river"),
+    BRIDGE("bridge"),
     CLOSED_DOOR("closedDoor"),
     OPEN_DOOR("openDoor");
 
