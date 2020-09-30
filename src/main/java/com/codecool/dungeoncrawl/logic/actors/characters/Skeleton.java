@@ -12,6 +12,10 @@ public class Skeleton extends Enemy {
         this.name = "Skeleton";
     }
 
+    public void runActionAfterDefeat(Player player) {
+
+    }
+
     public String getTileName() {
         return "skeleton";
     }
