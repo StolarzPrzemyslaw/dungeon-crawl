@@ -1,14 +1,10 @@
 package com.codecool.dungeoncrawl.view;
 
 import com.codecool.dungeoncrawl.logic.Cell;
-import com.codecool.dungeoncrawl.logic.CellType;
 import com.codecool.dungeoncrawl.logic.GameMap;
 import com.codecool.dungeoncrawl.logic.MapLoader;
 import com.codecool.dungeoncrawl.logic.actors.items.Item;
-import com.codecool.dungeoncrawl.logic.actors.obstacles.Door;
-import com.codecool.dungeoncrawl.view.SidePanel;
-import javafx.application.Application;
-import javafx.geometry.Insets;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -18,11 +14,10 @@ import javafx.scene.control.Label;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 
-import java.awt.*;
-
-public class Game extends Application {
+public class Game {
     private final int MAP_WIDTH_TO_DISPLAY = 25;
     private final int MAP_HEIGHT_TO_DISPLAY = 17;
 
@@ -42,12 +37,7 @@ public class Game extends Application {
     Button openDoor = new Button();
     ChoiceBox itemsList = new ChoiceBox();
 
-    public static void main(String[] args) {
-        launch(args);
-    }
-
-    @Override
-    public void start(Stage primaryStage) throws Exception {
+    public Stage generateGame(Stage primaryStage) {
         SidePanel sidePanel = new SidePanel(this);
         VBox descriptionContainer = sidePanel.createSidePanel(healthLabel, strengthLabel, weaponLabel, heroName);
         descriptionContainer.getChildren().add(sidePanel.createUserInterface(pickUpButton, itemsList, map, chooseItem, openDoor));
@@ -62,9 +52,19 @@ public class Game extends Application {
         primaryStage.setScene(scene);
         refresh();
         scene.setOnKeyPressed(this::onKeyPressed);
-
+        centerStage(primaryStage, borderPane);
         primaryStage.setTitle("Dungeon Crawl");
-        primaryStage.show();
+        return primaryStage;
+    }
+
+    public void setPlayerName(String name) {
+        map.getPlayer().setPlayerName(name);
+    }
+
+    private void centerStage(Stage stage, BorderPane borderPane) {
+        Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
+        stage.setX((screenBounds.getWidth() - borderPane.getWidth()) / 2);
+        stage.setY((screenBounds.getHeight() - borderPane.getHeight()) / 2);
     }
 
     private void onKeyPressed(KeyEvent keyEvent) {
