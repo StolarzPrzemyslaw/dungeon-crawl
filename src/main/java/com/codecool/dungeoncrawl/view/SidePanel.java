@@ -1,7 +1,5 @@
 package com.codecool.dungeoncrawl.view;
 
-import com.codecool.dungeoncrawl.view.Main;
-import com.codecool.dungeoncrawl.logic.CellType;
 import com.codecool.dungeoncrawl.logic.GameMap;
 import com.codecool.dungeoncrawl.logic.actors.items.Item;
 import javafx.geometry.Insets;
