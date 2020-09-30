@@ -95,7 +95,7 @@ public class Game {
         inventoryLabel.setText(inventoryText.toString());
         healthLabel.setText("" + gameMap.getPlayer().getCurrentHealth() + "\n");
         strengthLabel.setText("" + gameMap.getPlayer().getStrength() + "\n");
-        String weaponName = gameMap.getPlayer().getWeapon() == null ? "Basic sword" : gameMap.getPlayer().getWeapon().getName();
+        String weaponName = gameMap.getPlayer().getWeapon() == null ? "Basic dagger" : gameMap.getPlayer().getWeapon().getName();
         weaponLabel.setText("" + weaponName + "\n");
     }
 

@@ -33,6 +33,10 @@ public abstract class Person extends Actor {
         return this instanceof Player ? ((Player) this).getStrengthBasedOnWeapon() : strength;
     }
 
+    public void increaseBaseStrength(int value) {
+        this.strength += value;
+    }
+
     public void setBackgroundCellActor(Actor backgroundCellActor) {
         this.backgroundCellActor = backgroundCellActor;
     }

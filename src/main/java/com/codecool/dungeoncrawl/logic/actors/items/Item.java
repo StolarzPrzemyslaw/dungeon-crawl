@@ -15,4 +15,8 @@ public abstract class Item extends Actor {
         return this.obtainMessage;
     }
 
+    @Override
+    public String toString() {
+        return this.getName();
+    }
 }
