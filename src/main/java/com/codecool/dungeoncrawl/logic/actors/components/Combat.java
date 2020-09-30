@@ -17,10 +17,14 @@ public class Combat {
             }
 
             enemy.actionAfterDefeat(player);
-            nextCell.setActor(null);
+            finishEnemy(nextCell);
             return true;
         }
 
         return true;
+    }
+
+    public void finishEnemy(Cell nextCell) {
+        nextCell.setActor(null);
     }
 }
