@@ -1,6 +1,6 @@
 package com.codecool.dungeoncrawl.logic.actors.components;
 
-import com.codecool.dungeoncrawl.logic.actors.characters.Person;
+import com.codecool.dungeoncrawl.logic.actors.characters.*;
 
 public class Combat {
 
@@ -8,7 +8,7 @@ public class Combat {
         enemy.setHealth(enemy.getHealth() - player.getStrength());
         player.setHealth(player.getHealth() - enemy.getStrength());
         if (isEnemyDestroyed(player, enemy)) {
-            destroyEnemy(enemy);
+            destroyEnemy(player, enemy);
         }
     }
 
@@ -16,7 +16,8 @@ public class Combat {
         return enemy.getHealth() <= player.getStrength();
     }
 
-    public void destroyEnemy(Person enemy) {
+    public void destroyEnemy(Person player, Person enemy) {
+        ((Enemy) enemy).runActionAfterDefeat((Player) player);
         enemy.getCell().setActor(null);
     }
 }
