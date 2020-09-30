@@ -1,33 +1,22 @@
 package com.codecool.dungeoncrawl.logic.actors.components;
 
-import com.codecool.dungeoncrawl.logic.Cell;
 import com.codecool.dungeoncrawl.logic.actors.characters.Person;
 
 public class Combat {
 
-    public boolean simulateFight(Cell nextCell, Cell cell) {
-        if (cell.getActor() instanceof Person && nextCell.getActor() instanceof Person) {
-            Person player = (Person) cell.getActor();
-            Person enemy = (Person) nextCell.getActor();
-
-            if (enemy.getHealth() > player.getStrength()) {
-                enemy.setHealth(enemy.getHealth() - player.getStrength());
-                player.setHealth(player.getHealth() - enemy.getStrength());
-                if (player.getHealth() <= 0) {
-                    player.actionAfterDefeat(enemy);
-                    return false;
-                }
-                return false;
-            }
-            enemy.actionAfterDefeat(player);
-            finishEnemy(nextCell);
-            return true;
+    public void simulateCombat(Person player, Person enemy) {
+        enemy.setHealth(enemy.getHealth() - player.getStrength());
+        player.setHealth(player.getHealth() - enemy.getStrength());
+        if (isEnemyDestroyed(player, enemy)) {
+            destroyEnemy(enemy);
         }
-
-        return true;
     }
 
-    public void finishEnemy(Cell nextCell) {
-        nextCell.setActor(null);
+    private boolean isEnemyDestroyed(Person player, Person enemy) {
+        return enemy.getHealth() <= player.getStrength();
+    }
+
+    public void destroyEnemy(Person enemy) {
+        enemy.getCell().setActor(null);
     }
 }

@@ -35,7 +35,7 @@ public class Inventory {
         removeItemFromInventory(getItemByName(itemName));
     }
 
-    public boolean containsItem(String itemName) {
+    public boolean contains(String itemName) {
         return getAllItemNames().contains(itemName);
     }
 
