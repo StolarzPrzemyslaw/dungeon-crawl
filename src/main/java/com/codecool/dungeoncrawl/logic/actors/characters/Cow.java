@@ -1,7 +1,6 @@
 package com.codecool.dungeoncrawl.logic.actors.characters;
 
 import com.codecool.dungeoncrawl.logic.Cell;
-import com.codecool.dungeoncrawl.logic.actors.Actor;
 
 public class Cow extends Enemy {
 

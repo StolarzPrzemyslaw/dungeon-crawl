@@ -17,6 +17,7 @@ public class Player extends Person {
         this.name = "Hero Name";
         this.strength = 5;
         this.health = 20;
+        this.currentHealth = this.health;
         this.inventory = new Inventory();
     }
 
@@ -55,5 +56,9 @@ public class Player extends Person {
 
     public void setPlayerName(String name) {
         this.name = name;
+    }
+
+    public void healUp(int healthRestored) {
+        currentHealth = Math.min(currentHealth + healthRestored, health);
     }
 }

@@ -5,6 +5,7 @@ import com.codecool.dungeoncrawl.logic.actors.characters.Cow;
 import com.codecool.dungeoncrawl.logic.actors.characters.Player;
 import com.codecool.dungeoncrawl.logic.actors.characters.Skeleton;
 import com.codecool.dungeoncrawl.logic.actors.items.Key;
+import com.codecool.dungeoncrawl.logic.actors.items.Potion;
 import com.codecool.dungeoncrawl.logic.actors.items.Sword;
 import com.codecool.dungeoncrawl.logic.actors.obstacles.Door;
 import com.codecool.dungeoncrawl.logic.actors.obstacles.Stairs;
@@ -42,6 +43,10 @@ public class MapLoader {
                             break;
                         case '-':
                             cell.setType(CellType.BRIDGE);
+                            break;
+                        case '+':
+                            cell.setType(CellType.FLOOR);
+                            new Potion(cell);
                             break;
                         case 'd':
                             cell.setType(CellType.FLOOR);

@@ -5,6 +5,7 @@ import com.codecool.dungeoncrawl.logic.actors.Actor;
 
 public abstract class Person extends Actor {
     protected int health = 10;
+    protected int currentHealth = health;
     protected int strength = 5;
     protected Actor backgroundCellActor;
 
@@ -20,12 +21,12 @@ public abstract class Person extends Actor {
         cell = nextCell;
     }
 
-    public int getHealth() {
-        return health;
+    public int getCurrentHealth() {
+        return currentHealth;
     }
 
-    public void setHealth(int health) {
-        this.health = health;
+    public void setCurrentHealth(int currentHealth) {
+        this.currentHealth = currentHealth;
     }
 
     public int getStrength() {
