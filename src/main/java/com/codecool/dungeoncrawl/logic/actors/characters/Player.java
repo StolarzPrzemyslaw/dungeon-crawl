@@ -6,6 +6,8 @@ import com.codecool.dungeoncrawl.logic.actors.components.Inventory;
 import com.codecool.dungeoncrawl.logic.actors.items.Item;
 import com.codecool.dungeoncrawl.logic.actors.items.Weapon;
 import com.codecool.dungeoncrawl.logic.actors.obstacles.Door;
+import javafx.application.Platform;
+import javafx.scene.control.Alert;
 
 public class Player extends Person {
 
@@ -52,9 +54,18 @@ public class Player extends Person {
         return strength;
     }
 
+    public void setPlayerName(String name) {
+        this.name = name;
+    }
+
     @Override
     public void actionAfterDefeat(Actor actorWhichDefeatedPlayer) {
-        // show message after defeat
+        Alert loseScreen = new Alert(Alert.AlertType.INFORMATION);
+        loseScreen.setHeaderText("You lose!");
+        loseScreen.setContentText("You are defeated by " + actorWhichDefeatedPlayer.getName());
+        loseScreen.showAndWait();
+        Platform.exit();
+        System.exit(0);
     }
 
     @Override

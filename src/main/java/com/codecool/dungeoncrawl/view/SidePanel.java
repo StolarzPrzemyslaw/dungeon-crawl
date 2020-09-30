@@ -17,10 +17,10 @@ public class SidePanel {
     private int heroStatsRowNumber = 0;
     private final int PARAMETERS_POSITION = 0;
     private int inventoryItemRowNumber = 1;
-    private Main main;
+    private Game game;
 
-    public SidePanel(Main main) {
-        this.main = main;
+    public SidePanel(Game game) {
+        this.game = game;
     }
 
     public VBox createSidePanel(Label healthLabel, Label strengthLabel, Label weaponLabel, Label heroName) {
@@ -152,6 +152,6 @@ public class SidePanel {
         map.getPlayer().getItemFromTheFloor((Item) map.getPlayer().getBackgroundCellActor());
         map.getPlayer().setBackgroundCellActor(null);
         pickUpButton.setDisable(true);
-        main.refresh();
+        game.refresh();
     }
 }
