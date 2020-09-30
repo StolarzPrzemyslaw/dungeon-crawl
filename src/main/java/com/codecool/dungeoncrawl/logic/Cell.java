@@ -64,19 +64,15 @@ public class Cell implements Drawable {
     }
 
     public boolean isEmptyField() {
-        return !isTypeWall() && !isTypeEmpty() && !isClosedDoor();
+        return isCellTypePassable() && !isClosedDoor();
     }
 
     public boolean isClosedDoor() {
         return getActor() instanceof Door && !((Door) getActor()).isOpen();
     }
 
-    public boolean isTypeWall() {
-        return getType() == CellType.WALL;
-    }
-
-    public boolean isTypeEmpty() {
-        return getType() == CellType.EMPTY;
+    public boolean isCellTypePassable() {
+        return getType().isPassable();
     }
 
     public boolean isOccupiedByEnemy() {
