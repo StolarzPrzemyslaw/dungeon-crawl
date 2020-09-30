@@ -73,5 +73,9 @@ public abstract class Person extends Actor {
         this.backgroundCellActor = backgroundCellActor;
     }
 
+    public Actor getBackgroundCellActor() {
+        return backgroundCellActor;
+    }
+
     public abstract void actionAfterDefeat(Actor actorWhichDefeatedCow);
 }

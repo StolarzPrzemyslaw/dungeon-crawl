@@ -21,8 +21,6 @@ public class MapLoader {
         int width = scanner.nextInt();
         int height = scanner.nextInt();
 
-        List<Item> itemsOnMap = new ArrayList<>();
-
         scanner.nextLine(); // empty line
 
         GameMap map = new GameMap(width, height, CellType.EMPTY);
@@ -47,11 +45,11 @@ public class MapLoader {
                             break;
                         case 'i':
                             cell.setType(CellType.FLOOR);
-                            itemsOnMap.add(new Sword(cell));
+                            new Sword(cell);
                             break;
                         case 'k':
                             cell.setType(CellType.FLOOR);
-                            itemsOnMap.add(new Key(cell));
+                            new Key(cell);
                             break;
                         case 'c':
                             cell.setType(CellType.FLOOR);
@@ -71,7 +69,6 @@ public class MapLoader {
                 }
             }
         }
-        map.setItemsOnMap(itemsOnMap);
         return map;
     }
 

@@ -11,7 +11,6 @@ public class GameMap {
     private final Cell[][] cells;
 
     private Player player;
-    private List<Item> itemsOnMap;
 
     public GameMap(int width, int height, CellType defaultCellType) {
         this.width = width;
@@ -34,14 +33,6 @@ public class GameMap {
 
     public Player getPlayer() {
         return player;
-    }
-
-    public void setItemsOnMap(List<Item> itemsOnMap) {
-        this.itemsOnMap = itemsOnMap;
-    }
-
-    public List<Item> getItemsOnMap() {
-        return itemsOnMap;
     }
 
     public int getWidth() {
