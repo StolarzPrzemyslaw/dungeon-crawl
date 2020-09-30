@@ -9,12 +9,13 @@ public class Player extends Person {
 
     private final Inventory inventory;
     private Weapon chosenWeapon;
+    protected int maxHealth = 20;
 
     public Player(Cell cell) {
         super(cell);
         this.name = "Hero Name";
         this.strength = 5;
-        this.health = 10;
+        this.health = 20;
         this.inventory = new Inventory();
     }
 
@@ -45,6 +46,10 @@ public class Player extends Person {
 
     public int getStrengthBasedOnWeapon() {
         return chosenWeapon != null ? chosenWeapon.getStatistic() + strength : strength;
+    }
+
+    public void healUp(int value) {
+        this.health = Math.min(health + value, maxHealth);
     }
 
     public void setPlayerName(String name) {
