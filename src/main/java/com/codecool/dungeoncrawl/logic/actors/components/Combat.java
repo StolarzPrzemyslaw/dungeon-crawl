@@ -1,6 +1,8 @@
 package com.codecool.dungeoncrawl.logic.actors.components;
 
-import com.codecool.dungeoncrawl.logic.actors.characters.*;
+import com.codecool.dungeoncrawl.logic.actors.characters.Enemy;
+import com.codecool.dungeoncrawl.logic.actors.characters.Person;
+import com.codecool.dungeoncrawl.logic.actors.characters.Player;
 import com.codecool.dungeoncrawl.view.Game;
 
 public class Combat {
@@ -15,13 +17,14 @@ public class Combat {
         enemy.setCurrentHealth(enemy.getCurrentHealth() - player.getStrength());
         player.setCurrentHealth(player.getCurrentHealth() - enemy.getStrength());
         ui.displayLog(player.getName() + " get " + enemy.getStrength() + " damage and " + enemy.getName() + " get " + player.getStrength() + " damage!");
+        setPersonDeadStatus(player, enemy);
+        setPersonDeadStatus(enemy, player);
+    }
+
+    private void setPersonDeadStatus(Person player, Person enemy) {
         if (isPersonDestroyed(player)) {
             player.setCurrentHealth(0);
             destroyPerson(enemy, player);
-        }
-        if (isPersonDestroyed(enemy)) {
-            enemy.setCurrentHealth(0);
-            destroyPerson(player, enemy);
         }
     }
 

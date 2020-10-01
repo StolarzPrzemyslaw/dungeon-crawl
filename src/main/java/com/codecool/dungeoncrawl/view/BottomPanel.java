@@ -4,7 +4,6 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
 public class BottomPanel {
@@ -15,7 +14,7 @@ public class BottomPanel {
     }
 
     public VBox createLogContainer(Label previousLog, Label currentLog) {
-        VBox logsMsg = new VBox(previousLog,currentLog);
+        VBox logsMsg = new VBox(previousLog, currentLog);
         styleLogContainer(logsMsg);
         styleLogMessage(previousLog, currentLog);
         return logsMsg;

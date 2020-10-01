@@ -15,7 +15,7 @@ public class BridgeGuardian extends Enemy {
 
     public void runActionAfterDefeat(Game ui, Player player) {
         ui.displayLog("You defeated guardian! You get additional 5 strength points!");
-        player.increaseBaseStrength(5);
+        player.setStrength(player.getStrength() + 5);
     }
 
     @Override

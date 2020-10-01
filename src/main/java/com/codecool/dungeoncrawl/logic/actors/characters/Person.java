@@ -33,8 +33,8 @@ public abstract class Person extends Actor {
         return strength;
     }
 
-    public void increaseBaseStrength(int value) {
-        this.strength += value;
+    public void setStrength(int strength) {
+        this.strength = strength;
     }
 
     public void setBackgroundCellActor(Actor backgroundCellActor) {

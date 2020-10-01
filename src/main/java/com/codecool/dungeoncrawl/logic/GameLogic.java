@@ -157,7 +157,9 @@ public class GameLogic {
     }
 
     private void moveCowOrSwapDirection(Cow cow, int dx) {
-        if (cow.getCell().getNeighbor(dx, 0).isEnemyMovePossible()) {
+        if (cow.getCell().getNeighbor(dx, 0).isOccupiedByClass(Player.class)) {
+            combat.simulateCombat(cow, map.getPlayer());
+        } else if (cow.getCell().getNeighbor(dx, 0).isEnemyMovePossible()) {
             moveCowStepAheadHorizontal(cow, dx);
         } else {
             swapDirection(cow);

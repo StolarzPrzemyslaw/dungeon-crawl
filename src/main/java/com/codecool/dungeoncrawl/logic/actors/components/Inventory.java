@@ -25,7 +25,7 @@ public class Inventory {
     }
 
     public Item getItemByName(String itemName) {
-        for (Item item: listOfItems) {
+        for (Item item : listOfItems) {
             if (item.getName().equals(itemName)) return item;
         }
         return null;

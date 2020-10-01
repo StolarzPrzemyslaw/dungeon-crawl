@@ -19,7 +19,7 @@ public class SidePanel {
     private int heroStatsRowNumber = 0;
     private final int PARAMETERS_POSITION = 0;
     private int inventoryItemRowNumber = 1;
-    private Game game;
+    private final Game game;
 
     public SidePanel(Game game) {
         this.game = game;
@@ -205,7 +205,7 @@ public class SidePanel {
             itemsList.getSelectionModel().selectFirst();
         }
         item.showObtainMessage(game);
-        map.getPlayer().getItemFromTheFloor(item);
+        map.getPlayer().getInventory().addItemToInventory(item);
         map.getPlayer().setBackgroundCellActor(null);
         pickUpButton.setDisable(true);
         game.refresh();

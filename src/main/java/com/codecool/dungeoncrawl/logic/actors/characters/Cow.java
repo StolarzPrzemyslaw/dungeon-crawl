@@ -38,7 +38,7 @@ public class Cow extends Enemy {
     }
 
     public void swapDirectionOfMoving() {
-        this.isMovingLeft  = !this.isMovingLeft;
+        this.isMovingLeft = !this.isMovingLeft;
     }
 
     public String getTileName() {

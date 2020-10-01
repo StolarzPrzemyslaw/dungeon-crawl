@@ -2,7 +2,6 @@ package com.codecool.dungeoncrawl.logic.actors.characters;
 
 import com.codecool.dungeoncrawl.logic.Cell;
 import com.codecool.dungeoncrawl.logic.actors.components.Inventory;
-import com.codecool.dungeoncrawl.logic.actors.items.Item;
 import com.codecool.dungeoncrawl.logic.actors.items.Weapon;
 
 public class Player extends Person {
@@ -30,10 +29,6 @@ public class Player extends Person {
 
     public Inventory getInventory() {
         return inventory;
-    }
-
-    public void getItemFromTheFloor(Item obtainedItem) {
-        inventory.addItemToInventory(obtainedItem);
     }
 
     public String getTileName() {
