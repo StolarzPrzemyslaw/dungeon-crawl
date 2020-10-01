@@ -4,6 +4,7 @@ import com.codecool.dungeoncrawl.logic.actors.Actor;
 import com.codecool.dungeoncrawl.logic.actors.characters.*;
 import com.codecool.dungeoncrawl.logic.actors.components.Combat;
 import com.codecool.dungeoncrawl.logic.actors.items.Item;
+import com.codecool.dungeoncrawl.logic.actors.obstacles.Stairs;
 import com.codecool.dungeoncrawl.view.Game;
 import javafx.scene.input.KeyEvent;
 
@@ -13,18 +14,13 @@ import java.util.List;
 public class GameLogic {
 
     private Game ui;
-    private GameMap map = MapLoader.loadMap();
+    private GameMap map = MapLoader.loadMap(1);
     private Combat combat;
 
     public GameLogic(Game game, String playerName) {
         this.ui = game;
         this.combat = new Combat(ui);
         map.getPlayer().setPlayerName(playerName);
-    }
-
-    public GameLogic(Game game, String playerName, GameMap gameMap) {
-        this(game, playerName);
-        this.map = gameMap;
     }
 
     public GameMap getGameMap() {
@@ -60,8 +56,17 @@ public class GameLogic {
                 ui.generateLoseScreen(player, (Person) nearActor);
             }
         } else if (nextCell.isMovePossible()) {
-            player.move(dx, dy);
-            enemiesTurn();
+            if (nextCell.isOccupiedByClass(Stairs.class)) {
+                Player temporaryPlayer = map.getPlayer();
+                map = MapLoader.loadMap(map.getLevelNumber() + 1);
+                Cell temporaryCell = map.getPlayer().getCell();
+                map.setPlayer(temporaryPlayer);
+                map.getPlayer().setPlayerCell(temporaryCell);
+                ui.setMap(map);
+            } else {
+                player.move(dx, dy);
+                enemiesTurn();
+            }
         }
         ui.refresh();
     }

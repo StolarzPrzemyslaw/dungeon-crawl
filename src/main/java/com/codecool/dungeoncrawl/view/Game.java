@@ -6,22 +6,23 @@ import com.codecool.dungeoncrawl.logic.GameMap;
 import com.codecool.dungeoncrawl.logic.actors.characters.Person;
 import com.codecool.dungeoncrawl.logic.actors.characters.Player;
 import javafx.application.Platform;
+import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.Label;
+import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.stage.Modality;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Game {
     private final int MAP_WIDTH_TO_DISPLAY = 25;
@@ -106,6 +107,10 @@ public class Game {
         strengthLabel.setText("" + gameMap.getPlayer().getStrength() + "\n");
         String weaponName = gameMap.getPlayer().getWeapon() == null ? "Basic dagger" : gameMap.getPlayer().getWeapon().getName();
         weaponLabel.setText("" + weaponName + "\n");
+    }
+
+    public void setMap(GameMap map) {
+        this.gameMap = map;
     }
 
     private void drawAllTilesWithShift() {

@@ -12,15 +12,31 @@ import java.io.InputStream;
 import java.util.Scanner;
 
 public class MapLoader {
-    public static GameMap loadMap() {
-        InputStream is = MapLoader.class.getResourceAsStream("/map.txt");
+    public static GameMap loadMap(int mapNumber) {
+        String levelName;
+        switch (mapNumber) {
+            case 1:
+                levelName = "/level1.txt";
+                break;
+            case 2:
+                levelName = "/level2.txt";
+                break;
+            case 3:
+                levelName = "/level3.txt";
+                break;
+            default:
+                levelName = "/map.txt";
+                break;
+        }
+
+        InputStream is = MapLoader.class.getResourceAsStream(levelName);
         Scanner scanner = new Scanner(is);
         int width = scanner.nextInt();
         int height = scanner.nextInt();
 
         scanner.nextLine();
 
-        GameMap map = new GameMap(width, height, CellType.EMPTY);
+        GameMap map = new GameMap(width, height, CellType.EMPTY, mapNumber);
         for (int y = 0; y < height; y++) {
             String line = scanner.nextLine();
             for (int x = 0; x < width; x++) {
