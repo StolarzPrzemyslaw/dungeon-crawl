@@ -1,6 +1,8 @@
 package com.codecool.dungeoncrawl.logic;
 
 import com.codecool.dungeoncrawl.logic.actors.Actor;
+import com.codecool.dungeoncrawl.logic.actors.characters.Enemy;
+import com.codecool.dungeoncrawl.logic.actors.characters.Person;
 import com.codecool.dungeoncrawl.logic.actors.obstacles.Door;
 
 public class Cell implements Drawable {
@@ -63,6 +65,10 @@ public class Cell implements Drawable {
 
     public boolean isMovePossible() {
         return isCellTypePassable() && !isClosedDoor();
+    }
+
+    public boolean isEnemyMovePossible() {
+        return isCellTypePassable() && !isClosedDoor() && !isOccupiedByClass(Enemy.class);
     }
 
     public boolean isClosedDoor() {

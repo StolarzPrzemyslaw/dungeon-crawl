@@ -15,10 +15,12 @@ public class GameLogic {
     private Game ui;
     private GameMap map = MapLoader.loadMap();
     private Combat combat;
+    private boolean cheatsEnabled;
 
     public GameLogic(Game game, String playerName) {
         this.ui = game;
         this.combat = new Combat(ui);
+        cheatsEnabled = playerName.equals("Andrzej") || playerName.equals("Marcin") || playerName.equals("Przemysław");
         map.getPlayer().setPlayerName(playerName);
     }
 
@@ -45,6 +47,9 @@ public class GameLogic {
             case D:
                 playerTurn(1, 0);
                 break;
+            case F:
+                playerTurn(0, 0);
+                break;
         }
     }
 
@@ -56,9 +61,9 @@ public class GameLogic {
 
         if (nextCell.isOccupiedByClass(Enemy.class)) {
             combat.simulateCombat(player, (Person) nearActor);
-            if (map.getPlayer().getCurrentHealth() <= 0) {
-                ui.generateLoseScreen(player, (Person) nearActor);
-            }
+        } else if (cheatsEnabled) {
+            player.move(dx, dy);
+            enemiesTurn();
         } else if (nextCell.isMovePossible()) {
             player.move(dx, dy);
             enemiesTurn();
@@ -84,7 +89,13 @@ public class GameLogic {
         List<int[]> directions = getDirectionsOptions(skeleton);
         if (directions.size() != 0) {
             int randomDirection = (int) (Math.random() * directions.size());
-            skeleton.move(directions.get(randomDirection)[FIRST_COORDINATE], directions.get(randomDirection)[SECOND_COORDINATE]);
+            int firstCoordinate = directions.get(randomDirection)[FIRST_COORDINATE];
+            int secondCoordinate = directions.get(randomDirection)[SECOND_COORDINATE];
+            if (skeleton.getCell().getNeighbor(firstCoordinate, secondCoordinate).isOccupiedByClass(Player.class)) {
+                combat.simulateCombat(skeleton, map.getPlayer());
+            } else {
+                skeleton.move(firstCoordinate, secondCoordinate);
+            }
         }
     }
 
@@ -98,7 +109,7 @@ public class GameLogic {
     }
 
     private void checkMoveAndAdd(Cell cell, List<int[]> directions, int dx, int dy) {
-        if (cell.getNeighbor(dx, dy).isMovePossible()) {
+        if (cell.getNeighbor(dx, dy).isEnemyMovePossible()) {
             directions.add(new int[]{dx, dy});
         }
     }
@@ -123,7 +134,7 @@ public class GameLogic {
     }
 
     private void moveCowOrSwapDirection(Cow cow, int dx, int dy) {
-        if (cow.getCell().getNeighbor(dx, dy).isMovePossible()) {
+        if (cow.getCell().getNeighbor(dx, dy).isEnemyMovePossible()) {
             cow.decreaseStepsLeft();
             cow.move(dx, dy);
         } else {
