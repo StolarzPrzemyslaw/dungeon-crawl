@@ -14,10 +14,11 @@ public class GameLogic {
 
     private Game ui;
     private GameMap map = MapLoader.loadMap();
-    private Combat combat = new Combat();
+    private Combat combat;
 
     public GameLogic(Game game, String playerName) {
         this.ui = game;
+        this.combat = new Combat(ui);
         map.getPlayer().setPlayerName(playerName);
     }
 

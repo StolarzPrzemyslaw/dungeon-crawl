@@ -4,9 +4,9 @@ import com.codecool.dungeoncrawl.logic.Cell;
 import com.codecool.dungeoncrawl.logic.actors.Actor;
 
 public abstract class Person extends Actor {
-    protected int health = 10;
+    protected int health;
     protected int currentHealth = health;
-    protected int strength = 5;
+    protected int strength;
     protected Actor backgroundCellActor;
 
     public Person(Cell cell) {
@@ -30,7 +30,7 @@ public abstract class Person extends Actor {
     }
 
     public int getStrength() {
-        return this instanceof Player ? ((Player) this).getStrengthBasedOnWeapon() : strength;
+        return strength;
     }
 
     public void increaseBaseStrength(int value) {

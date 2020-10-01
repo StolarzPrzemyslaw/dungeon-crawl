@@ -9,7 +9,6 @@ public class Player extends Person {
 
     private final Inventory inventory;
     private Weapon chosenWeapon;
-    private final int INITIAL_STRENGTH = 5;
 
     public Player(Cell cell) {
         super(cell);
@@ -45,8 +44,9 @@ public class Player extends Person {
         return chosenWeapon;
     }
 
-    public int getStrengthBasedOnWeapon() {
-        return chosenWeapon != null ? chosenWeapon.getStatistic() + strength : INITIAL_STRENGTH;
+    @Override
+    public int getStrength() {
+        return chosenWeapon != null ? chosenWeapon.getStatistic() + strength : strength;
     }
 
     public void setPlayerName(String name) {
