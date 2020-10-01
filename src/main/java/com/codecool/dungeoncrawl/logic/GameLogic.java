@@ -15,10 +15,12 @@ public class GameLogic {
     private Game ui;
     private GameMap map = MapLoader.loadMap();
     private Combat combat;
+    private boolean cheatsEnabled;
 
     public GameLogic(Game game, String playerName) {
         this.ui = game;
         this.combat = new Combat(ui);
+        cheatsEnabled = playerName.equals("Andrzej") || playerName.equals("Marcin") || playerName.equals("Przemysław");
         map.getPlayer().setPlayerName(playerName);
     }
 
@@ -59,6 +61,9 @@ public class GameLogic {
 
         if (nextCell.isOccupiedByClass(Enemy.class)) {
             combat.simulateCombat(player, (Person) nearActor);
+        } else if (cheatsEnabled) {
+            player.move(dx, dy);
+            enemiesTurn();
         } else if (nextCell.isMovePossible()) {
             player.move(dx, dy);
             enemiesTurn();
