@@ -201,6 +201,7 @@ public class SidePanel {
         if (item instanceof Item && item.getName() != "Key") {
             playerInventory.add(item);
             itemsList.getItems().add(item.toString());
+            item.showObtainMessage(game);
         }
         map.getPlayer().getItemFromTheFloor(item);
         map.getPlayer().setBackgroundCellActor(null);
