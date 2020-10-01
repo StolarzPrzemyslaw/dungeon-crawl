@@ -107,7 +107,7 @@ public class SidePanel {
         UIName.setPadding(new Insets(10));
 
         HBox chooseItems = generateChooseSection(itemsList, map);
-        HBox useItem = generateChooseButton(chooseItem, map, itemsList);
+        HBox useItem = createUseItemPanel(chooseItem, map, itemsList);
         HBox buttonPanel = generateButtonPanel(pickUpButton, map, openDoor, itemsList);
 
         UIContainer.getChildren().addAll(UIName, chooseItems, useItem, buttonPanel);
@@ -123,20 +123,32 @@ public class SidePanel {
         return buttonPanel;
     }
 
-    private HBox generateChooseButton(Button chooseItem, GameMap map, ChoiceBox itemsList) {
-        HBox useItem = new HBox(chooseItem);
-        chooseItem.setText("Use selected item");
-        useItem.setPrefWidth(300);
-        useItem.setPadding(new Insets(10));
-        useItem.setAlignment(Pos.BASELINE_CENTER);
-        chooseItem.setOnAction(event -> setChooseButton(map, itemsList));
-        return useItem;
+    private HBox createUseItemPanel(Button useItemButton, GameMap map, ChoiceBox itemsList) {
+        HBox useItemPanel = new HBox(useItemButton);
+        setUseItemPanel(useItemPanel);
+        setUseItemButton(useItemButton, itemsList, map);
+        return useItemPanel;
     }
 
-    private void setChooseButton(GameMap map, ChoiceBox itemsList) {
+    private void setUseItemPanel(HBox useItemPanel) {
+        useItemPanel.setPrefWidth(300);
+        useItemPanel.setPadding(new Insets(10));
+        useItemPanel.setAlignment(Pos.BASELINE_CENTER);
+    }
+
+    private void setUseItemButton(Button useItemButton, ChoiceBox itemsList, GameMap map) {
+        useItemButton.setText("Use selected item");
+        useItemButton.setOnAction(event -> handleUseItemButton(map, itemsList));
+    }
+
+    private void handleUseItemButton(GameMap map, ChoiceBox itemsList) {
         Item item = getSelectedItem(map, itemsList);
         if (isType(Usable.class, item)) useItem(item, map);
         else if (isType(Consumable.class, item)) consumeItem(item, map, itemsList);
+        finalizeUseItemEvent(itemsList);
+    }
+
+    private void finalizeUseItemEvent(ChoiceBox itemsList) {
         itemsList.getSelectionModel().clearSelection();
         game.refresh();
     }
