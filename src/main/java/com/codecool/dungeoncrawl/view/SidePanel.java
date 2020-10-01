@@ -2,6 +2,7 @@ package com.codecool.dungeoncrawl.view;
 
 import com.codecool.dungeoncrawl.logic.GameMap;
 import com.codecool.dungeoncrawl.logic.actors.items.Item;
+import com.codecool.dungeoncrawl.logic.actors.items.Potion;
 import com.codecool.dungeoncrawl.logic.actors.items.Weapon;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -12,9 +13,6 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class SidePanel {
 
@@ -153,6 +151,8 @@ public class SidePanel {
             map.getPlayer().getInventory().removeItemByName(item.getName());
             // switch for another weapon if available else select basic dagger
             itemsList.getItems().add("Basic dagger");
+        } else if (item instanceof Potion) {
+            System.out.println("Potion");
         }
     }
 
@@ -202,6 +202,7 @@ public class SidePanel {
             itemsList.getItems().add(item.toString());
             itemsList.setDisable(false);
             itemsList.getSelectionModel().selectFirst();
+            item.showObtainMessage(game);
         }
         map.getPlayer().getItemFromTheFloor(item);
         map.getPlayer().setBackgroundCellActor(null);

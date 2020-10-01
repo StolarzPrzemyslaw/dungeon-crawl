@@ -1,6 +1,7 @@
 package com.codecool.dungeoncrawl.logic.actors.characters;
 
 import com.codecool.dungeoncrawl.logic.Cell;
+import com.codecool.dungeoncrawl.view.Game;
 
 public abstract class Enemy extends Person {
 
@@ -8,5 +9,5 @@ public abstract class Enemy extends Person {
         super(cell);
     }
 
-    public abstract void runActionAfterDefeat(Player player);
+    public abstract void runActionAfterDefeat(Game ui, Player player);
 }

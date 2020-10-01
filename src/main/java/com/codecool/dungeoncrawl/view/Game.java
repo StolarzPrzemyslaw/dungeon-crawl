@@ -21,6 +21,9 @@ import javafx.scene.paint.Color;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Game {
     private final int MAP_WIDTH_TO_DISPLAY = 25;
     private final int MAP_HEIGHT_TO_DISPLAY = 17;
@@ -32,6 +35,7 @@ public class Game {
             MAP_WIDTH_TO_DISPLAY * Tiles.TILE_WIDTH,
             MAP_HEIGHT_TO_DISPLAY * Tiles.TILE_WIDTH);
     GraphicsContext context = canvas.getGraphicsContext2D();
+    List<String> log = new ArrayList<>();
 
     Label heroName = new Label();
     Label healthLabel = new Label();
@@ -41,7 +45,8 @@ public class Game {
     Button pickUpButton = new Button();
     Button chooseItem = new Button();
     Button openDoor = new Button();
-    Label logMessage = new Label();
+    Label previousLog = new Label();
+    Label currentLog = new Label();
     ChoiceBox itemsList = new ChoiceBox();
 
     public void setUpReferenceLogicForGetDataFromGame(GameLogic gameLogic) {
@@ -55,7 +60,7 @@ public class Game {
         VBox descriptionContainer = sidePanel.createSidePanel(healthLabel, strengthLabel, weaponLabel, heroName);
         descriptionContainer.getChildren().add(sidePanel.createUserInterface(pickUpButton, itemsList, gameMap, chooseItem, openDoor));
         descriptionContainer.getChildren().add(sidePanel.generateInventory(inventoryLabel));
-        HBox logContainer = bottomPanel.createLogContainer(logMessage);
+        VBox logContainer = bottomPanel.createLogContainer(previousLog, currentLog);
         BorderPane borderPane = new BorderPane();
         VBox mainView = new VBox();
         mainView.getChildren().addAll(canvas, logContainer);
@@ -68,6 +73,17 @@ public class Game {
         primaryStage.setTitle("Dungeon Crawl");
         refresh();
         return primaryStage;
+    }
+
+    public void displayLog(String text) {
+        log.add(text);
+        refresh();
+        if (log.size() > 1) {
+            previousLog.setText(log.get(log.size() - 2));
+            currentLog.setText(log.get(log.size() - 1));
+        } else if (log.size() == 1) {
+            currentLog.setText(log.get(log.size() - 1));
+        }
     }
 
     private void centerStage(Stage stage, BorderPane borderPane) {
