@@ -139,7 +139,6 @@ public class SidePanel {
         map.getPlayer().getInventory().getAllItemNames().forEach(item -> {
             if (item == itemsList.getValue()) {
                 armPlayerWithItem(map, itemsList, map.getPlayer().getInventory().getItemByName(item));
-                itemsList.getItems().add("Basic dagger");
             }
         });
         setBasicDaggerIfSelected(map, itemsList);
@@ -152,6 +151,8 @@ public class SidePanel {
             map.getPlayer().setWeapon((Weapon) item);
             itemsList.getItems().remove(item.getName());
             map.getPlayer().getInventory().removeItemByName(item.getName());
+            // switch for another weapon if available else select basic dagger
+            itemsList.getItems().add("Basic dagger");
         }
     }
 

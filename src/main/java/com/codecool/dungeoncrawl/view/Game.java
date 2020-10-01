@@ -15,6 +15,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Screen;
@@ -40,8 +41,8 @@ public class Game {
     Button pickUpButton = new Button();
     Button chooseItem = new Button();
     Button openDoor = new Button();
+    Label logMessage = new Label();
     ChoiceBox itemsList = new ChoiceBox();
-
 
     public void setUpReferenceLogicForGetDataFromGame(GameLogic gameLogic) {
         this.gameLogic = gameLogic;
@@ -50,11 +51,15 @@ public class Game {
 
     public Stage generateUI(Stage primaryStage) {
         SidePanel sidePanel = new SidePanel(this);
+        BottomPanel bottomPanel = new BottomPanel(this);
         VBox descriptionContainer = sidePanel.createSidePanel(healthLabel, strengthLabel, weaponLabel, heroName);
         descriptionContainer.getChildren().add(sidePanel.createUserInterface(pickUpButton, itemsList, gameMap, chooseItem, openDoor));
         descriptionContainer.getChildren().add(sidePanel.generateInventory(inventoryLabel));
+        HBox logContainer = bottomPanel.createLogContainer(logMessage);
         BorderPane borderPane = new BorderPane();
-        borderPane.setCenter(canvas);
+        VBox mainView = new VBox();
+        mainView.getChildren().addAll(canvas, logContainer);
+        borderPane.setCenter(mainView);
         borderPane.setRight(descriptionContainer);
         scene = new Scene(borderPane);
         primaryStage.setScene(scene);
