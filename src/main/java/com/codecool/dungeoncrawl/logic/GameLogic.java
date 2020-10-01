@@ -45,6 +45,9 @@ public class GameLogic {
             case D:
                 playerTurn(1, 0);
                 break;
+            case F:
+                playerTurn(0, 0);
+                break;
         }
     }
 
@@ -98,7 +101,7 @@ public class GameLogic {
     }
 
     private void checkMoveAndAdd(Cell cell, List<int[]> directions, int dx, int dy) {
-        if (cell.getNeighbor(dx, dy).isMovePossible()) {
+        if (cell.getNeighbor(dx, dy).isEnemyMovePossible()) {
             directions.add(new int[]{dx, dy});
         }
     }
