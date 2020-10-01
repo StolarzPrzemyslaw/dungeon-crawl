@@ -192,6 +192,7 @@ public class SidePanel {
 
     private void handleOpenDoorButton(GameMap map, Button openDoorButton) {
         map.getPlayer().getCell().openDoorNextToPlayer();
+        game.displayLog("You have opened a door!");
         openDoorButton.setDisable(true);
         game.refresh();
     }

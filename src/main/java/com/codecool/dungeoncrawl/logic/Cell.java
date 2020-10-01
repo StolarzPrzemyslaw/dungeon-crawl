@@ -2,15 +2,14 @@ package com.codecool.dungeoncrawl.logic;
 
 import com.codecool.dungeoncrawl.logic.actors.Actor;
 import com.codecool.dungeoncrawl.logic.actors.characters.Enemy;
-import com.codecool.dungeoncrawl.logic.actors.characters.Person;
 import com.codecool.dungeoncrawl.logic.actors.obstacles.Door;
 
 public class Cell implements Drawable {
-    private boolean xDirection = true;
     private CellType type;
     private Actor actor;
-    private GameMap gameMap;
-    private int x, y;
+    private final GameMap gameMap;
+    private final int x;
+    private final int y;
 
     Cell(GameMap gameMap, int x, int y, CellType type) {
         this.gameMap = gameMap;
@@ -36,18 +35,14 @@ public class Cell implements Drawable {
     }
 
     public Cell getNeighbor(int dx, int dy) {
-        return gameMap.getCell(validatePosition(dx, xDirection), validatePosition(dy, !xDirection));
+        boolean isX = true;
+        return gameMap.getCell(validatePosition(dx, isX), validatePosition(dy, !isX));
     }
 
     private int validatePosition(int shift, boolean direction) {
         int currentPosition = direction ? x : y;
         int mapSizeDirection = direction ? gameMap.getWidth() : gameMap.getHeight();
-
-        if (currentPosition + shift >= mapSizeDirection || currentPosition + shift < 0) {
-            return  currentPosition;
-        } else {
-            return currentPosition + shift;
-        }
+        return (currentPosition + shift >= mapSizeDirection || currentPosition + shift < 0) ? currentPosition : currentPosition + shift;
     }
 
     @Override
@@ -64,15 +59,15 @@ public class Cell implements Drawable {
     }
 
     public boolean isMovePossible() {
-        return isCellTypePassable() && !isClosedDoor();
+        return isCellTypePassable() && isOpenDoor();
     }
 
     public boolean isEnemyMovePossible() {
-        return isCellTypePassable() && !isClosedDoor() && !isOccupiedByClass(Enemy.class);
+        return isCellTypePassable() && isOpenDoor() && !isOccupiedByClass(Enemy.class);
     }
 
-    public boolean isClosedDoor() {
-        return isOccupiedByClass(Door.class) && !((Door) getActor()).isOpen();
+    public boolean isOpenDoor() {
+        return !isOccupiedByClass(Door.class) || ((Door) getActor()).isOpen();
     }
 
     public boolean isCellTypePassable() {

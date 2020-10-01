@@ -13,20 +13,16 @@ import java.util.List;
 
 public class GameLogic {
 
-    private Game ui;
+    private final Game ui;
     private GameMap map = MapLoader.loadMap(1);
-    private Combat combat;
-    private boolean cheatsEnabled;
+    private final Combat combat;
+    private final boolean cheatsEnabled;
 
     public GameLogic(Game game, String playerName) {
         this.ui = game;
         this.combat = new Combat(ui);
         cheatsEnabled = playerName.equals("Andrzej") || playerName.equals("Marcin") || playerName.equals("Przemysław");
         map.getPlayer().setPlayerName(playerName);
-    }
-
-    public GameMap getGameMap() {
-        return map;
     }
 
     public void onKeyPressed(KeyEvent keyEvent) {
@@ -50,30 +46,41 @@ public class GameLogic {
     }
 
     private void playerTurn(int dx, int dy) {
-        Cell playerCell = map.getPlayer().getCell();
         Player player = map.getPlayer();
         Cell nextCell = map.getPlayer().getCell().getNeighbor(dx, dy);
         Actor nearActor = map.getPlayer().getCell().getNeighbor(dx, dy).getActor();
 
-        if (nextCell.isOccupiedByClass(Enemy.class)) {
+        if (isEnemyAffront(nextCell)) {
             combat.simulateCombat(player, (Person) nearActor);
-        } else if (cheatsEnabled) {
+        } else if (areStairsUnderPlayer(nextCell)) {
+            loadNextMap();
+        } else if (isPlayerAbleToMove(nextCell)) {
             player.move(dx, dy);
             enemiesTurn();
-        } else if (nextCell.isMovePossible()) {
-            if (nextCell.isOccupiedByClass(Stairs.class)) {
-                Player temporaryPlayer = map.getPlayer();
-                map = MapLoader.loadMap(map.getLevelNumber() + 1);
-                Cell temporaryCell = map.getPlayer().getCell();
-                map.setPlayer(temporaryPlayer);
-                map.getPlayer().setPlayerCell(temporaryCell);
-                ui.setMap(map);
-            } else {
-                player.move(dx, dy);
-                enemiesTurn();
-            }
         }
         ui.refresh();
+    }
+
+    private boolean isEnemyAffront(Cell nextCell) {
+        return nextCell.isOccupiedByClass(Enemy.class);
+    }
+
+    private boolean areStairsUnderPlayer(Cell nextCell) {
+        return nextCell.isOccupiedByClass(Stairs.class);
+    }
+
+    private boolean isPlayerAbleToMove(Cell nextCell) {
+        return cheatsEnabled || nextCell.isMovePossible();
+    }
+
+    private void loadNextMap() {
+        Player temporaryPlayer = map.getPlayer();
+        map = MapLoader.loadMap(map.getLevelNumber() + 1);
+        Cell temporaryCell = map.getPlayer().getCell();
+        map.setPlayer(temporaryPlayer);
+        map.getPlayer().setPlayerCell(temporaryCell);
+        ui.setMap(map);
+        ui.displayLog("You have moved to the next level!");
     }
 
     private void enemiesTurn() {
@@ -87,20 +94,27 @@ public class GameLogic {
     }
 
     private void validateCoordinatesInEveryDirection(Actor actor) {
+        Skeleton skeleton = ((Skeleton) actor);
+        List<int[]> directions = getDirectionsOptions(skeleton);
+        makeMoveIfMoveExist(skeleton, directions);
+    }
+
+    private void makeMoveIfMoveExist(Skeleton skeleton, List<int[]> directions) {
         final int FIRST_COORDINATE = 0;
         final int SECOND_COORDINATE = 1;
-        Skeleton skeleton = ((Skeleton) actor);
-
-        List<int[]> directions = getDirectionsOptions(skeleton);
         if (directions.size() != 0) {
             int randomDirection = (int) (Math.random() * directions.size());
             int firstCoordinate = directions.get(randomDirection)[FIRST_COORDINATE];
             int secondCoordinate = directions.get(randomDirection)[SECOND_COORDINATE];
-            if (skeleton.getCell().getNeighbor(firstCoordinate, secondCoordinate).isOccupiedByClass(Player.class)) {
-                combat.simulateCombat(skeleton, map.getPlayer());
-            } else {
-                skeleton.move(firstCoordinate, secondCoordinate);
-            }
+            makeEnemyMove(skeleton, firstCoordinate, secondCoordinate);
+        }
+    }
+
+    private void makeEnemyMove(Skeleton skeleton, int firstCoordinate, int secondCoordinate) {
+        if (skeleton.getCell().getNeighbor(firstCoordinate, secondCoordinate).isOccupiedByClass(Player.class)) {
+            combat.simulateCombat(skeleton, map.getPlayer());
+        } else {
+            skeleton.move(firstCoordinate, secondCoordinate);
         }
     }
 
@@ -127,24 +141,32 @@ public class GameLogic {
     private void validateCowMove(Actor actor) {
         Cow cow = ((Cow) actor);
         if (cow.getStepsLeft() > 0) {
-            if (cow.isMovingLeft()) {
-                moveCowOrSwapDirection(cow, -1, 0);
-            } else {
-                moveCowOrSwapDirection(cow, 1, 0);
-            }
+            selectDirectionAndMove(cow);
         }
         if (cow.getStepsLeft() <= 0) {
             swapDirection(cow);
         }
     }
 
-    private void moveCowOrSwapDirection(Cow cow, int dx, int dy) {
-        if (cow.getCell().getNeighbor(dx, dy).isEnemyMovePossible()) {
-            cow.decreaseStepsLeft();
-            cow.move(dx, dy);
+    private void selectDirectionAndMove(Cow cow) {
+        if (cow.isMovingLeft()) {
+            moveCowOrSwapDirection(cow, -1);
+        } else {
+            moveCowOrSwapDirection(cow, 1);
+        }
+    }
+
+    private void moveCowOrSwapDirection(Cow cow, int dx) {
+        if (cow.getCell().getNeighbor(dx, 0).isEnemyMovePossible()) {
+            moveCowStepAheadHorizontal(cow, dx);
         } else {
             swapDirection(cow);
         }
+    }
+
+    private void moveCowStepAheadHorizontal(Cow cow, int dx) {
+        cow.decreaseStepsLeft();
+        cow.move(dx, 0);
     }
 
     private void swapDirection(Cow cow) {
@@ -162,5 +184,9 @@ public class GameLogic {
 
     public boolean isPlayerNearDoor() {
         return map.getPlayer().getCell().isDoorOneOfTheNeighbors();
+    }
+
+    public GameMap getGameMap() {
+        return map;
     }
 }

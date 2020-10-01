@@ -102,6 +102,7 @@ public class Game {
         DialogPane dialogPane = dialog.getDialogPane();
         dialogPane.setStyle("-fx-background-color: #fff;");
         dialog.initModality(Modality.APPLICATION_MODAL);
+        displayLog("You are defeated by " + enemy.getName());
         dialogPane.setContentText("You are defeated by " + enemy.getName());
 
         ButtonType confirmButton = new ButtonType("Ok", ButtonBar.ButtonData.OK_DONE);
