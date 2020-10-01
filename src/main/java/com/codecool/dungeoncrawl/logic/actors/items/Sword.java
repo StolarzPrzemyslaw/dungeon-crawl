@@ -12,6 +12,6 @@ public class Sword extends Weapon implements Usable {
     }
 
     public String getTileName() {
-        return "weapon";
+        return "sword";
     }
 }

@@ -12,6 +12,6 @@ public class Axe extends Weapon implements Usable {
     }
 
     public String getTileName() {
-        return "weapon";
+        return "axe";
     }
 }
