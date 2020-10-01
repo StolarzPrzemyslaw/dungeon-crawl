@@ -12,10 +12,6 @@ public abstract class Item extends Actor {
         super(cell);
     }
 
-    public String getObtainMessage() {
-        return this.obtainMessage;
-    }
-
     @Override
     public String toString() {
         return this.getName();

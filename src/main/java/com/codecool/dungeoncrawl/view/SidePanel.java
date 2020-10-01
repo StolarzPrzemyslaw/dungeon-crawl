@@ -2,6 +2,7 @@ package com.codecool.dungeoncrawl.view;
 
 import com.codecool.dungeoncrawl.logic.GameMap;
 import com.codecool.dungeoncrawl.logic.actors.items.Item;
+import com.codecool.dungeoncrawl.logic.actors.items.Potion;
 import com.codecool.dungeoncrawl.logic.actors.items.Weapon;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -13,16 +14,12 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class SidePanel {
 
     private int heroStatsRowNumber = 0;
     private final int PARAMETERS_POSITION = 0;
     private int inventoryItemRowNumber = 1;
     private Game game;
-    private List<Item> playerInventory = new ArrayList<>();
 
     public SidePanel(Game game) {
         this.game = game;
@@ -137,14 +134,12 @@ public class SidePanel {
     }
 
     private void setChooseButton(GameMap map, ChoiceBox itemsList) {
-        for (Item item: playerInventory) {
-            if (item.getName() == itemsList.getValue()) {
-                armPlayerWithItem(map, itemsList, item);
-                itemsList.getItems().add("Basic dagger");
-            } else {
-                setBasicDaggerIfSelected(map, itemsList);
+        map.getPlayer().getInventory().getAllItemNames().forEach(item -> {
+            if (item == itemsList.getValue()) {
+                armPlayerWithItem(map, itemsList, map.getPlayer().getInventory().getItemByName(item));
             }
-        }
+        });
+        setBasicDaggerIfSelected(map, itemsList);
         itemsList.getSelectionModel().selectFirst();
         game.refresh();
     }
@@ -154,12 +149,16 @@ public class SidePanel {
             map.getPlayer().setWeapon((Weapon) item);
             itemsList.getItems().remove(item.getName());
             map.getPlayer().getInventory().removeItemByName(item.getName());
+            // switch for another weapon if available else select basic dagger
+            itemsList.getItems().add("Basic dagger");
+        } else if (item instanceof Potion) {
+            System.out.println("Potion");
         }
     }
 
     private void setBasicDaggerIfSelected(GameMap map, ChoiceBox itemsList) {
         Item currentItem = map.getPlayer().getWeapon();
-        if (itemsList.getValue() == "Basic dagger" || itemsList.getValue() == null) {
+        if (itemsList.getValue() == "Basic dagger") {
             map.getPlayer().setWeapon(null);
             map.getPlayer().getInventory().addItemToInventory(currentItem);
             itemsList.getItems().add(currentItem.toString());
@@ -173,6 +172,7 @@ public class SidePanel {
         itemsList.setPrefWidth(150);
         itemLabel.setTextFill(Color.web("#472D3C"));
         itemLabel.setStyle("-fx-padding: 4,0,0,0;");
+        itemsList.setDisable(true);
         chooseItems.getChildren().addAll(itemLabel, itemsList);
         return chooseItems;
     }
@@ -198,11 +198,12 @@ public class SidePanel {
 
     private void handlePickUpButtonPress(GameMap map, Button pickUpButton, ChoiceBox itemsList) {
         Item item = (Item) map.getPlayer().getBackgroundCellActor();
-        if (item instanceof Item && item.getName() != "Key") {
-            playerInventory.add(item);
+        if (item.getName() != "Key") {
             itemsList.getItems().add(item.toString());
-            item.showObtainMessage(game);
+            itemsList.setDisable(false);
+            itemsList.getSelectionModel().selectFirst();
         }
+        item.showObtainMessage(game);
         map.getPlayer().getItemFromTheFloor(item);
         map.getPlayer().setBackgroundCellActor(null);
         pickUpButton.setDisable(true);
