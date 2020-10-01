@@ -1,6 +1,7 @@
 package com.codecool.dungeoncrawl.logic.actors.characters;
 
 import com.codecool.dungeoncrawl.logic.Cell;
+import com.codecool.dungeoncrawl.view.Game;
 
 public class Skeleton extends Enemy {
 
@@ -12,8 +13,8 @@ public class Skeleton extends Enemy {
         this.name = "Skeleton";
     }
 
-    public void runActionAfterDefeat(Player player) {
-
+    public void runActionAfterDefeat(Game ui, Player player) {
+        ui.displayLog("You defeated skeleton!");
     }
 
     public String getTileName() {

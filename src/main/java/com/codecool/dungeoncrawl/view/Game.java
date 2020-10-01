@@ -21,6 +21,9 @@ import javafx.scene.paint.Color;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Game {
     private final int MAP_WIDTH_TO_DISPLAY = 25;
     private final int MAP_HEIGHT_TO_DISPLAY = 17;
@@ -32,6 +35,7 @@ public class Game {
             MAP_WIDTH_TO_DISPLAY * Tiles.TILE_WIDTH,
             MAP_HEIGHT_TO_DISPLAY * Tiles.TILE_WIDTH);
     GraphicsContext context = canvas.getGraphicsContext2D();
+    List<String> log = new ArrayList<>();
 
     Label heroName = new Label();
     Label healthLabel = new Label();
@@ -68,6 +72,12 @@ public class Game {
         primaryStage.setTitle("Dungeon Crawl");
         refresh();
         return primaryStage;
+    }
+
+    public void displayLog(String text) {
+        log.add(text);
+        // textField.setText(log.get(log.size() - 2) + "\n" + log.get(log.size() - 1));
+        refresh();
     }
 
     private void centerStage(Stage stage, BorderPane borderPane) {

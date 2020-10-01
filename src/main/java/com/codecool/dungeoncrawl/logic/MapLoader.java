@@ -4,9 +4,7 @@ import com.codecool.dungeoncrawl.logic.actors.characters.BridgeGuardian;
 import com.codecool.dungeoncrawl.logic.actors.characters.Cow;
 import com.codecool.dungeoncrawl.logic.actors.characters.Player;
 import com.codecool.dungeoncrawl.logic.actors.characters.Skeleton;
-import com.codecool.dungeoncrawl.logic.actors.items.Key;
-import com.codecool.dungeoncrawl.logic.actors.items.Potion;
-import com.codecool.dungeoncrawl.logic.actors.items.Sword;
+import com.codecool.dungeoncrawl.logic.actors.items.*;
 import com.codecool.dungeoncrawl.logic.actors.obstacles.Door;
 import com.codecool.dungeoncrawl.logic.actors.obstacles.Stairs;
 
@@ -55,6 +53,14 @@ public class MapLoader {
                         case 'i':
                             cell.setType(CellType.FLOOR);
                             new Sword(cell);
+                            break;
+                        case 'j':
+                            cell.setType(CellType.FLOOR);
+                            new Axe(cell);
+                            break;
+                        case 'n':
+                            cell.setType(CellType.FLOOR);
+                            new Knife(cell);
                             break;
                         case 'k':
                             cell.setType(CellType.FLOOR);
