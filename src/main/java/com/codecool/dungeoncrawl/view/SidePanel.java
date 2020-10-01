@@ -98,7 +98,7 @@ public class SidePanel {
         pane.setPadding(new Insets(10));
     }
 
-    public VBox createUserInterface(Button pickUpButton, ChoiceBox itemsList, GameMap map, Button chooseItem, Button openDoor) {
+    public VBox createUserInterface(Button pickUpButton, ChoiceBox<String> itemsList, GameMap map, Button chooseItem, Button openDoor) {
         VBox UIContainer = new VBox();
         UIContainer.setStyle("-fx-border-color:#472D3C; -fx-padding: 15;");
         UIContainer.setPadding(new Insets(20));
@@ -115,7 +115,7 @@ public class SidePanel {
         return UIContainer;
     }
 
-    private HBox generateButtonPanel(Button pickUpButton, GameMap map, Button openDoor, ChoiceBox itemLists) {
+    private HBox generateButtonPanel(Button pickUpButton, GameMap map, Button openDoor, ChoiceBox<String> itemLists) {
         HBox buttonPanel = new HBox();
         styleHBox(buttonPanel);
         setPickUpButton(pickUpButton, map, itemLists);
@@ -124,7 +124,7 @@ public class SidePanel {
         return buttonPanel;
     }
 
-    private HBox createUseItemPanel(Button useItemButton, GameMap map, ChoiceBox itemsList) {
+    private HBox createUseItemPanel(Button useItemButton, GameMap map, ChoiceBox<String> itemsList) {
         HBox useItemPanel = new HBox(useItemButton);
         setUseItemPanel(useItemPanel);
         setUseItemButton(useItemButton, itemsList, map);
@@ -137,19 +137,19 @@ public class SidePanel {
         useItemPanel.setAlignment(Pos.BASELINE_CENTER);
     }
 
-    private void setUseItemButton(Button useItemButton, ChoiceBox itemsList, GameMap map) {
+    private void setUseItemButton(Button useItemButton, ChoiceBox<String> itemsList, GameMap map) {
         useItemButton.setText("Use selected item");
         useItemButton.setOnAction(event -> handleUseItemButton(map, itemsList));
     }
 
-    private void handleUseItemButton(GameMap map, ChoiceBox itemsList) {
+    private void handleUseItemButton(GameMap map, ChoiceBox<String> itemsList) {
         Item item = getSelectedItem(map, itemsList);
         if (isType(Usable.class, item)) useItem(item, map);
         else if (isType(Consumable.class, item)) consumeItem(item, map, itemsList);
         finalizeUseItemEvent(itemsList);
     }
 
-    private void finalizeUseItemEvent(ChoiceBox itemsList) {
+    private void finalizeUseItemEvent(ChoiceBox<String> itemsList) {
         itemsList.getSelectionModel().clearSelection();
         game.refresh();
     }
@@ -158,28 +158,27 @@ public class SidePanel {
         ((Usable) item).use(map.getPlayer());
     }
 
-    private void consumeItem(Item item, GameMap map, ChoiceBox itemsList) {
+    private void consumeItem(Item item, GameMap map, ChoiceBox<String> itemsList) {
         itemsList.getItems().remove(item.getName());
         ((Consumable) item).consume(map.getPlayer());
     }
 
-    private Item getSelectedItem(GameMap map, ChoiceBox itemsList) {
-        return map.getPlayer().getInventory().getItemByName((String) itemsList.getValue());
+    private Item getSelectedItem(GameMap map, ChoiceBox<String> itemsList) {
+        return map.getPlayer().getInventory().getItemByName(itemsList.getValue());
     }
 
-    private HBox generateChooseSection(ChoiceBox itemsList, GameMap map) {
+    private HBox generateChooseSection(ChoiceBox<String> itemsList, GameMap map) {
         HBox chooseItems = new HBox();
         Label itemLabel = new Label("Choose item: ");
         itemsList.setItems(getUsableItemsNames(map));
         itemsList.setPrefWidth(150);
         itemLabel.setTextFill(Color.web("#472D3C"));
         itemLabel.setStyle("-fx-padding: 4,0,0,0;");
-        itemsList.setDisable(true);
         chooseItems.getChildren().addAll(itemLabel, itemsList);
         return chooseItems;
     }
 
-    private void setPickUpButton(Button pickUpButton, GameMap map, ChoiceBox itemsList) {
+    private void setPickUpButton(Button pickUpButton, GameMap map, ChoiceBox<String> itemsList) {
         pickUpButton.setText("Pick up item!");
         pickUpButton.setOnAction(event -> handlePickUpButtonPress(map, pickUpButton, itemsList));
         pickUpButton.setDisable(true);
@@ -199,12 +198,10 @@ public class SidePanel {
         game.refresh();
     }
 
-    private void handlePickUpButtonPress(GameMap map, Button pickUpButton, ChoiceBox itemsList) {
+    private void handlePickUpButtonPress(GameMap map, Button pickUpButton, ChoiceBox<String> itemsList) {
         Item item = (Item) map.getPlayer().getBackgroundCellActor();
         if (isType(Usable.class, item) || isType(Consumable.class, item)) {
             itemsList.getItems().add(item.toString());
-            itemsList.setDisable(false);
-            itemsList.getSelectionModel().selectFirst();
         }
         item.showObtainMessage(game);
         map.getPlayer().getInventory().addItemToInventory(item);

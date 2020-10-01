@@ -19,6 +19,7 @@ import javafx.stage.Stage;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class Game {
     private final int MAP_WIDTH_TO_DISPLAY = 25;
@@ -45,7 +46,7 @@ public class Game {
     Button openDoor = new Button();
     Label previousLog = new Label();
     Label currentLog = new Label();
-    ChoiceBox itemsList = new ChoiceBox();
+    ChoiceBox<String> itemsList = new ChoiceBox<>();
 
     public Game(Main main) {
         this.main = main;
@@ -93,7 +94,7 @@ public class Game {
     }
 
     public void generateLoseScreen(Person enemy) {
-        Dialog dialog = new Dialog();
+        Dialog<Optional<ButtonType>> dialog = new Dialog<>();
         DialogPane dialogPane = dialog.getDialogPane();
         dialogPane.setStyle("-fx-background-color: #fff;");
         dialog.initModality(Modality.APPLICATION_MODAL);
