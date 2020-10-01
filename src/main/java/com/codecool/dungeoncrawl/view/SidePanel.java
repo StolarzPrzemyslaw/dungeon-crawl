@@ -22,7 +22,6 @@ public class SidePanel {
     private final int PARAMETERS_POSITION = 0;
     private int inventoryItemRowNumber = 1;
     private Game game;
-    private List<Item> playerInventory = new ArrayList<>();
 
     public SidePanel(Game game) {
         this.game = game;
@@ -137,14 +136,13 @@ public class SidePanel {
     }
 
     private void setChooseButton(GameMap map, ChoiceBox itemsList) {
-        for (Item item: playerInventory) {
-            if (item.getName() == itemsList.getValue()) {
-                armPlayerWithItem(map, itemsList, item);
+        map.getPlayer().getInventory().getAllItemNames().forEach(item -> {
+            if (item == itemsList.getValue()) {
+                armPlayerWithItem(map, itemsList, map.getPlayer().getInventory().getItemByName(item));
                 itemsList.getItems().add("Basic dagger");
-            } else {
-                setBasicDaggerIfSelected(map, itemsList);
             }
-        }
+        });
+        setBasicDaggerIfSelected(map, itemsList);
         itemsList.getSelectionModel().selectFirst();
         game.refresh();
     }
@@ -159,7 +157,7 @@ public class SidePanel {
 
     private void setBasicDaggerIfSelected(GameMap map, ChoiceBox itemsList) {
         Item currentItem = map.getPlayer().getWeapon();
-        if (itemsList.getValue() == "Basic dagger" || itemsList.getValue() == null) {
+        if (itemsList.getValue() == "Basic dagger") {
             map.getPlayer().setWeapon(null);
             map.getPlayer().getInventory().addItemToInventory(currentItem);
             itemsList.getItems().add(currentItem.toString());
@@ -173,6 +171,7 @@ public class SidePanel {
         itemsList.setPrefWidth(150);
         itemLabel.setTextFill(Color.web("#472D3C"));
         itemLabel.setStyle("-fx-padding: 4,0,0,0;");
+        itemsList.setDisable(true);
         chooseItems.getChildren().addAll(itemLabel, itemsList);
         return chooseItems;
     }
@@ -198,9 +197,10 @@ public class SidePanel {
 
     private void handlePickUpButtonPress(GameMap map, Button pickUpButton, ChoiceBox itemsList) {
         Item item = (Item) map.getPlayer().getBackgroundCellActor();
-        if (item instanceof Item && item.getName() != "Key") {
-            playerInventory.add(item);
+        if (item.getName() != "Key") {
             itemsList.getItems().add(item.toString());
+            itemsList.setDisable(false);
+            itemsList.getSelectionModel().selectFirst();
         }
         map.getPlayer().getItemFromTheFloor(item);
         map.getPlayer().setBackgroundCellActor(null);
