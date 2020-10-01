@@ -7,7 +7,7 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 
 public class BottomPanel {
-    private Game game;
+    private final Game game;
 
     public BottomPanel(Game game) {
         this.game = game;

@@ -1,9 +1,10 @@
 package com.codecool.dungeoncrawl.view;
 
 import com.codecool.dungeoncrawl.logic.GameMap;
+import com.codecool.dungeoncrawl.logic.actors.items.*;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import com.codecool.dungeoncrawl.logic.actors.items.Item;
-import com.codecool.dungeoncrawl.logic.actors.items.Potion;
-import com.codecool.dungeoncrawl.logic.actors.items.Weapon;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -97,7 +98,7 @@ public class SidePanel {
         pane.setPadding(new Insets(10));
     }
 
-    public VBox createUserInterface(Button pickUpButton, ChoiceBox itemsList, GameMap map, Button chooseItem, Button openDoor) {
+    public VBox createUserInterface(Button pickUpButton, ChoiceBox<String> itemsList, GameMap map, Button chooseItem, Button openDoor) {
         VBox UIContainer = new VBox();
         UIContainer.setStyle("-fx-border-color:#472D3C; -fx-padding: 15;");
         UIContainer.setPadding(new Insets(20));
@@ -106,15 +107,15 @@ public class SidePanel {
         UIName.setTextFill(Color.web("#472D3C"));
         UIName.setPadding(new Insets(10));
 
-        HBox chooseItems = generateChooseSection(itemsList);
-        HBox useItem = generateChooseButton(chooseItem, map, itemsList);
+        HBox chooseItems = generateChooseSection(itemsList, map);
+        HBox useItem = createUseItemPanel(chooseItem, map, itemsList);
         HBox buttonPanel = generateButtonPanel(pickUpButton, map, openDoor, itemsList);
 
         UIContainer.getChildren().addAll(UIName, chooseItems, useItem, buttonPanel);
         return UIContainer;
     }
 
-    private HBox generateButtonPanel(Button pickUpButton, GameMap map, Button openDoor, ChoiceBox itemLists) {
+    private HBox generateButtonPanel(Button pickUpButton, GameMap map, Button openDoor, ChoiceBox<String> itemLists) {
         HBox buttonPanel = new HBox();
         styleHBox(buttonPanel);
         setPickUpButton(pickUpButton, map, itemLists);
@@ -123,61 +124,61 @@ public class SidePanel {
         return buttonPanel;
     }
 
-    private HBox generateChooseButton(Button chooseItem, GameMap map, ChoiceBox itemsList) {
-        HBox useItem = new HBox(chooseItem);
-        chooseItem.setText("Use selected item");
-        useItem.setPrefWidth(300);
-        useItem.setPadding(new Insets(10));
-        useItem.setAlignment(Pos.BASELINE_CENTER);
-        chooseItem.setOnAction(event -> setChooseButton(map, itemsList));
-        return useItem;
+    private HBox createUseItemPanel(Button useItemButton, GameMap map, ChoiceBox<String> itemsList) {
+        HBox useItemPanel = new HBox(useItemButton);
+        setUseItemPanel(useItemPanel);
+        setUseItemButton(useItemButton, itemsList, map);
+        return useItemPanel;
     }
 
-    private void setChooseButton(GameMap map, ChoiceBox itemsList) {
-        map.getPlayer().getInventory().getAllItemNames().forEach(item -> {
-            if (item == itemsList.getValue()) {
-                armPlayerWithItem(map, itemsList, map.getPlayer().getInventory().getItemByName(item));
-            }
-        });
-        setBasicDaggerIfSelected(map, itemsList);
-        itemsList.getSelectionModel().selectFirst();
+    private void setUseItemPanel(HBox useItemPanel) {
+        useItemPanel.setPrefWidth(300);
+        useItemPanel.setPadding(new Insets(10));
+        useItemPanel.setAlignment(Pos.BASELINE_CENTER);
+    }
+
+    private void setUseItemButton(Button useItemButton, ChoiceBox<String> itemsList, GameMap map) {
+        useItemButton.setText("Use selected item");
+        useItemButton.setOnAction(event -> handleUseItemButton(map, itemsList));
+    }
+
+    private void handleUseItemButton(GameMap map, ChoiceBox<String> itemsList) {
+        Item item = getSelectedItem(map, itemsList);
+        if (isType(Usable.class, item)) useItem(item, map);
+        else if (isType(Consumable.class, item)) consumeItem(item, map, itemsList);
+        finalizeUseItemEvent(itemsList);
+    }
+
+    private void finalizeUseItemEvent(ChoiceBox<String> itemsList) {
+        itemsList.getSelectionModel().clearSelection();
         game.refresh();
     }
 
-    private void armPlayerWithItem(GameMap map, ChoiceBox itemsList, Item item) {
-        if (item instanceof Weapon) {
-            map.getPlayer().setWeapon((Weapon) item);
-            itemsList.getItems().remove(item.getName());
-            map.getPlayer().getInventory().removeItemByName(item.getName());
-            // switch for another weapon if available else select basic dagger
-            itemsList.getItems().add("Basic dagger");
-        } else if (item instanceof Potion) {
-            System.out.println("Potion");
-        }
+    private void useItem(Item item, GameMap map) {
+        ((Usable) item).use(map.getPlayer());
     }
 
-    private void setBasicDaggerIfSelected(GameMap map, ChoiceBox itemsList) {
-        Item currentItem = map.getPlayer().getWeapon();
-        if (itemsList.getValue() == "Basic dagger") {
-            map.getPlayer().setWeapon(null);
-            map.getPlayer().getInventory().addItemToInventory(currentItem);
-            itemsList.getItems().add(currentItem.toString());
-            itemsList.getItems().remove("Basic dagger");
-        }
+    private void consumeItem(Item item, GameMap map, ChoiceBox<String> itemsList) {
+        itemsList.getItems().remove(item.getName());
+        ((Consumable) item).consume(map.getPlayer());
     }
 
-    private HBox generateChooseSection(ChoiceBox itemsList) {
+    private Item getSelectedItem(GameMap map, ChoiceBox<String> itemsList) {
+        return map.getPlayer().getInventory().getItemByName(itemsList.getValue());
+    }
+
+    private HBox generateChooseSection(ChoiceBox<String> itemsList, GameMap map) {
         HBox chooseItems = new HBox();
         Label itemLabel = new Label("Choose item: ");
+        itemsList.setItems(getUsableItemsNames(map));
         itemsList.setPrefWidth(150);
         itemLabel.setTextFill(Color.web("#472D3C"));
         itemLabel.setStyle("-fx-padding: 4,0,0,0;");
-        itemsList.setDisable(true);
         chooseItems.getChildren().addAll(itemLabel, itemsList);
         return chooseItems;
     }
 
-    private void setPickUpButton(Button pickUpButton, GameMap map, ChoiceBox itemsList) {
+    private void setPickUpButton(Button pickUpButton, GameMap map, ChoiceBox<String> itemsList) {
         pickUpButton.setText("Pick up item!");
         pickUpButton.setOnAction(event -> handlePickUpButtonPress(map, pickUpButton, itemsList));
         pickUpButton.setDisable(true);
@@ -197,17 +198,27 @@ public class SidePanel {
         game.refresh();
     }
 
-    private void handlePickUpButtonPress(GameMap map, Button pickUpButton, ChoiceBox itemsList) {
+    private void handlePickUpButtonPress(GameMap map, Button pickUpButton, ChoiceBox<String> itemsList) {
         Item item = (Item) map.getPlayer().getBackgroundCellActor();
-        if (item.getName() != "Key") {
+        if (isType(Usable.class, item) || isType(Consumable.class, item)) {
             itemsList.getItems().add(item.toString());
-            itemsList.setDisable(false);
-            itemsList.getSelectionModel().selectFirst();
         }
         item.showObtainMessage(game);
         map.getPlayer().getInventory().addItemToInventory(item);
         map.getPlayer().setBackgroundCellActor(null);
         pickUpButton.setDisable(true);
         game.refresh();
+    }
+
+    private ObservableList<String> getUsableItemsNames(GameMap map) {
+        ObservableList<String> usableItemsNames = FXCollections.observableArrayList();
+        map.getPlayer().getInventory().getItems().forEach(item -> {
+            if (isType(Usable.class, item)) usableItemsNames.add(item.getName());
+        });
+        return usableItemsNames;
+    }
+
+    private boolean isType(Class<?> itemClass, Item item) {
+        return itemClass.isInstance(item);
     }
 }

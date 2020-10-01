@@ -5,7 +5,7 @@ import com.codecool.dungeoncrawl.logic.actors.Actor;
 
 public abstract class Person extends Actor {
     protected int health;
-    protected int currentHealth = health;
+    protected int currentHealth;
     protected int strength;
     protected Actor backgroundCellActor;
 
