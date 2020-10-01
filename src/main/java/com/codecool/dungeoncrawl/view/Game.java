@@ -78,12 +78,10 @@ public class Game {
     public void displayLog(String text) {
         log.add(text);
         refresh();
-        if (log.size() > 1) {
+        if (log.size() != 1) {
             previousLog.setText(log.get(log.size() - 2));
-            currentLog.setText(log.get(log.size() - 1));
-        } else if (log.size() == 1) {
-            currentLog.setText(log.get(log.size() - 1));
         }
+        currentLog.setText(log.get(log.size() - 1));
     }
 
     private void centerStage(Stage stage, BorderPane borderPane) {

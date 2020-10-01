@@ -28,10 +28,13 @@ public class BottomPanel {
     }
 
     private void styleLogMessage(Label previousLog, Label currentLog) {
-        currentLog.setContentDisplay(ContentDisplay.CENTER);
-        currentLog.setStyle("-fx-text-alignment: center; -fx-text-fill: #CFC6B8; -fx-font-size: 20;");
+        styleLabel(currentLog, "-fx-text-alignment: center; -fx-text-fill: #CFC6B8; -fx-font-size: 20;");
 
-        previousLog.setContentDisplay(ContentDisplay.CENTER);
-        previousLog.setStyle("-fx-text-alignment: center; -fx-text-fill: #CFC6B8; -fx-font-size: 15; -fx-opacity: 0.5");
+        styleLabel(previousLog, "-fx-text-alignment: center; -fx-text-fill: #CFC6B8; -fx-font-size: 15; -fx-opacity: 0.5");
+    }
+
+    private void styleLabel(Label currentLog, String styles) {
+        currentLog.setContentDisplay(ContentDisplay.CENTER);
+        currentLog.setStyle(styles);
     }
 }

@@ -202,8 +202,8 @@ public class SidePanel {
             itemsList.getItems().add(item.toString());
             itemsList.setDisable(false);
             itemsList.getSelectionModel().selectFirst();
-            item.showObtainMessage(game);
         }
+        item.showObtainMessage(game);
         map.getPlayer().getItemFromTheFloor(item);
         map.getPlayer().setBackgroundCellActor(null);
         pickUpButton.setDisable(true);
