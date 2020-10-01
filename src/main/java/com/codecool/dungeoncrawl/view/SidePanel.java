@@ -1,8 +1,10 @@
 package com.codecool.dungeoncrawl.view;
 
 import com.codecool.dungeoncrawl.logic.GameMap;
-import com.codecool.dungeoncrawl.logic.actors.items.Item;
-import com.codecool.dungeoncrawl.logic.actors.items.Weapon;
+import com.codecool.dungeoncrawl.logic.actors.items.*;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.collections.ObservableListBase;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -22,7 +24,6 @@ public class SidePanel {
     private final int PARAMETERS_POSITION = 0;
     private int inventoryItemRowNumber = 1;
     private Game game;
-    private List<Item> playerInventory = new ArrayList<>();
 
     public SidePanel(Game game) {
         this.game = game;
@@ -109,7 +110,7 @@ public class SidePanel {
         UIName.setTextFill(Color.web("#472D3C"));
         UIName.setPadding(new Insets(10));
 
-        HBox chooseItems = generateChooseSection(itemsList);
+        HBox chooseItems = generateChooseSection(itemsList, map);
         HBox useItem = generateChooseButton(chooseItem, map, itemsList);
         HBox buttonPanel = generateButtonPanel(pickUpButton, map, openDoor, itemsList);
 
@@ -137,39 +138,30 @@ public class SidePanel {
     }
 
     private void setChooseButton(GameMap map, ChoiceBox itemsList) {
-        for (Item item: playerInventory) {
-            if (item.getName() == itemsList.getValue()) {
-                armPlayerWithItem(map, itemsList, item);
-                itemsList.getItems().add("Basic dagger");
-            } else {
-                setBasicDaggerIfSelected(map, itemsList);
-            }
-        }
-        itemsList.getSelectionModel().selectFirst();
+        Item item = getSelectedItem(map, itemsList);
+        if (isType(Usable.class, item)) useItem(item, map);
+        else if (isType(Consumable.class, item)) consumeItem(item, map, itemsList);
+        itemsList.getSelectionModel().clearSelection();
         game.refresh();
     }
 
-    private void armPlayerWithItem(GameMap map, ChoiceBox itemsList, Item item) {
-        if (item instanceof Weapon) {
-            map.getPlayer().setWeapon((Weapon) item);
-            itemsList.getItems().remove(item.getName());
-            map.getPlayer().getInventory().removeItemByName(item.getName());
-        }
+    private void useItem(Item item, GameMap map) {
+        ((Usable) item).use(map.getPlayer());
     }
 
-    private void setBasicDaggerIfSelected(GameMap map, ChoiceBox itemsList) {
-        Item currentItem = map.getPlayer().getWeapon();
-        if (itemsList.getValue() == "Basic dagger" || itemsList.getValue() == null) {
-            map.getPlayer().setWeapon(null);
-            map.getPlayer().getInventory().addItemToInventory(currentItem);
-            itemsList.getItems().add(currentItem.toString());
-            itemsList.getItems().remove("Basic dagger");
-        }
+    private void consumeItem(Item item, GameMap map, ChoiceBox itemsList) {
+        itemsList.getItems().remove(item.getName());
+        ((Consumable) item).consume(map.getPlayer());
     }
 
-    private HBox generateChooseSection(ChoiceBox itemsList) {
+    private Item getSelectedItem(GameMap map, ChoiceBox itemsList) {
+        return map.getPlayer().getInventory().getItemByName((String) itemsList.getValue());
+    }
+
+    private HBox generateChooseSection(ChoiceBox itemsList, GameMap map) {
         HBox chooseItems = new HBox();
         Label itemLabel = new Label("Choose item: ");
+        itemsList.setItems(getUsableItemsNames(map));
         itemsList.setPrefWidth(150);
         itemLabel.setTextFill(Color.web("#472D3C"));
         itemLabel.setStyle("-fx-padding: 4,0,0,0;");
@@ -198,13 +190,24 @@ public class SidePanel {
 
     private void handlePickUpButtonPress(GameMap map, Button pickUpButton, ChoiceBox itemsList) {
         Item item = (Item) map.getPlayer().getBackgroundCellActor();
-        if (item instanceof Weapon) {
-            playerInventory.add(item);
+        if (isType(Usable.class, item) || isType(Consumable.class, item)) {
             itemsList.getItems().add(item.toString());
         }
         map.getPlayer().getItemFromTheFloor(item);
         map.getPlayer().setBackgroundCellActor(null);
         pickUpButton.setDisable(true);
         game.refresh();
+    }
+
+    private ObservableList<String> getUsableItemsNames(GameMap map) {
+        ObservableList<String> usableItemsNames = FXCollections.observableArrayList();
+        map.getPlayer().getInventory().getItems().forEach(item -> {
+            if (isType(Usable.class, item)) usableItemsNames.add(item.getName());
+        });
+        return usableItemsNames;
+    }
+
+    private boolean isType(Class<?> itemClass, Item item) {
+        return itemClass.isInstance(item);
     }
 }

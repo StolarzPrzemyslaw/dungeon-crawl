@@ -44,4 +44,8 @@ public class Inventory {
         listOfItems.forEach(item -> listOfNames.add(item.getName()));
         return listOfNames;
     }
+
+    public List<Item> getItems() {
+        return listOfItems;
+    }
 }

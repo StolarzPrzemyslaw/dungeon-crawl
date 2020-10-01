@@ -2,22 +2,19 @@ package com.codecool.dungeoncrawl.logic.actors.characters;
 
 import com.codecool.dungeoncrawl.logic.Cell;
 import com.codecool.dungeoncrawl.logic.actors.components.Inventory;
+import com.codecool.dungeoncrawl.logic.actors.items.Dagger;
 import com.codecool.dungeoncrawl.logic.actors.items.Item;
 import com.codecool.dungeoncrawl.logic.actors.items.Weapon;
 
 public class Player extends Person {
 
-    private final Inventory inventory;
+    private Inventory inventory;
     private Weapon chosenWeapon;
     private final int INITIAL_STRENGTH = 5;
 
     public Player(Cell cell) {
         super(cell);
-        this.name = "Hero Name";
-        this.strength = 5;
-        this.health = 20;
-        this.currentHealth = this.health;
-        this.inventory = new Inventory();
+        createPlayer();
     }
 
     public Player(Cell cell, Inventory inventory) {
@@ -55,5 +52,16 @@ public class Player extends Person {
 
     public void healUp(int healthRestored) {
         currentHealth = Math.min(currentHealth + healthRestored, health);
+    }
+
+    private void createPlayer() {
+        this.name = "Hero Name";
+        this.strength = 5;
+        this.health = 20;
+        this.currentHealth = this.health;
+        chosenWeapon = new Dagger(cell);
+        this.inventory = new Inventory();
+        this.inventory.addItemToInventory(chosenWeapon);
+        cell.setActor(this);
     }
 }
