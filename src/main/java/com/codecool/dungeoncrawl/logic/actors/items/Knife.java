@@ -7,7 +7,7 @@ public class Knife extends Weapon implements Usable {
     public Knife(Cell cell) {
         super(cell);
         this.statistic = 3;
-        this.name = "Knife +3";
+        this.name = "Knife";
         this.obtainMessage = "You have obtained a knife!";
     }
 

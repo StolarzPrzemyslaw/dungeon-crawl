@@ -10,6 +10,7 @@ public class Potion extends Item implements Consumable {
         super(cell);
         healthRestored = 5;
         name = "Small potion";
+        this.obtainMessage = "You have obtained a potion!";
     }
 
     @Override

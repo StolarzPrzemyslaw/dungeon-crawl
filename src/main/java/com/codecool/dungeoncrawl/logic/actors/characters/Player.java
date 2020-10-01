@@ -3,17 +3,16 @@ package com.codecool.dungeoncrawl.logic.actors.characters;
 import com.codecool.dungeoncrawl.logic.Cell;
 import com.codecool.dungeoncrawl.logic.actors.components.Inventory;
 import com.codecool.dungeoncrawl.logic.actors.items.Dagger;
-import com.codecool.dungeoncrawl.logic.actors.items.Item;
 import com.codecool.dungeoncrawl.logic.actors.items.Weapon;
 
 public class Player extends Person {
 
-    private Inventory inventory;
+    private final Inventory inventory;
     private Weapon chosenWeapon;
-    private final int INITIAL_STRENGTH = 5;
 
     public Player(Cell cell) {
         super(cell);
+        this.inventory = new Inventory();
         createPlayer();
     }
 
@@ -22,14 +21,15 @@ public class Player extends Person {
         this.inventory = inventory;
     }
 
+    public void setPlayerCell(Cell cell) {
+        this.cell = cell;
+    }
+
     public Inventory getInventory() {
         return inventory;
     }
 
-    public void getItemFromTheFloor(Item obtainedItem) {
-        inventory.addItemToInventory(obtainedItem);
-    }
-
+    @Override
     public String getTileName() {
         return "player";
     }
@@ -42,8 +42,9 @@ public class Player extends Person {
         return chosenWeapon;
     }
 
-    public int getStrengthBasedOnWeapon() {
-        return chosenWeapon != null ? chosenWeapon.getStatistic() + strength : INITIAL_STRENGTH;
+    @Override
+    public int getStrength() {
+        return chosenWeapon != null ? chosenWeapon.getStatistic() + strength : strength;
     }
 
     public void setPlayerName(String name) {
@@ -60,7 +61,6 @@ public class Player extends Person {
         this.health = 20;
         this.currentHealth = this.health;
         chosenWeapon = new Dagger(cell);
-        this.inventory = new Inventory();
         this.inventory.addItemToInventory(chosenWeapon);
         cell.setActor(this);
     }

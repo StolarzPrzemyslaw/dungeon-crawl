@@ -1,6 +1,7 @@
 package com.codecool.dungeoncrawl.logic.actors.characters;
 
 import com.codecool.dungeoncrawl.logic.Cell;
+import com.codecool.dungeoncrawl.view.Game;
 
 public class Cow extends Enemy {
 
@@ -11,10 +12,12 @@ public class Cow extends Enemy {
         super(cell);
         this.strength = 0;
         this.health = 6;
+        this.currentHealth = this.health;
         this.name = "Cow";
     }
 
-    public void runActionAfterDefeat(Player player) {
+    public void runActionAfterDefeat(Game ui, Player player) {
+        ui.displayLog("You defeated cow! You are fully healed up!");
         player.healUp(20);
     }
 
@@ -35,7 +38,7 @@ public class Cow extends Enemy {
     }
 
     public void swapDirectionOfMoving() {
-        this.isMovingLeft  = !this.isMovingLeft;
+        this.isMovingLeft = !this.isMovingLeft;
     }
 
     public String getTileName() {

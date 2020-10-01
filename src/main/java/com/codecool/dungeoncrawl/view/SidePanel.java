@@ -4,6 +4,7 @@ import com.codecool.dungeoncrawl.logic.GameMap;
 import com.codecool.dungeoncrawl.logic.actors.items.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import com.codecool.dungeoncrawl.logic.actors.items.Item;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -19,7 +20,7 @@ public class SidePanel {
     private int heroStatsRowNumber = 0;
     private final int PARAMETERS_POSITION = 0;
     private int inventoryItemRowNumber = 1;
-    private Game game;
+    private final Game game;
 
     public SidePanel(Game game) {
         this.game = game;
@@ -173,6 +174,7 @@ public class SidePanel {
         itemsList.setPrefWidth(150);
         itemLabel.setTextFill(Color.web("#472D3C"));
         itemLabel.setStyle("-fx-padding: 4,0,0,0;");
+        itemsList.setDisable(true);
         chooseItems.getChildren().addAll(itemLabel, itemsList);
         return chooseItems;
     }
@@ -192,6 +194,7 @@ public class SidePanel {
 
     private void handleOpenDoorButton(GameMap map, Button openDoorButton) {
         map.getPlayer().getCell().openDoorNextToPlayer();
+        game.displayLog("You have opened a door!");
         openDoorButton.setDisable(true);
         game.refresh();
     }
@@ -200,8 +203,11 @@ public class SidePanel {
         Item item = (Item) map.getPlayer().getBackgroundCellActor();
         if (isType(Usable.class, item) || isType(Consumable.class, item)) {
             itemsList.getItems().add(item.toString());
+            itemsList.setDisable(false);
+            itemsList.getSelectionModel().selectFirst();
         }
-        map.getPlayer().getItemFromTheFloor(item);
+        item.showObtainMessage(game);
+        map.getPlayer().getInventory().addItemToInventory(item);
         map.getPlayer().setBackgroundCellActor(null);
         pickUpButton.setDisable(true);
         game.refresh();

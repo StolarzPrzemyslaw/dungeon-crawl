@@ -9,11 +9,15 @@ public enum CellType {
     },
     WALL("wall") {
         @Override
-        public boolean isPassable() { return false; }
+        public boolean isPassable() {
+            return false;
+        }
     },
     RIVER("river") {
         @Override
-        public boolean isPassable() { return false; }
+        public boolean isPassable() {
+            return false;
+        }
     },
     FLOOR("floor"),
     BRIDGE("bridge");

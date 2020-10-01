@@ -4,21 +4,21 @@ import com.codecool.dungeoncrawl.logic.Cell;
 import com.codecool.dungeoncrawl.logic.GameLogic;
 import com.codecool.dungeoncrawl.logic.GameMap;
 import com.codecool.dungeoncrawl.logic.actors.characters.Person;
-import com.codecool.dungeoncrawl.logic.actors.characters.Player;
-import javafx.application.Platform;
+import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.Label;
+import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.stage.Modality;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Game {
     private final int MAP_WIDTH_TO_DISPLAY = 25;
@@ -26,11 +26,14 @@ public class Game {
 
     GameMap gameMap;
     GameLogic gameLogic;
+    Main main;
+
     Scene scene;
     Canvas canvas = new Canvas(
             MAP_WIDTH_TO_DISPLAY * Tiles.TILE_WIDTH,
             MAP_HEIGHT_TO_DISPLAY * Tiles.TILE_WIDTH);
     GraphicsContext context = canvas.getGraphicsContext2D();
+    List<String> log = new ArrayList<>();
 
     Label heroName = new Label();
     Label healthLabel = new Label();
@@ -40,8 +43,13 @@ public class Game {
     Button pickUpButton = new Button();
     Button chooseItem = new Button();
     Button openDoor = new Button();
+    Label previousLog = new Label();
+    Label currentLog = new Label();
     ChoiceBox itemsList = new ChoiceBox();
 
+    public Game(Main main) {
+        this.main = main;
+    }
 
     public void setUpReferenceLogicForGetDataFromGame(GameLogic gameLogic) {
         this.gameLogic = gameLogic;
@@ -50,11 +58,15 @@ public class Game {
 
     public Stage generateUI(Stage primaryStage) {
         SidePanel sidePanel = new SidePanel(this);
+        BottomPanel bottomPanel = new BottomPanel(this);
         VBox descriptionContainer = sidePanel.createSidePanel(healthLabel, strengthLabel, weaponLabel, heroName);
         descriptionContainer.getChildren().add(sidePanel.createUserInterface(pickUpButton, itemsList, gameMap, chooseItem, openDoor));
         descriptionContainer.getChildren().add(sidePanel.generateInventory(inventoryLabel));
+        VBox logContainer = bottomPanel.createLogContainer(previousLog, currentLog);
         BorderPane borderPane = new BorderPane();
-        borderPane.setCenter(canvas);
+        VBox mainView = new VBox();
+        mainView.getChildren().addAll(canvas, logContainer);
+        borderPane.setCenter(mainView);
         borderPane.setRight(descriptionContainer);
         scene = new Scene(borderPane);
         primaryStage.setScene(scene);
@@ -65,19 +77,37 @@ public class Game {
         return primaryStage;
     }
 
+    public void displayLog(String text) {
+        log.add(text);
+        refresh();
+        if (log.size() != 1) {
+            previousLog.setText(log.get(log.size() - 2));
+        }
+        currentLog.setText(log.get(log.size() - 1));
+    }
+
     private void centerStage(Stage stage, BorderPane borderPane) {
         Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
         stage.setX((screenBounds.getWidth() - borderPane.getWidth()) / 2);
         stage.setY((screenBounds.getHeight() - borderPane.getHeight()) / 2);
     }
 
-    public void generateLoseScreen(Player player, Person enemy) {
-        Alert loseScreen = new Alert(Alert.AlertType.INFORMATION);
-        loseScreen.setHeaderText("You lose!");
-        loseScreen.setContentText("You are defeated by " + enemy.getName());
-        loseScreen.showAndWait();
-        Platform.exit();
-        System.exit(0);
+    public void generateLoseScreen(Person enemy) {
+        Dialog dialog = new Dialog();
+        DialogPane dialogPane = dialog.getDialogPane();
+        dialogPane.setStyle("-fx-background-color: #fff;");
+        dialog.initModality(Modality.APPLICATION_MODAL);
+        displayLog("You are defeated by " + enemy.getName());
+        dialogPane.setContentText("You are defeated by " + enemy.getName());
+
+        ButtonType confirmButton = new ButtonType("Ok", ButtonBar.ButtonData.OK_DONE);
+        dialog.getDialogPane().getButtonTypes().addAll(confirmButton);
+
+        Button okButton = (Button) dialog.getDialogPane().lookupButton(confirmButton);
+        okButton.setAlignment(Pos.CENTER);
+
+        dialog.showAndWait();
+        main.setMainMenuScene();
     }
 
     public void refresh() {
@@ -97,6 +127,10 @@ public class Game {
         strengthLabel.setText("" + gameMap.getPlayer().getStrength() + "\n");
         String weaponName = gameMap.getPlayer().getWeapon() == null ? "Basic dagger" : gameMap.getPlayer().getWeapon().getName();
         weaponLabel.setText("" + weaponName + "\n");
+    }
+
+    public void setMap(GameMap map) {
+        this.gameMap = map;
     }
 
     private void drawAllTilesWithShift() {
