@@ -59,9 +59,6 @@ public class GameLogic {
 
         if (nextCell.isOccupiedByClass(Enemy.class)) {
             combat.simulateCombat(player, (Person) nearActor);
-            if (map.getPlayer().getCurrentHealth() <= 0) {
-                ui.generateLoseScreen(player, (Person) nearActor);
-            }
         } else if (nextCell.isMovePossible()) {
             player.move(dx, dy);
             enemiesTurn();
@@ -87,7 +84,13 @@ public class GameLogic {
         List<int[]> directions = getDirectionsOptions(skeleton);
         if (directions.size() != 0) {
             int randomDirection = (int) (Math.random() * directions.size());
-            skeleton.move(directions.get(randomDirection)[FIRST_COORDINATE], directions.get(randomDirection)[SECOND_COORDINATE]);
+            int firstCoordinate = directions.get(randomDirection)[FIRST_COORDINATE];
+            int secondCoordinate = directions.get(randomDirection)[SECOND_COORDINATE];
+            if (skeleton.getCell().getNeighbor(firstCoordinate, secondCoordinate).isOccupiedByClass(Player.class)) {
+                combat.simulateCombat(skeleton, map.getPlayer());
+            } else {
+                skeleton.move(firstCoordinate, secondCoordinate);
+            }
         }
     }
 
@@ -126,7 +129,7 @@ public class GameLogic {
     }
 
     private void moveCowOrSwapDirection(Cow cow, int dx, int dy) {
-        if (cow.getCell().getNeighbor(dx, dy).isMovePossible()) {
+        if (cow.getCell().getNeighbor(dx, dy).isEnemyMovePossible()) {
             cow.decreaseStepsLeft();
             cow.move(dx, dy);
         } else {

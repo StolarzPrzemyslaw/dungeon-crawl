@@ -6,17 +6,16 @@ import com.codecool.dungeoncrawl.logic.GameMap;
 import com.codecool.dungeoncrawl.logic.actors.characters.Person;
 import com.codecool.dungeoncrawl.logic.actors.characters.Player;
 import javafx.application.Platform;
+import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.Label;
+import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.stage.Modality;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
@@ -29,6 +28,8 @@ public class Game {
 
     GameMap gameMap;
     GameLogic gameLogic;
+    Main main;
+
     Scene scene;
     Canvas canvas = new Canvas(
             MAP_WIDTH_TO_DISPLAY * Tiles.TILE_WIDTH,
@@ -45,6 +46,10 @@ public class Game {
     Button chooseItem = new Button();
     Button openDoor = new Button();
     ChoiceBox itemsList = new ChoiceBox();
+
+    public Game(Main main) {
+        this.main = main;
+    }
 
     public void setUpReferenceLogicForGetDataFromGame(GameLogic gameLogic) {
         this.gameLogic = gameLogic;
@@ -80,13 +85,21 @@ public class Game {
         stage.setY((screenBounds.getHeight() - borderPane.getHeight()) / 2);
     }
 
-    public void generateLoseScreen(Player player, Person enemy) {
-        Alert loseScreen = new Alert(Alert.AlertType.INFORMATION);
-        loseScreen.setHeaderText("You lose!");
-        loseScreen.setContentText("You are defeated by " + enemy.getName());
-        loseScreen.showAndWait();
-        Platform.exit();
-        System.exit(0);
+    public void generateLoseScreen(Person enemy) {
+        Dialog dialog = new Dialog();
+        DialogPane dialogPane = dialog.getDialogPane();
+        dialogPane.setStyle("-fx-background-color: #fff;");
+        dialog.initModality(Modality.APPLICATION_MODAL);
+        dialogPane.setContentText("You are defeated by " + enemy.getName());
+
+        ButtonType confirmButton = new ButtonType("Ok", ButtonBar.ButtonData.OK_DONE);
+        dialog.getDialogPane().getButtonTypes().addAll(confirmButton);
+
+        Button okButton = (Button) dialog.getDialogPane().lookupButton(confirmButton);
+        okButton.setAlignment(Pos.CENTER);
+
+        dialog.showAndWait();
+        main.setMainMenuScene();
     }
 
     public void refresh() {

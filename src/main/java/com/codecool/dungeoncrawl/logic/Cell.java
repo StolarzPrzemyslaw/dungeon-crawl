@@ -68,7 +68,7 @@ public class Cell implements Drawable {
     }
 
     public boolean isEnemyMovePossible() {
-        return isCellTypePassable() && !isClosedDoor() && !isOccupiedByClass(Person.class);
+        return isCellTypePassable() && !isClosedDoor() && !isOccupiedByClass(Enemy.class);
     }
 
     public boolean isClosedDoor() {
