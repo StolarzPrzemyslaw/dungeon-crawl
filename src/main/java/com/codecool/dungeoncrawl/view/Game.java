@@ -22,6 +22,8 @@ import javafx.stage.Stage;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Game {
     private final int MAP_WIDTH_TO_DISPLAY = 25;
@@ -129,6 +131,10 @@ public class Game {
         strengthLabel.setText("" + gameMap.getPlayer().getStrength() + "\n");
         String weaponName = gameMap.getPlayer().getWeapon() == null ? "Basic dagger" : gameMap.getPlayer().getWeapon().getName();
         weaponLabel.setText("" + weaponName + "\n");
+    }
+
+    public void setMap(GameMap map) {
+        this.gameMap = map;
     }
 
     private void drawAllTilesWithShift() {

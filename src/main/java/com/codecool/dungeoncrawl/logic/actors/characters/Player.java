@@ -24,6 +24,10 @@ public class Player extends Person {
         this.inventory = inventory;
     }
 
+    public void setPlayerCell(Cell cell) {
+        this.cell = cell;
+    }
+
     public Inventory getInventory() {
         return inventory;
     }
