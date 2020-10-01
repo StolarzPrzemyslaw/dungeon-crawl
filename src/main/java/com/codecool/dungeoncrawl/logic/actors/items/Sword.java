@@ -12,6 +12,6 @@ public class Sword extends Weapon {
     }
 
     public String getTileName() {
-        return "weapon";
+        return "sword";
     }
 }

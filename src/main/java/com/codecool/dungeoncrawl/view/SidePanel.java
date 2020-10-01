@@ -149,8 +149,9 @@ public class SidePanel {
             map.getPlayer().setWeapon((Weapon) item);
             itemsList.getItems().remove(item.getName());
             map.getPlayer().getInventory().removeItemByName(item.getName());
-            // switch for another weapon if available else select basic dagger
-            itemsList.getItems().add("Basic dagger");
+            if (!map.getPlayer().getInventory().contains("Basic dagger")) {
+                itemsList.getItems().add("Basic dagger");
+            }
         } else if (item instanceof Potion) {
             System.out.println("Potion");
         }
