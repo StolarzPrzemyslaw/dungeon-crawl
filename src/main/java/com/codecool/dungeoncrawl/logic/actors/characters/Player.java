@@ -2,8 +2,14 @@ package com.codecool.dungeoncrawl.logic.actors.characters;
 
 import com.codecool.dungeoncrawl.logic.Cell;
 import com.codecool.dungeoncrawl.logic.actors.components.Inventory;
-import com.codecool.dungeoncrawl.logic.actors.items.Dagger;
+<<<<<<< HEAD
+import com.codecool.dungeoncrawl.logic.actors.items.*;
+=======
+import com.codecool.dungeoncrawl.logic.actors.items.Axe;
+import com.codecool.dungeoncrawl.logic.actors.items.Item;
+import com.codecool.dungeoncrawl.logic.actors.items.Sword;
 import com.codecool.dungeoncrawl.logic.actors.items.Weapon;
+>>>>>>> 56c2797c9aad9510b85ea5fd87cdf77ef0465072
 
 public class Player extends Person {
 
@@ -31,6 +37,15 @@ public class Player extends Person {
 
     @Override
     public String getTileName() {
+        if (chosenWeapon instanceof Sword) {
+            return "playerLvL3";
+        } else if (chosenWeapon instanceof Axe) {
+<<<<<<< HEAD
+            return "playerLvL2";
+=======
+            return "playerLvl2";
+>>>>>>> 56c2797c9aad9510b85ea5fd87cdf77ef0465072
+        }
         return "player";
     }
 

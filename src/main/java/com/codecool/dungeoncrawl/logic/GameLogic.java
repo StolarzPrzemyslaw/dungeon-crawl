@@ -76,11 +76,13 @@ public class GameLogic {
     private void loadNextMap() {
         Player temporaryPlayer = map.getPlayer();
         map = MapLoader.loadMap(map.getLevelNumber() + 1);
+        map.getPlayer().setWeapon(temporaryPlayer.getWeapon());
         Cell temporaryCell = map.getPlayer().getCell();
         map.setPlayer(temporaryPlayer);
         map.getPlayer().setPlayerCell(temporaryCell);
         ui.setMap(map);
         ui.displayLog("You have moved to the next level!");
+        ui.refresh();
     }
 
     private void enemiesTurn() {
