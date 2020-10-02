@@ -2,8 +2,7 @@ package com.codecool.dungeoncrawl.logic.actors.characters;
 
 import com.codecool.dungeoncrawl.logic.Cell;
 import com.codecool.dungeoncrawl.logic.actors.components.Inventory;
-import com.codecool.dungeoncrawl.logic.actors.items.Dagger;
-import com.codecool.dungeoncrawl.logic.actors.items.Weapon;
+import com.codecool.dungeoncrawl.logic.actors.items.*;
 
 public class Player extends Person {
 
@@ -31,6 +30,11 @@ public class Player extends Person {
 
     @Override
     public String getTileName() {
+        if (chosenWeapon instanceof Sword) {
+            return "playerLvL3";
+        } else if (chosenWeapon instanceof Axe) {
+            return "playerLvL2";
+        }
         return "player";
     }
 

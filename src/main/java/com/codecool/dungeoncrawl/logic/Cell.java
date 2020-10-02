@@ -18,6 +18,7 @@ public class Cell implements Drawable {
         this.type = type;
     }
 
+
     public CellType getType() {
         return type;
     }
@@ -49,6 +50,7 @@ public class Cell implements Drawable {
     public String getTileName() {
         return type.getTileName();
     }
+
 
     public int getX() {
         return x;
