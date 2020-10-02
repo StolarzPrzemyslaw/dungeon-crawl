@@ -154,8 +154,22 @@ public class SidePanel {
         game.refresh();
     }
 
+<<<<<<< HEAD
     private void useItem(Item item, GameMap map) {
         ((Usable) item).use(map.getPlayer());
+=======
+    private void armPlayerWithItem(GameMap map, ChoiceBox itemsList, Item item) {
+        if (item instanceof Weapon) {
+            map.getPlayer().setWeapon((Weapon) item);
+            itemsList.getItems().remove(item.getName());
+            map.getPlayer().getInventory().removeItemByName(item.getName());
+            if (!map.getPlayer().getInventory().contains("Basic dagger")) {
+                itemsList.getItems().add("Basic dagger");
+            }
+        } else if (item instanceof Potion) {
+            System.out.println("Potion");
+        }
+>>>>>>> 56c2797c9aad9510b85ea5fd87cdf77ef0465072
     }
 
     private void consumeItem(Item item, GameMap map, ChoiceBox<String> itemsList) {
