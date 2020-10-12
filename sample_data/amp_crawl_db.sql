@@ -93,3 +93,7 @@ CREATE INDEX "fkIdx_76" ON "public"."game_state"
 (
  "current_map"
 );
+
+INSERT INTO map (id, file_name) VALUES (1, 'level1.txt');
+INSERT INTO map (id, file_name) VALUES (2, 'level2.txt');
+INSERT INTO map (id, file_name) VALUES (3, 'level3.txt');
