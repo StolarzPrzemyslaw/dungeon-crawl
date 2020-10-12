@@ -72,6 +72,7 @@ public class Game {
         scene = new Scene(borderPane);
         primaryStage.setScene(scene);
         scene.setOnKeyPressed(gameLogic::onKeyPressed);
+        scene.setOnKeyReleased(gameLogic::onKeyReleased);
         centerStage(primaryStage, borderPane);
         primaryStage.setTitle("Dungeon Crawl");
         refresh();

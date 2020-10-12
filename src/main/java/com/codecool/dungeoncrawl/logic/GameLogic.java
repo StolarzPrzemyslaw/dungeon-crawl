@@ -1,13 +1,18 @@
 package com.codecool.dungeoncrawl.logic;
 
+import com.codecool.dungeoncrawl.dao.GameDatabaseManager;
 import com.codecool.dungeoncrawl.logic.actors.Actor;
 import com.codecool.dungeoncrawl.logic.actors.characters.*;
 import com.codecool.dungeoncrawl.logic.actors.components.Combat;
 import com.codecool.dungeoncrawl.logic.actors.items.Item;
 import com.codecool.dungeoncrawl.logic.actors.obstacles.Stairs;
 import com.codecool.dungeoncrawl.view.Game;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,12 +22,24 @@ public class GameLogic {
     private GameMap map = MapLoader.loadMap(1);
     private final Combat combat;
     private final boolean cheatsEnabled;
+    GameDatabaseManager dbManager;
 
-    public GameLogic(Game game, String playerName) {
+    public GameLogic(Game game, String playerName, GameDatabaseManager dbManager) {
         this.ui = game;
         this.combat = new Combat(ui);
+        this.dbManager = dbManager;
         cheatsEnabled = playerName.equals("Andrzej") || playerName.equals("Marcin") || playerName.equals("Przemysław");
         map.getPlayer().setPlayerName(playerName);
+    }
+
+    public void onKeyReleased(KeyEvent keyEvent) {
+        KeyCombination exitCombinationMac = new KeyCodeCombination(KeyCode.W, KeyCombination.SHORTCUT_DOWN);
+        KeyCombination exitCombinationWin = new KeyCodeCombination(KeyCode.F4, KeyCombination.ALT_DOWN);
+        if (exitCombinationMac.match(keyEvent)
+                || exitCombinationWin.match(keyEvent)
+                || keyEvent.getCode() == KeyCode.ESCAPE) {
+            exit();
+        }
     }
 
     public void onKeyPressed(KeyEvent keyEvent) {
@@ -41,6 +58,9 @@ public class GameLogic {
                 break;
             case F:
                 playerTurn(0, 0);
+                break;
+            case Z:
+                dbManager.savePlayer(map.getPlayer());
                 break;
         }
     }
@@ -192,5 +212,9 @@ public class GameLogic {
 
     public GameMap getGameMap() {
         return map;
+    }
+
+    private void exit() {
+        System.exit(1);
     }
 }

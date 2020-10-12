@@ -1,5 +1,6 @@
 package com.codecool.dungeoncrawl.view;
 
+import com.codecool.dungeoncrawl.dao.GameDatabaseManager;
 import com.codecool.dungeoncrawl.logic.GameLogic;
 import javafx.application.Application;
 import javafx.geometry.Insets;
@@ -11,6 +12,7 @@ import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+import java.sql.SQLException;
 import java.util.Optional;
 
 public class Main extends Application {
@@ -19,12 +21,23 @@ public class Main extends Application {
     private final Button startGameButton = new Button();
     private final TextField inputNameOfCharacter = new TextField();
     private Scene mainMenuScene;
+    GameDatabaseManager dbManager;
 
     @Override
     public void start(Stage stage) {
+        setupDbManager();
         this.stage = stage;
         mainMenuScene = new Scene(getMainMenuContainer(), 400, 300);
         setMainMenuScene();
+    }
+
+    private void setupDbManager() {
+        dbManager = new GameDatabaseManager();
+        try {
+            dbManager.setup();
+        } catch (SQLException ex) {
+            System.out.println("Cannot connect to database.");
+        }
     }
 
     public void setMainMenuScene() {
@@ -75,7 +88,7 @@ public class Main extends Application {
     private void initializeNewGame() {
         Game game = new Game(this);
         String playerName = inputNameOfCharacter.getText();
-        GameLogic gameLogic = new GameLogic(game, playerName);
+        GameLogic gameLogic = new GameLogic(game, playerName, dbManager);
         game.setUpReferenceLogicForGetDataFromGame(gameLogic);
 
         stage = game.generateUI(stage);
