@@ -102,4 +102,15 @@ public class Cell implements Drawable {
             ((Door) getNeighbor(dx, dy).getActor()).open();
         }
     }
+
+    public boolean isBonfireNextToPlayer() {
+        return isCellTypeBonfire(-1, 0)
+                || isCellTypeBonfire(1, 0)
+                || isCellTypeBonfire(0, -1)
+                || isCellTypeBonfire(0, 1);
+    }
+
+    private boolean isCellTypeBonfire(int dx, int dy) {
+        return getNeighbor(dx, dy).getType().equals(CellType.BONFIRE);
+    }
 }

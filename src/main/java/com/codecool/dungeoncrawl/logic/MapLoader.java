@@ -58,6 +58,9 @@ public class MapLoader {
                         case '-':
                             cell.setType(CellType.BRIDGE);
                             break;
+                        case 'A':
+                            cell.setType(CellType.BONFIRE);
+                            break;
                         case '+':
                             cell.setType(CellType.FLOOR);
                             new Potion(cell);
