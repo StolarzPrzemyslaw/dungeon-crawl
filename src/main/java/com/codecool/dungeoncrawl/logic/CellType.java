@@ -19,6 +19,12 @@ public enum CellType {
             return false;
         }
     },
+    BONFIRE("bonfire") {
+        @Override
+        public boolean isPassable() {
+            return false;
+        }
+    },
     FLOOR("floor"),
     BRIDGE("bridge");
 
