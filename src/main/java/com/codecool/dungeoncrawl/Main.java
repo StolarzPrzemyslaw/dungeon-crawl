@@ -4,7 +4,6 @@ import com.codecool.dungeoncrawl.dao.GameDatabaseManager;
 import com.codecool.dungeoncrawl.logic.Cell;
 import com.codecool.dungeoncrawl.logic.GameMap;
 import com.codecool.dungeoncrawl.logic.MapLoader;
-import com.codecool.dungeoncrawl.logic.actors.Player;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
@@ -23,7 +22,7 @@ import javafx.stage.Stage;
 import java.sql.SQLException;
 
 public class Main extends Application {
-    GameMap map = MapLoader.loadMap();
+    GameMap map = MapLoader.loadMap(1);
     Canvas canvas = new Canvas(
             map.getWidth() * Tiles.TILE_WIDTH,
             map.getHeight() * Tiles.TILE_WIDTH);
@@ -89,8 +88,7 @@ public class Main extends Application {
                 refresh();
                 break;
             case S:
-                Player player = map.getPlayer();
-                dbManager.savePlayer(player);
+                dbManager.savePlayer(map.getPlayer());
                 break;
         }
     }
@@ -108,7 +106,7 @@ public class Main extends Application {
                 }
             }
         }
-        healthLabel.setText("" + map.getPlayer().getHealth());
+        healthLabel.setText("" + map.getPlayer().getCurrentHealth());
     }
 
     private void setupDbManager() {
