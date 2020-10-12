@@ -12,7 +12,6 @@ import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,10 +34,16 @@ public class GameLogic {
     public void onKeyReleased(KeyEvent keyEvent) {
         KeyCombination exitCombinationMac = new KeyCodeCombination(KeyCode.W, KeyCombination.SHORTCUT_DOWN);
         KeyCombination exitCombinationWin = new KeyCodeCombination(KeyCode.F4, KeyCombination.ALT_DOWN);
+        KeyCode saveGameKeyCode = KeyCode.F5;
         if (exitCombinationMac.match(keyEvent)
                 || exitCombinationWin.match(keyEvent)
                 || keyEvent.getCode() == KeyCode.ESCAPE) {
             exit();
+        } else if (keyEvent.getCode() == saveGameKeyCode) {
+            if (isPlayerAbleToSaveGame()) {
+                System.out.println("save");
+//            dbManager.savePlayer(map.getPlayer());
+            }
         }
     }
 
@@ -58,9 +63,6 @@ public class GameLogic {
                 break;
             case F:
                 playerTurn(0, 0);
-                break;
-            case Z:
-                dbManager.savePlayer(map.getPlayer());
                 break;
         }
     }
@@ -208,6 +210,10 @@ public class GameLogic {
 
     public boolean isPlayerNearDoor() {
         return map.getPlayer().getCell().isDoorOneOfTheNeighbors();
+    }
+
+    public boolean isPlayerAbleToSaveGame() {
+        return map.getPlayer().getCell().isBonfireOneOfTheNeighbours();
     }
 
     public GameMap getGameMap() {
