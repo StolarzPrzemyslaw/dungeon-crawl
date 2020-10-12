@@ -7,6 +7,7 @@ import com.codecool.dungeoncrawl.logic.actors.components.Combat;
 import com.codecool.dungeoncrawl.logic.actors.items.Item;
 import com.codecool.dungeoncrawl.logic.actors.obstacles.Stairs;
 import com.codecool.dungeoncrawl.view.Game;
+import com.codecool.dungeoncrawl.view.SaveGameModal;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
@@ -40,10 +41,7 @@ public class GameLogic {
                 || keyEvent.getCode() == KeyCode.ESCAPE) {
             exit();
         } else if (keyEvent.getCode() == saveGameKeyCode) {
-            if (isPlayerAbleToSaveGame()) {
-                System.out.println("save");
-//            dbManager.savePlayer(map.getPlayer());
-            }
+            tryToSaveGame();
         }
     }
 
@@ -222,5 +220,20 @@ public class GameLogic {
 
     private void exit() {
         System.exit(1);
+    }
+
+    private void tryToSaveGame() {
+        if (isPlayerAbleToSaveGame()) {
+            showSaveGameModal();
+//                dbManager.savePlayer(map.getPlayer());
+        } else showCantSaveGameMessage();
+    }
+
+    private void showCantSaveGameMessage() {
+        ui.displayLog("You can't save game here! Go to the nearest bonfire.");
+    }
+
+    private void showSaveGameModal() {
+        new SaveGameModal().show();
     }
 }
