@@ -10,11 +10,13 @@ public class GameMap {
     private final int width;
     private final int height;
     private final Cell[][] cells;
+    private final String levelName;
 
     private Player player;
     private final int levelNumber;
 
     public GameMap(int width, int height, CellType defaultCellType, int levelNumber) {
+        this.levelName = "level" + levelNumber;
         this.levelNumber = levelNumber;
         this.width = width;
         this.height = height;
@@ -24,6 +26,10 @@ public class GameMap {
                 cells[x][y] = new Cell(this, x, y, defaultCellType);
             }
         }
+    }
+
+    public String getLevelName() {
+        return levelName;
     }
 
     public int getLevelNumber() {
