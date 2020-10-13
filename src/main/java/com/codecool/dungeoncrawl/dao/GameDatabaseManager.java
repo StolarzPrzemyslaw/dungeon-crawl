@@ -51,6 +51,10 @@ public class GameDatabaseManager {
         return inventoryId;
     }
 
+    public Inventory getInventoryFromInventoryModel(InventoryModel model) {
+        return model.getInventory();
+    }
+
     private DataSource connect() throws SQLException {
         PGSimpleDataSource dataSource = new PGSimpleDataSource();
         String dbName = System.getenv("DB_NAME");

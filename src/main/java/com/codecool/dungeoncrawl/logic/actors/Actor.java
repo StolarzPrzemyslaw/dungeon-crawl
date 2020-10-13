@@ -8,8 +8,10 @@ public abstract class Actor implements Drawable {
     protected String name;
 
     public Actor(Cell cell) {
-        this.cell = cell;
-        this.cell.setActor(this);
+        if (cell != null) {
+            this.cell = cell;
+            this.cell.setActor(this);
+        }
     }
 
     public Cell getCell() {

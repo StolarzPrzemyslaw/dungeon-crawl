@@ -37,4 +37,14 @@ public class InventoryModel extends BaseModel {
     public void setItems(List<ItemModel> items) {
         this.items = items;
     }
+
+    public Inventory getInventory() {
+        Inventory inventory = new Inventory();
+        List<Item> oldGoodItems = new ArrayList<>();
+        for (ItemModel item : items) {
+            oldGoodItems.add(item.getItem());
+        }
+        inventory.setItems(oldGoodItems);
+        return inventory;
+    }
 }

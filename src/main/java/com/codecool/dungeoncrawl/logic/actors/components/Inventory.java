@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Inventory {
-    private final List<Item> listOfItems;
+    private List<Item> listOfItems;
 
     public Inventory() {
         this.listOfItems = new ArrayList<>();
@@ -43,6 +43,10 @@ public class Inventory {
         List<String> listOfNames = new ArrayList<>();
         listOfItems.forEach(item -> listOfNames.add(item.getName()));
         return listOfNames;
+    }
+
+    public void setItems(List<Item> items) {
+        this.listOfItems = items;
     }
 
     public List<Item> getItems() {

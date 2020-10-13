@@ -1,8 +1,6 @@
 package com.codecool.dungeoncrawl.model;
 
-import com.codecool.dungeoncrawl.logic.actors.items.Consumable;
-import com.codecool.dungeoncrawl.logic.actors.items.Item;
-import com.codecool.dungeoncrawl.logic.actors.items.Usable;
+import com.codecool.dungeoncrawl.logic.actors.items.*;
 
 public class ItemModel extends BaseModel {
     private String name;
@@ -55,6 +53,23 @@ public class ItemModel extends BaseModel {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public Item getItem() {
+        switch (name) {
+            case "Axe":
+                return new Axe(null);
+            case "Dagger":
+                return new Dagger(null);
+            case "Knife":
+                return new Knife(null);
+            case "Sword":
+                return new Sword(null);
+            case "Small Potion":
+                return new Potion(null);
+            default:
+                return new Key(null);
+        }
     }
 
     public enum Type {
