@@ -15,6 +15,7 @@ public class SaveGameModal {
     private final Stage stage;
     private final GameDatabaseManager gameDbManager;
     private final GameMap map;
+    private TextField textInput;
 
     public SaveGameModal(GameDatabaseManager gameDbManager, GameMap map) {
         this.stage = getStage();
@@ -61,7 +62,7 @@ public class SaveGameModal {
     }
 
     private TextField getTextInput() {
-        TextField textInput = new TextField();
+        textInput = new TextField();
         setupTextInput(textInput);
         return textInput;
     }
@@ -117,6 +118,12 @@ public class SaveGameModal {
     }
 
     private void handleSaveButton() {
-        gameDbManager.savePlayer(map.getPlayer());
+        String saveName = textInput.getText();
+        if (gameDbManager.checkValidSaveName(saveName)) {
+            gameDbManager.saveGameState(map, saveName);
+        } else {
+            new SaveGameConfirmModal(gameDbManager, map, saveName).show();
+        }
+        close();
     }
 }
