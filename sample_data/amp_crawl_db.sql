@@ -1,98 +1,72 @@
-DROP TABLE IF EXISTS "public"."game_state";
-DROP TABLE IF EXISTS "public"."map";
-DROP TABLE IF EXISTS "public"."player";
-DROP TABLE IF EXISTS "public"."inventory";
-DROP TABLE IF EXISTS "public"."item";
-DROP TYPE IF EXISTS item_type;
+DROP TABLE IF EXISTS public.game_state CASCADE;
+DROP TABLE IF EXISTS public.map CASCADE;
+DROP TABLE IF EXISTS public.player CASCADE;
+DROP TABLE IF EXISTS public.inventory CASCADE;
+DROP TABLE IF EXISTS public.item CASCADE;
 
-CREATE TYPE item_type AS ENUM ('usable', 'consumable', 'none');
+ALTER TABLE IF EXISTS ONLY public.game_state
+    DROP CONSTRAINT IF EXISTS fk_player_id_id CASCADE;
+ALTER TABLE IF EXISTS ONLY public.game_state
+    DROP CONSTRAINT IF EXISTS fk_current_map CASCADE;
+ALTER TABLE IF EXISTS ONLY public.player
+    DROP CONSTRAINT IF EXISTS fk_inventory_id CASCADE;
+ALTER TABLE IF EXISTS ONLY public.item
+    DROP CONSTRAINT IF EXISTS fk_player_inventory_id CASCADE;
 
--- ************************************** "public"."item"
-
-CREATE TABLE "public"."item"
+CREATE TABLE item
 (
- "id"        serial NOT NULL,
- "name"      text NOT NULL,
- "statistic" int NOT NULL,
- "type"      item_type NOT NULL,
- CONSTRAINT "PK_item" PRIMARY KEY ( "id" )
+    "id"                  serial    NOT NULL PRIMARY KEY,
+    "player_inventory_id" integer   NOT NULL,
+    "name"                text      NOT NULL,
+    "statistic"           int       NOT NULL,
+    "type"                text      NOT NULL
 );
 
--- ************************************** "public"."inventory"
-
-CREATE TABLE "public"."inventory"
+CREATE TABLE inventory
 (
- "id"      serial NOT NULL,
- "item_id" integer NOT NULL,
- CONSTRAINT "PK_inventory" PRIMARY KEY ( "id" ),
- CONSTRAINT "FK_51" FOREIGN KEY ( "item_id" ) REFERENCES "public"."item" ( "id" )
+    "id"                  serial  NOT NULL PRIMARY KEY,
+    "player_inventory_id" integer NOT NULL
 );
 
-CREATE INDEX "fkIdx_51" ON "public"."inventory"
+CREATE TABLE player
 (
- "item_id"
+    "id"             serial  NOT NULL PRIMARY KEY,
+    "health"         int     NOT NULL,
+    "current_health" int     NOT NULL,
+    "strength"       int     NOT NULL,
+    "name"           text    NOT NULL,
+    "posX"           int     NOT NULL,
+    "posY"           int     NOT NULL,
+    "inventory_id"   integer NOT NULL,
+    "weapon_id"      integer NOT NULL
 );
 
--- ************************************** "public"."player"
-
-CREATE TABLE "public"."player"
+CREATE TABLE map
 (
- "id"             serial NOT NULL,
- "health"         int NOT NULL,
- "current_health" int NOT NULL,
- "strength"       int NOT NULL,
- "name"           text NOT NULL,
- "posX"           int NOT NULL,
- "posY"           int NOT NULL,
- "inventory_id"   integer NOT NULL,
- "weapon_id"      integer NOT NULL,
- CONSTRAINT "PK_player" PRIMARY KEY ( "id" ),
- CONSTRAINT "FK_28" FOREIGN KEY ( "inventory_id" ) REFERENCES "public"."inventory" ( "id" ),
- CONSTRAINT "FK_66" FOREIGN KEY ( "weapon_id" ) REFERENCES "public"."item" ( "id" )
+    "id"        int  NOT NULL PRIMARY KEY,
+    "file_name" text NOT NULL
 );
 
-CREATE INDEX "fkIdx_28" ON "public"."player"
+CREATE TABLE game_state
 (
- "inventory_id"
+    "id"          serial  NOT NULL PRIMARY KEY,
+    "saved_at"    date    NOT NULL,
+    "player_id"   integer NOT NULL,
+    "current_map" int     NOT NULL,
+    "save_name"   text    NOT NULL
 );
 
-CREATE INDEX "fkIdx_66" ON "public"."player"
-(
- "weapon_id"
-);
+ALTER TABLE ONLY game_state
+    ADD CONSTRAINT fk_player_id_id FOREIGN KEY (player_id) REFERENCES player (id);
 
--- ************************************** "public"."map"
+ALTER TABLE ONLY game_state
+    ADD CONSTRAINT fk_current_map FOREIGN KEY (current_map) REFERENCES map (id);
 
-CREATE TABLE "public"."map"
-(
- "id"        int NOT NULL,
- "file_name" text NOT NULL,
- CONSTRAINT "PK_map" PRIMARY KEY ( "id" )
-);
+ALTER TABLE ONLY player
+    ADD CONSTRAINT fk_inventory_id FOREIGN KEY (inventory_id) REFERENCES inventory (id);
 
--- ************************************** "public"."game_state"
-
-CREATE TABLE "public"."game_state"
-(
- "id"          serial NOT NULL,
- "saved_at"    date NOT NULL,
- "player_id"   integer NOT NULL,
- "current_map" int NOT NULL,
- "save_name"   text NOT NULL,
- CONSTRAINT "PK_game_state" PRIMARY KEY ( "id" ),
- CONSTRAINT "FK_22" FOREIGN KEY ( "player_id" ) REFERENCES "public"."player" ( "id" ),
- CONSTRAINT "FK_76" FOREIGN KEY ( "current_map" ) REFERENCES "public"."map" ( "id" )
-);
-
-CREATE INDEX "fkIdx_22" ON "public"."game_state"
-(
- "player_id"
-);
-
-CREATE INDEX "fkIdx_76" ON "public"."game_state"
-(
- "current_map"
-);
+ALTER TABLE ONLY item
+    ADD CONSTRAINT fk_player_inventory_id FOREIGN KEY (player_inventory_id) REFERENCES inventory (id);
 
 INSERT INTO map (id, file_name) VALUES (1, 'level1.txt');
 INSERT INTO map (id, file_name) VALUES (2, 'level2.txt');

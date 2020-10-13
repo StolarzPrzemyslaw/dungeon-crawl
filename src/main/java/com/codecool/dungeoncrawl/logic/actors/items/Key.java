@@ -7,7 +7,6 @@ public class Key extends Item {
     public Key(Cell cell) {
         super(cell);
         this.name = "Key";
-        this.obtainMessage = "You have obtained a key!";
     }
 
     public String getTileName() {
