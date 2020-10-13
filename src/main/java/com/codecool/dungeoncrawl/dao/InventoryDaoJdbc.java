@@ -11,11 +11,9 @@ import java.util.List;
 public class InventoryDaoJdbc implements InventoryDao {
 
     private final DataSource dataSource;
-    private final ItemDao itemDao;
 
-    public InventoryDaoJdbc(DataSource dataSource, ItemDao itemDao) {
+    public InventoryDaoJdbc(DataSource dataSource) {
         this.dataSource = dataSource;
-        this.itemDao = itemDao;
     }
 
     @Override
@@ -28,24 +26,18 @@ public class InventoryDaoJdbc implements InventoryDao {
             ResultSet resultSet = statement.getGeneratedKeys();
             resultSet.next();
             inventory.setId(resultSet.getInt(1));
-            for (ItemModel item : inventory.getItems()) {
-                ((ItemDaoJdbc) itemDao).add(item, inventory.getId());
-            }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
 
     @Override
-    public void update(InventoryModel inventory) {
+    public void delete(InventoryModel inventory) {
         try (Connection connection = dataSource.getConnection()) {
             String sqlQuery = "DELETE FROM item WHERE player_inventory_id = ?;";
             PreparedStatement statement = connection.prepareStatement(sqlQuery);
             statement.setInt(1, inventory.getId());
             statement.executeUpdate();
-            for (ItemModel item : inventory.getItems()) {
-                ((ItemDaoJdbc) itemDao).add(item, inventory.getId());
-            }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -82,9 +74,7 @@ public class InventoryDaoJdbc implements InventoryDao {
 
     private InventoryModel createInventoryModelBasedOnData(ResultSet result) throws SQLException {
         int inventoryId = result.getInt("player_inventory_id");
-        List<ItemModel> items = ((ItemDaoJdbc) itemDao).getAll(result.getInt(1));
         InventoryModel inventory = new InventoryModel();
-        inventory.setItems(items);
         inventory.setId(inventoryId);
         return inventory;
     }

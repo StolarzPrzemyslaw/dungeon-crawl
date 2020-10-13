@@ -7,7 +7,7 @@ import java.util.List;
 public interface InventoryDao {
     void add(InventoryModel inventory);
 
-    void update(InventoryModel inventory);
+    void delete(InventoryModel inventory);
 
     InventoryModel get(int id);
 

@@ -3,11 +3,13 @@ package com.codecool.dungeoncrawl.dao;
 import com.codecool.dungeoncrawl.logic.actors.characters.Player;
 import com.codecool.dungeoncrawl.logic.actors.components.Inventory;
 import com.codecool.dungeoncrawl.model.InventoryModel;
+import com.codecool.dungeoncrawl.model.ItemModel;
 import com.codecool.dungeoncrawl.model.PlayerModel;
 import org.postgresql.ds.PGSimpleDataSource;
 
 import javax.sql.DataSource;
 import java.sql.SQLException;
+import java.util.List;
 
 public class GameDatabaseManager {
     private PlayerDao playerDao;
@@ -18,7 +20,7 @@ public class GameDatabaseManager {
         DataSource dataSource = connect();
         playerDao = new PlayerDaoJdbc(dataSource);
         itemDao = new ItemDaoJdbc(dataSource);
-        inventoryDao = new InventoryDaoJdbc(dataSource, itemDao);
+        inventoryDao = new InventoryDaoJdbc(dataSource);
     }
 
     public void saveGameState() {
@@ -31,9 +33,22 @@ public class GameDatabaseManager {
     }
 
     public int saveInventoryReturnInventoryId(Inventory inventory) {
+        // Create new inventory
         InventoryModel model = new InventoryModel(inventory);
         inventoryDao.add(model);
-        return model.getId();
+        int inventoryId = model.getId();
+
+        // Get all items from player inventory
+        List<ItemModel> items = itemDao.getAll(inventoryId);
+        model.setItems(items);
+
+        // Save all items as records in DB
+        for (ItemModel item : model.getItems()) {
+            itemDao.add(item, inventoryId);
+        }
+
+        // Return inventory ID
+        return inventoryId;
     }
 
     private DataSource connect() throws SQLException {
