@@ -27,9 +27,9 @@ public class GameDatabaseManager {
 
     public void saveGameState(GameMap map) {
         // How to use InventoryModel return values
-        InventoryModel inventory = saveInventoryReturnInventoryId(map.getPlayer().getInventory());
-        System.out.println("Inventory id: " + inventory.getId());
-        inventory.getItems().forEach(item -> System.out.println(item.getName() + ": " + item.getId()));
+//        InventoryModel inventory = saveInventoryReturnInventoryId(map.getPlayer().getInventory());
+//        System.out.println("Inventory id: " + inventory.getId());
+//        inventory.getItems().forEach(item -> System.out.println(item.getName() + ": " + item.getId()));
         // ------------------------------------ //
     }
 
