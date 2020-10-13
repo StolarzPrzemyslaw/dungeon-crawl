@@ -36,6 +36,10 @@ public class GameDatabaseManager {
         System.out.println("Game saved as " + saveName + "!");
     }
 
+    public void loadGameState(int saveId) {
+        
+    }
+
     public PlayerModel savePlayer(Player player) {
         InventoryModel inventory = saveInventoryReturnInventoryId(player.getInventory());
         PlayerModel model = new PlayerModel(player);
