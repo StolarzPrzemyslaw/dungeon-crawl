@@ -34,8 +34,21 @@ public class GameDatabaseManager {
     }
 
     public void savePlayer(Player player) {
+        InventoryModel inventory = saveInventoryReturnInventoryId(player.getInventory());
         PlayerModel model = new PlayerModel(player);
+        model.setInventoryId(inventory.getId());
+        model.setWeaponId(getWeaponInUseId(player, inventory));
         playerDao.add(model);
+    }
+
+    private int getWeaponInUseId(Player player, InventoryModel inventory) {
+        int weaponId = 1;
+        for (ItemModel item: inventory.getItems()) {
+            if (item.getName().equals(player.getWeapon().getName())) {
+                weaponId = item.getId();
+            }
+        }
+        return weaponId;
     }
 
     public InventoryModel saveInventoryReturnInventoryId(Inventory inventory) {

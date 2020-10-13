@@ -2,10 +2,7 @@ package com.codecool.dungeoncrawl.logic.actors.characters;
 
 import com.codecool.dungeoncrawl.logic.Cell;
 import com.codecool.dungeoncrawl.logic.actors.components.Inventory;
-import com.codecool.dungeoncrawl.logic.actors.items.Axe;
-import com.codecool.dungeoncrawl.logic.actors.items.Dagger;
-import com.codecool.dungeoncrawl.logic.actors.items.Sword;
-import com.codecool.dungeoncrawl.logic.actors.items.Weapon;
+import com.codecool.dungeoncrawl.logic.actors.items.*;
 
 
 public class Player extends Person {
@@ -42,8 +39,8 @@ public class Player extends Person {
         return "player";
     }
 
-    public void setWeapon(Weapon chosenWeapon) {
-        this.chosenWeapon = chosenWeapon;
+    public void setWeapon(Weapon weapon) {
+        this.chosenWeapon = weapon;
     }
 
     public Weapon getWeapon() {
