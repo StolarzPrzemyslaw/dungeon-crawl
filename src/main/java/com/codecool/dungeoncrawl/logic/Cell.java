@@ -103,7 +103,7 @@ public class Cell implements Drawable {
         }
     }
 
-    public boolean isBonfireNextToPlayer() {
+    public boolean isBonfireOneOfTheNeighbours() {
         return isCellTypeBonfire(-1, 0)
                 || isCellTypeBonfire(1, 0)
                 || isCellTypeBonfire(0, -1)
