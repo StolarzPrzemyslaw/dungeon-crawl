@@ -1,5 +1,6 @@
 package com.codecool.dungeoncrawl.dao;
 
+import com.codecool.dungeoncrawl.logic.GameMap;
 import com.codecool.dungeoncrawl.logic.actors.characters.Player;
 import com.codecool.dungeoncrawl.logic.actors.components.Inventory;
 import com.codecool.dungeoncrawl.model.InventoryModel;
@@ -9,6 +10,7 @@ import org.postgresql.ds.PGSimpleDataSource;
 
 import javax.sql.DataSource;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class GameDatabaseManager {
@@ -23,8 +25,12 @@ public class GameDatabaseManager {
         inventoryDao = new InventoryDaoJdbc(dataSource);
     }
 
-    public void saveGameState() {
-
+    public void saveGameState(GameMap map) {
+        // How to use InventoryModel return values
+        InventoryModel inventory = saveInventoryReturnInventoryId(map.getPlayer().getInventory());
+        System.out.println("Inventory id: " + inventory.getId());
+        inventory.getItems().forEach(item -> System.out.println(item.getName() + ": " + item.getId()));
+        // ------------------------------------ //
     }
 
     public void savePlayer(Player player) {
@@ -32,27 +38,24 @@ public class GameDatabaseManager {
         playerDao.add(model);
     }
 
-    public int saveInventoryReturnInventoryId(Inventory inventory) {
-        // Create new inventory
+    public InventoryModel saveInventoryReturnInventoryId(Inventory inventory) {
         InventoryModel model = new InventoryModel(inventory);
         inventoryDao.add(model);
-        int inventoryId = model.getId();
+        setUpItemsInInventoryModel(inventory, model);
+        saveAllItemsInDatabase(model, model.getId());
+        return model;
+    }
 
-        // Get all items from player inventory
-        List<ItemModel> items = itemDao.getAll(inventoryId);
-        model.setItems(items);
-
-        // Save all items as records in DB
+    private void saveAllItemsInDatabase(InventoryModel model, int inventoryId) {
         for (ItemModel item : model.getItems()) {
             itemDao.add(item, inventoryId);
         }
-
-        // Return inventory ID
-        return inventoryId;
     }
 
-    public Inventory getInventoryFromInventoryModel(InventoryModel model) {
-        return model.getInventory();
+    private void setUpItemsInInventoryModel(Inventory inventory, InventoryModel model) {
+        List<ItemModel> items = new ArrayList<>();
+        inventory.getItems().forEach(item -> items.add(new ItemModel(item)));
+        model.setItems(items);
     }
 
     private DataSource connect() throws SQLException {
