@@ -3,6 +3,7 @@ package com.codecool.dungeoncrawl.dao;
 import com.codecool.dungeoncrawl.logic.GameMap;
 import com.codecool.dungeoncrawl.logic.actors.characters.Player;
 import com.codecool.dungeoncrawl.logic.actors.components.Inventory;
+import com.codecool.dungeoncrawl.model.GameState;
 import com.codecool.dungeoncrawl.model.InventoryModel;
 import com.codecool.dungeoncrawl.model.ItemModel;
 import com.codecool.dungeoncrawl.model.PlayerModel;
@@ -17,20 +18,23 @@ public class GameDatabaseManager {
     private PlayerDao playerDao;
     private ItemDao itemDao;
     private InventoryDao inventoryDao;
+    private GameStateDao gameStateDao;
 
     public void setup() throws SQLException {
         DataSource dataSource = connect();
+        gameStateDao = new GameStateDaoJdbc(dataSource);
         playerDao = new PlayerDaoJdbc(dataSource);
         itemDao = new ItemDaoJdbc(dataSource);
         inventoryDao = new InventoryDaoJdbc(dataSource);
     }
 
-    public void saveGameState(GameMap map) {
+    public void saveGameState(GameMap map, String saveName) {
         // How to use InventoryModel return values
 //        InventoryModel inventory = saveInventoryReturnInventoryId(map.getPlayer().getInventory());
 //        System.out.println("Inventory id: " + inventory.getId());
 //        inventory.getItems().forEach(item -> System.out.println(item.getName() + ": " + item.getId()));
         // ------------------------------------ //
+        System.out.println("Game saved!");
     }
 
     public void savePlayer(Player player) {
@@ -69,6 +73,16 @@ public class GameDatabaseManager {
         List<ItemModel> items = new ArrayList<>();
         inventory.getItems().forEach(item -> items.add(new ItemModel(item)));
         model.setItems(items);
+    }
+
+    public boolean checkValidSaveName(String saveName) {
+//        List<GameState> gameStates = gameStateDao.getAll();
+//        gameStates.forEach(state -> {
+//            if (state.getSaveName.equals(saveName)) {
+//                return false;
+//            }
+//        });
+        return false;
     }
 
     private DataSource connect() throws SQLException {

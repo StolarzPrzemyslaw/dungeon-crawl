@@ -11,16 +11,17 @@ import javafx.stage.Stage;
 import javafx.scene.control.*;
 
 
-public class SaveGameModal {
+public class SaveGameConfirmModal {
     private final Stage stage;
     private final GameDatabaseManager gameDbManager;
     private final GameMap map;
-    private TextField textInput;
+    private final String saveName;
 
-    public SaveGameModal(GameDatabaseManager gameDbManager, GameMap map) {
+    public SaveGameConfirmModal(GameDatabaseManager gameDbManager, GameMap map, String saveName) {
         this.stage = getStage();
         this.gameDbManager = gameDbManager;
         this.map = map;
+        this.saveName = saveName;
     }
 
     public void show() {
@@ -53,24 +54,18 @@ public class SaveGameModal {
 
     private void setupMainContainer(VBox mainContainer) {
         setupMainContainerAttributes(mainContainer);
-        mainContainer.getChildren().addAll(getTextInput(), getButtonContainer());
+        mainContainer.getChildren().addAll(getLabelContainer(), getButtonContainer());
+    }
+
+    private Label getLabelContainer() {
+        Label label = new Label();
+        label.setText("Do you want to overwrite your save?");
+        return label;
     }
 
     private void setupMainContainerAttributes(VBox mainContainer) {
         mainContainer.setAlignment(Pos.CENTER);
         mainContainer.setSpacing(20);
-    }
-
-    private TextField getTextInput() {
-        textInput = new TextField();
-        setupTextInput(textInput);
-        return textInput;
-    }
-
-    private void setupTextInput(TextField textInput) {
-        textInput.setText("Name");
-        textInput.setMaxWidth(150);
-        textInput.setTooltip(new Tooltip("Please insert save name."));
     }
 
     private HBox getButtonContainer() {
@@ -118,12 +113,7 @@ public class SaveGameModal {
     }
 
     private void handleSaveButton() {
-        String saveName = textInput.getText();
-        if (gameDbManager.checkValidSaveName(saveName)) {
-            gameDbManager.saveGameState(map, saveName);
-        } else {
-            new SaveGameConfirmModal(gameDbManager, map, saveName).show();
-        }
+        gameDbManager.saveGameState(map, saveName);
         close();
     }
 }
