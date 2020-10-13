@@ -2,6 +2,7 @@ DROP TABLE IF EXISTS "public"."game_state";
 DROP TABLE IF EXISTS "public"."map";
 DROP TABLE IF EXISTS "public"."player";
 DROP TABLE IF EXISTS "public"."inventory";
+DROP TABLE IF EXISTS "public"."player_inventory";
 DROP TABLE IF EXISTS "public"."item";
 DROP TYPE IF EXISTS item_type;
 
@@ -12,25 +13,24 @@ CREATE TYPE item_type AS ENUM ('usable', 'consumable', 'none');
 CREATE TABLE "public"."item"
 (
  "id"        serial NOT NULL,
+ "player_inventory_id" integer NOT NULL,
  "name"      text NOT NULL,
  "statistic" int NOT NULL,
  "type"      item_type NOT NULL,
  CONSTRAINT "PK_item" PRIMARY KEY ( "id" )
 );
 
--- ************************************** "public"."inventory"
-
 CREATE TABLE "public"."inventory"
 (
  "id"      serial NOT NULL,
- "item_id" integer NOT NULL,
+ "player_inventory_id" integer NOT NULL,
  CONSTRAINT "PK_inventory" PRIMARY KEY ( "id" ),
- CONSTRAINT "FK_51" FOREIGN KEY ( "item_id" ) REFERENCES "public"."item" ( "id" )
+ CONSTRAINT "FK_51" FOREIGN KEY ( "player_inventory_id" ) REFERENCES "public"."item" ( "id" )
 );
 
 CREATE INDEX "fkIdx_51" ON "public"."inventory"
 (
- "item_id"
+ "player_inventory_id"
 );
 
 -- ************************************** "public"."player"
