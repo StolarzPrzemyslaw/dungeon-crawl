@@ -3,12 +3,12 @@ package com.codecool.dungeoncrawl.model;
 import com.codecool.dungeoncrawl.logic.actors.characters.Player;
 
 public class PlayerModel extends BaseModel {
-    private String playerName;
-    private int hp;
-    private int currentHp;
-    private int strength;
-    private int x;
-    private int y;
+    private final String playerName;
+    private final int hp;
+    private final int currentHp;
+    private final int strength;
+    private final int x;
+    private final int y;
     private int inventoryId;
     private int weaponId;
 
