@@ -10,6 +10,7 @@ import com.codecool.dungeoncrawl.model.PlayerModel;
 import org.postgresql.ds.PGSimpleDataSource;
 
 import javax.sql.DataSource;
+import java.sql.Date;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,20 +30,19 @@ public class GameDatabaseManager {
     }
 
     public void saveGameState(GameMap map, String saveName) {
-        // How to use InventoryModel return values
-//        InventoryModel inventory = saveInventoryReturnInventoryId(map.getPlayer().getInventory());
-//        System.out.println("Inventory id: " + inventory.getId());
-//        inventory.getItems().forEach(item -> System.out.println(item.getName() + ": " + item.getId()));
-        // ------------------------------------ //
-        System.out.println("Game saved!");
+        PlayerModel player = savePlayer(map.getPlayer());
+        GameState gameState = new GameState(map.getLevelName(), actualDate(), player, saveName);
+        gameStateDao.add(gameState);
+        System.out.println("Game saved as " + saveName + "!");
     }
 
-    public void savePlayer(Player player) {
+    public PlayerModel savePlayer(Player player) {
         InventoryModel inventory = saveInventoryReturnInventoryId(player.getInventory());
         PlayerModel model = new PlayerModel(player);
         model.setInventoryId(inventory.getId());
         model.setWeaponId(getWeaponInUseId(player, inventory));
         playerDao.add(model);
+        return model;
     }
 
     private int getWeaponInUseId(Player player, InventoryModel inventory) {
@@ -100,5 +100,10 @@ public class GameDatabaseManager {
         System.out.println("Connection ok.");
 
         return dataSource;
+    }
+
+    private Date actualDate() {
+        long millis=System.currentTimeMillis();
+        return new java.sql.Date(millis);
     }
 }
