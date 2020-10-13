@@ -1,6 +1,5 @@
 package com.codecool.dungeoncrawl.dao;
 
-import com.codecool.dungeoncrawl.logic.actors.items.Dagger;
 import com.codecool.dungeoncrawl.logic.actors.items.Weapon;
 import com.codecool.dungeoncrawl.model.PlayerModel;
 
@@ -27,7 +26,7 @@ public class PlayerDaoJdbc implements PlayerDao {
             statement.setString(4, player.getPlayerName());
             statement.setInt(5, player.getX());
             statement.setInt(6, player.getY());
-            statement.setInt(7, getInventoryId());
+            statement.setInt(7, player.getInventoryId());
             statement.setInt(8, player.getWeaponId());
             statement.executeUpdate();
             ResultSet resultSet = statement.getGeneratedKeys();
@@ -37,30 +36,6 @@ public class PlayerDaoJdbc implements PlayerDao {
             throw new RuntimeException(e);
         }
     }
-
-    private int getInventoryId() {
-        try (Connection conn = dataSource.getConnection()) {
-            String sql = "SELECT player_inventory_id FROM Inventory";
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-        return 0;
-    }
-
-//    private int getWeaponId(Weapon weapon) {
-//        try (Connection conn = dataSource.getConnection()) {
-//            String sql = "SELECT id FROM item WHERE name = ?";
-//            PreparedStatement statement = conn.prepareStatement(sql);
-//            statement.setString(1, String.valueOf(weapon));
-//            ResultSet resultSet = statement.executeQuery();
-//            if (!resultSet.next()) {
-//                return 0;
-//            }
-//            return resultSet.getInt(1);
-//        } catch (SQLException e) {
-//            throw new RuntimeException(e);
-//        }
-//    }
 
     @Override
     public void update(PlayerModel player) {
@@ -88,7 +63,7 @@ public class PlayerDaoJdbc implements PlayerDao {
 
             PlayerModel playerModel = new PlayerModel(health, currentHealth, strength, name, posX, posY, inventoryId, weaponId);
             playerModel.setId(id);
-            return null;
+            return playerModel;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

@@ -9,7 +9,6 @@ public class Player extends Person {
 
     private final Inventory inventory;
     private Weapon chosenWeapon;
-    private int weaponId;
 
     public Player(Cell cell) {
         super(cell);
@@ -42,31 +41,10 @@ public class Player extends Person {
 
     public void setWeapon(Weapon weapon) {
         this.chosenWeapon = weapon;
-        chosenWeaponById(weapon);
-    }
-
-    private void chosenWeaponById(Weapon weapon) {
-        if (weapon instanceof Axe) {
-            setWeaponId(0);
-        } else if (weapon instanceof Dagger) {
-            setWeaponId(1);
-        } else if (weapon instanceof Knife) {
-            setWeaponId(2);
-        } else {
-            setWeaponId(3);
-        }
     }
 
     public Weapon getWeapon() {
         return chosenWeapon;
-    }
-
-    public int getWeaponId() {
-        return weaponId;
-    }
-
-    public void setWeaponId(int weaponId) {
-        this.weaponId = weaponId;
     }
 
     @Override
