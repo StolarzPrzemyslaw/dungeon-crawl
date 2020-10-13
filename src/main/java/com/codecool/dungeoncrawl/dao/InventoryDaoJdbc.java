@@ -24,7 +24,7 @@ public class InventoryDaoJdbc implements InventoryDao {
             statement.executeUpdate();
             ResultSet resultSet = statement.getGeneratedKeys();
             resultSet.next();
-            inventory.setId(resultSet.getInt(1));
+            inventory.setId(resultSet.getInt("player_inventory_id"));
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -49,7 +49,7 @@ public class InventoryDaoJdbc implements InventoryDao {
             PreparedStatement statement = connection.prepareStatement(sqlQuery);
             statement.setInt(1, id);
             ResultSet result = statement.executeQuery();
-            return createInventoryModelBasedOnData(result);
+            return !result.next() ? null : createInventoryModelBasedOnData(result);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -79,13 +79,13 @@ public class InventoryDaoJdbc implements InventoryDao {
     }
 
     private int getLastIndexInInventory() {
-        try (Connection conn = dataSource.getConnection()) {
-            String sqlQuery = "SELECT id FROM inventory WHERE id = (SELECT MAX(id) FROM inventory)";
-            PreparedStatement statement = conn.prepareStatement(sqlQuery, Statement.RETURN_GENERATED_KEYS);
-            statement.executeUpdate();
-            ResultSet resultSet = statement.getGeneratedKeys();
-            resultSet.next();
-            return resultSet.getInt(1);
+        try (Connection connection = dataSource.getConnection()) {
+            String sqlQuery = "SELECT COUNT(id) as total FROM inventory";
+            ResultSet result = connection.createStatement().executeQuery(sqlQuery);
+            if (result.next()) {
+                return result.getInt("total");
+            }
+            return 0;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

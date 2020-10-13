@@ -92,7 +92,9 @@ public class ItemDaoJdbc implements ItemDao {
         try (Connection connection = dataSource.getConnection()) {
             List<ItemModel> items = new ArrayList<>();
             String sqlQuery = "SELECT id, name, statistic, type FROM item WHERE player_inventory_id = ?";
-            ResultSet result = connection.createStatement().executeQuery(sqlQuery);
+            PreparedStatement statement = connection.prepareStatement(sqlQuery);
+            statement.setInt(1, inventory_id);
+            ResultSet result = statement.executeQuery();
             while (result.next()) {
                 ItemModel item = createItemModelBasedOnData(result);
                 items.add(item);
