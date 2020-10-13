@@ -12,7 +12,6 @@ import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 

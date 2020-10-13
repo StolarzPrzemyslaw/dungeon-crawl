@@ -1,7 +1,6 @@
 package com.codecool.dungeoncrawl.model;
 
 import com.codecool.dungeoncrawl.logic.actors.characters.Player;
-import com.codecool.dungeoncrawl.logic.actors.items.Weapon;
 
 public class PlayerModel extends BaseModel {
     private String playerName;
@@ -10,16 +9,19 @@ public class PlayerModel extends BaseModel {
     private int strength;
     private int x;
     private int y;
-    private Weapon weapon;
+    private int inventoryId;
+    private int weaponId;
 
 
-    public PlayerModel(int hp, int currentHp, int strength, String playerName, int x, int y) {
+    public PlayerModel(int hp, int currentHp, int strength, String playerName, int posX, int posY, int inventoryId, int weaponId) {
         this.hp = hp;
         this.currentHp = currentHp;
         this.strength = strength;
         this.playerName = playerName;
-        this.x = x;
-        this.y = y;
+        this.x = posX;
+        this.y = posY;
+        this.inventoryId = inventoryId;
+        this.weaponId= weaponId;
     }
 
     public PlayerModel(Player player) {
@@ -29,7 +31,7 @@ public class PlayerModel extends BaseModel {
         this.hp = player.getHealth();
         this.currentHp = player.getCurrentHealth();
         this.strength = player.getStrength();
-        this.weapon = player.getWeapon();
+        this.weaponId = player.getWeaponId();
     }
 
     public String getPlayerName() {
@@ -80,7 +82,19 @@ public class PlayerModel extends BaseModel {
         this.strength = strength;
     }
 
-    public Weapon getWeapon() {
-        return weapon;
+    public int getWeaponId() {
+        return weaponId;
+    }
+
+    public int getInventoryId() {
+        return inventoryId;
+    }
+
+    public void setInventoryId(int inventoryId) {
+        this.inventoryId = inventoryId;
+    }
+
+    public void setWeaponId(int weaponId) {
+        this.weaponId = weaponId;
     }
 }

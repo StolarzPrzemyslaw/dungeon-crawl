@@ -1,5 +1,6 @@
 package com.codecool.dungeoncrawl.dao;
 
+import com.codecool.dungeoncrawl.logic.actors.items.Dagger;
 import com.codecool.dungeoncrawl.logic.actors.items.Weapon;
 import com.codecool.dungeoncrawl.model.PlayerModel;
 
@@ -27,7 +28,7 @@ public class PlayerDaoJdbc implements PlayerDao {
             statement.setInt(5, player.getX());
             statement.setInt(6, player.getY());
             statement.setInt(7, getInventoryId());
-            statement.setInt(8, getWeaponId(player.getWeapon()));
+            statement.setInt(8, player.getWeaponId());
             statement.executeUpdate();
             ResultSet resultSet = statement.getGeneratedKeys();
             resultSet.next();
@@ -46,20 +47,20 @@ public class PlayerDaoJdbc implements PlayerDao {
         return 0;
     }
 
-    private int getWeaponId(Weapon weapon) {
-        try (Connection conn = dataSource.getConnection()) {
-            String sql = "SELECT id FROM item WHERE name = ?";
-            PreparedStatement statement = conn.prepareStatement(sql);
-            statement.setString(1, String.valueOf(weapon));
-            ResultSet resultSet = statement.executeQuery();
-            if (!resultSet.next()) {
-                return 0;
-            }
-            return resultSet.getInt(1);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
+//    private int getWeaponId(Weapon weapon) {
+//        try (Connection conn = dataSource.getConnection()) {
+//            String sql = "SELECT id FROM item WHERE name = ?";
+//            PreparedStatement statement = conn.prepareStatement(sql);
+//            statement.setString(1, String.valueOf(weapon));
+//            ResultSet resultSet = statement.executeQuery();
+//            if (!resultSet.next()) {
+//                return 0;
+//            }
+//            return resultSet.getInt(1);
+//        } catch (SQLException e) {
+//            throw new RuntimeException(e);
+//        }
+//    }
 
     @Override
     public void update(PlayerModel player) {
@@ -68,7 +69,46 @@ public class PlayerDaoJdbc implements PlayerDao {
 
     @Override
     public PlayerModel get(int id) {
-        return null;
+        try (Connection conn = dataSource.getConnection()) {
+            String sql = "SELECT * FROM player WHERE id = ?";
+            PreparedStatement statement = conn.prepareStatement(sql);
+            statement.setInt(1, id);
+            ResultSet resultSet = statement.executeQuery();
+            if (!resultSet.next()) {
+                return null;
+            }
+            int health = resultSet.getInt(1);
+            int currentHealth = resultSet.getInt(2);
+            int strength = resultSet.getInt(3);
+            String name = resultSet.getString(4);
+            int posX = resultSet.getInt(5);
+            int posY = resultSet.getInt(6);
+            int inventoryId = resultSet.getInt(7);
+            int weaponId = resultSet.getInt(8);
+
+            PlayerModel playerModel = new PlayerModel(health, currentHealth, strength, name, posX, posY, inventoryId, weaponId);
+            playerModel.setId(id);
+            return null;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private Weapon getWeapon(int weaponId) {
+        try (Connection conn = dataSource.getConnection()) {
+            String sql = "SELECT name FROM item WHERE id = ?";
+            PreparedStatement statement = conn.prepareStatement(sql);
+            statement.setInt(1, weaponId);
+            ResultSet resultSet = statement.executeQuery();
+            if (!resultSet.next()) {
+                return null;
+            }
+            String weaponName = resultSet.getString(1);
+            Weapon weapon = null;
+            return weapon;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
