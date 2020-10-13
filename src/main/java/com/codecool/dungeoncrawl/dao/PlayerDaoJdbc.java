@@ -17,7 +17,7 @@ public class PlayerDaoJdbc implements PlayerDao {
     @Override
     public void add(PlayerModel player) {
         try (Connection conn = dataSource.getConnection()) {
-            String sql = "INSERT INTO player (health, current_health, strength, name, posX, posY, " +
+            String sql = "INSERT INTO player (health, current_health, strength, name, pos_x, pos_y, " +
                     "inventory_id, weapon_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
             PreparedStatement statement = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 
@@ -46,8 +46,8 @@ public class PlayerDaoJdbc implements PlayerDao {
     @Override
     public void update(PlayerModel player) {
         try (Connection conn = dataSource.getConnection()) {
-            String sql = "UPDATE player SET health = ?, current_health = ?, strength = ?, name = ?, posX = ?," +
-                    " posY = ?, inventory_id = ?, weapon_id = ? WHERE id = ?";
+            String sql = "UPDATE player SET health = ?, current_health = ?, strength = ?, name = ?, pos_x = ?," +
+                    " pos_y = ?, inventory_id = ?, weapon_id = ? WHERE id = ?";
             PreparedStatement statement = conn.prepareStatement(sql);
             insertPlayerDetailsIntoModel(player, statement);
         } catch (SQLException e) {

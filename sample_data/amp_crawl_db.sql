@@ -35,8 +35,8 @@ CREATE TABLE player
     "current_health" int     NOT NULL,
     "strength"       int     NOT NULL,
     "name"           text    NOT NULL,
-    "posX"           int     NOT NULL,
-    "posY"           int     NOT NULL,
+    "pos_x"           int     NOT NULL,
+    "pos_y"           int     NOT NULL,
     "inventory_id"   integer NOT NULL,
     "weapon_id"      integer NOT NULL
 );

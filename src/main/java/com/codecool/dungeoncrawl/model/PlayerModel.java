@@ -1,7 +1,6 @@
 package com.codecool.dungeoncrawl.model;
 
 import com.codecool.dungeoncrawl.logic.actors.characters.Player;
-import com.codecool.dungeoncrawl.logic.actors.items.Weapon;
 
 public class PlayerModel extends BaseModel {
     private String playerName;
@@ -12,7 +11,6 @@ public class PlayerModel extends BaseModel {
     private int y;
     private int inventoryId;
     private int weaponId;
-    private Weapon weapon;
 
 
     public PlayerModel(int hp, int currentHp, int strength, String playerName, int posX, int posY, int inventoryId, int weaponId) {
@@ -33,39 +31,22 @@ public class PlayerModel extends BaseModel {
         this.hp = player.getHealth();
         this.currentHp = player.getCurrentHealth();
         this.strength = player.getStrength();
-        this.weapon = player.getWeapon();
     }
 
     public String getPlayerName() {
         return playerName;
     }
 
-    public void setPlayerName(String playerName) {
-        this.playerName = playerName;
-    }
-
     public int getHp() {
         return hp;
-    }
-
-    public void setHp(int hp) {
-        this.hp = hp;
     }
 
     public int getX() {
         return x;
     }
 
-    public void setX(int x) {
-        this.x = x;
-    }
-
     public int getY() {
         return y;
-    }
-
-    public void setY(int y) {
-        this.y = y;
     }
 
     public int getCurrentHp() {
@@ -74,14 +55,6 @@ public class PlayerModel extends BaseModel {
 
     public int getStrength() {
         return strength;
-    }
-
-    public void setCurrentHp(int currentHp) {
-        this.currentHp = currentHp;
-    }
-
-    public void setStrength(int strength) {
-        this.strength = strength;
     }
 
     public int getWeaponId() {
