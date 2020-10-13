@@ -1,33 +1,122 @@
 package com.codecool.dungeoncrawl.view;
 
+import com.codecool.dungeoncrawl.dao.GameDatabaseManager;
+import com.codecool.dungeoncrawl.logic.GameMap;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.scene.control.*;
 
+
 public class SaveGameModal {
+    private final Stage stage;
+    private final GameDatabaseManager gameDbManager;
+    private final GameMap map;
+
+    public SaveGameModal(GameDatabaseManager gameDbManager, GameMap map) {
+        this.stage = getStage();
+        this.gameDbManager = gameDbManager;
+        this.map = map;
+    }
 
     public void show() {
-        Stage stage = new Stage();
-        VBox mainContainer = new VBox();
-        Scene scene = new Scene(mainContainer, 300, 200);
-        stage.setTitle("Save game");
-        HBox buttonContainer = new HBox();
-        Button saveButton = new Button("Save");
-        Button cancelButton = new Button("Cancel");
-        buttonContainer.getChildren().addAll(saveButton, cancelButton);
-        TextField textInput = new TextField();
-        textInput.setText("Name");
-        mainContainer.getChildren().addAll(textInput, buttonContainer);
-        setupMainContainerAttributes(mainContainer);
-        stage.setScene(scene);
         stage.show();
     }
 
-    private void setupMainContainerAttributes(VBox UIContainer) {
-        UIContainer.setAlignment(Pos.CENTER);
-        UIContainer.setSpacing(10);
+    private Stage getStage() {
+        Stage stage = new Stage();
+        setupStage(stage);
+        return stage;
+    }
+
+    private void setupStage(Stage stage) {
+        stage.setTitle("Save game");
+        stage.initModality(Modality.APPLICATION_MODAL);
+        stage.setScene(getScene());
+    }
+
+    private Scene getScene() {
+        int sceneWidth = 300;
+        int sceneHeight = 150;
+        return new Scene(getMainContainer(), sceneWidth, sceneHeight);
+    }
+
+    private VBox getMainContainer() {
+        VBox mainContainer = new VBox();
+        setupMainContainer(mainContainer);
+        return mainContainer;
+    }
+
+    private void setupMainContainer(VBox mainContainer) {
+        setupMainContainerAttributes(mainContainer);
+        mainContainer.getChildren().addAll(getTextInput(), getButtonContainer());
+    }
+
+    private void setupMainContainerAttributes(VBox mainContainer) {
+        mainContainer.setAlignment(Pos.CENTER);
+        mainContainer.setSpacing(20);
+    }
+
+    private TextField getTextInput() {
+        TextField textInput = new TextField();
+        setupTextInput(textInput);
+        return textInput;
+    }
+
+    private void setupTextInput(TextField textInput) {
+        textInput.setText("Name");
+        textInput.setMaxWidth(150);
+        textInput.setTooltip(new Tooltip("Please insert save name."));
+    }
+
+    private HBox getButtonContainer() {
+        HBox buttonContainer = new HBox();
+        setupButtonContainer(buttonContainer);
+        return buttonContainer;
+    }
+
+    private void setupButtonContainer(HBox buttonContainer) {
+        setupButtonContainerAttributes(buttonContainer);
+        buttonContainer.getChildren().addAll(getSaveButton(), getCancelButton());
+    }
+
+    private void setupButtonContainerAttributes(HBox buttonContainer) {
+        buttonContainer.setAlignment(Pos.CENTER);
+        buttonContainer.setSpacing(20);
+    }
+
+    private Button getSaveButton() {
+        Button saveButton = new Button();
+        setupSaveButton(saveButton);
+        return saveButton;
+    }
+
+    private void setupSaveButton(Button saveButton) {
+        saveButton.setText("Save");
+        saveButton.setTooltip(new Tooltip("Press here to save game."));
+        saveButton.setOnAction(event -> handleSaveButton());
+    }
+
+    private Button getCancelButton() {
+        Button cancelButton = new Button();
+        setupCancelButton(cancelButton);
+        return cancelButton;
+    }
+
+    private void setupCancelButton(Button cancelButton) {
+        cancelButton.setText("Cancel");
+        cancelButton.setTooltip(new Tooltip("Press here to cancel."));
+        cancelButton.setOnAction(cancelEvent -> close());
+    }
+
+    private void close() {
+        stage.close();
+    }
+
+    private void handleSaveButton() {
+        gameDbManager.savePlayer(map.getPlayer());
     }
 }
