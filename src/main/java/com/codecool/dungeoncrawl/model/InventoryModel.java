@@ -1,13 +1,25 @@
 package com.codecool.dungeoncrawl.model;
 
+import com.codecool.dungeoncrawl.logic.actors.components.Inventory;
+import com.codecool.dungeoncrawl.logic.actors.items.Item;
+
+import java.util.ArrayList;
 import java.util.List;
 
 public class InventoryModel extends BaseModel {
     private List<ItemModel> items;
     private int id;
 
-    public InventoryModel(List<ItemModel> items) {
-        this.items = items;
+    public InventoryModel() {
+
+    }
+
+    public InventoryModel(Inventory inventory) {
+        List<ItemModel> itemsModels = new ArrayList<>();
+        for (Item item : inventory.getItems()) {
+            itemsModels.add(new ItemModel(item));
+        }
+        this.items = itemsModels;
     }
 
     public int getId() {
