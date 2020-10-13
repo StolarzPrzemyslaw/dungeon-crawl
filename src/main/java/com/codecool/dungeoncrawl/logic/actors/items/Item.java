@@ -6,10 +6,12 @@ import com.codecool.dungeoncrawl.view.Game;
 
 public abstract class Item extends Actor {
 
-    protected String obtainMessage;
-
     public Item(Cell cell) {
         super(cell);
+    }
+
+    public int getStatistic() {
+        return 0;
     }
 
     @Override
@@ -18,6 +20,6 @@ public abstract class Item extends Actor {
     }
 
     public void showObtainMessage(Game ui) {
-        ui.displayLog(obtainMessage);
+        ui.displayLog("You have obtained a " + getName());
     }
 }
