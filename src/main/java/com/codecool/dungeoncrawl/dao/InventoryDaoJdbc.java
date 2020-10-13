@@ -1,7 +1,6 @@
 package com.codecool.dungeoncrawl.dao;
 
 import com.codecool.dungeoncrawl.model.InventoryModel;
-import com.codecool.dungeoncrawl.model.ItemModel;
 
 import javax.sql.DataSource;
 import java.sql.*;
@@ -32,7 +31,7 @@ public class InventoryDaoJdbc implements InventoryDao {
     }
 
     @Override
-    public void delete(InventoryModel inventory) {
+    public void update(InventoryModel inventory) {
         try (Connection connection = dataSource.getConnection()) {
             String sqlQuery = "DELETE FROM item WHERE player_inventory_id = ?;";
             PreparedStatement statement = connection.prepareStatement(sqlQuery);
