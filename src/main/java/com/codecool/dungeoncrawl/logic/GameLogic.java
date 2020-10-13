@@ -4,6 +4,7 @@ import com.codecool.dungeoncrawl.dao.GameDatabaseManager;
 import com.codecool.dungeoncrawl.logic.actors.Actor;
 import com.codecool.dungeoncrawl.logic.actors.characters.*;
 import com.codecool.dungeoncrawl.logic.actors.components.Combat;
+import com.codecool.dungeoncrawl.logic.actors.components.Inventory;
 import com.codecool.dungeoncrawl.logic.actors.items.Item;
 import com.codecool.dungeoncrawl.logic.actors.obstacles.Stairs;
 import com.codecool.dungeoncrawl.view.Game;
@@ -60,7 +61,7 @@ public class GameLogic {
                 playerTurn(0, 0);
                 break;
             case Z:
-                dbManager.savePlayer(map.getPlayer());
+                dbManager.saveGameState(map);
                 break;
         }
     }
