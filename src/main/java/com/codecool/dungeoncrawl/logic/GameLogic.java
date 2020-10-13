@@ -8,14 +8,18 @@ import com.codecool.dungeoncrawl.logic.actors.components.Inventory;
 import com.codecool.dungeoncrawl.logic.actors.items.Item;
 import com.codecool.dungeoncrawl.logic.actors.obstacles.Stairs;
 import com.codecool.dungeoncrawl.view.Game;
+import com.codecool.dungeoncrawl.view.SaveGameModal;
+import javafx.event.ActionEvent;
+import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.BiConsumer;
 
 public class GameLogic {
 
@@ -36,10 +40,13 @@ public class GameLogic {
     public void onKeyReleased(KeyEvent keyEvent) {
         KeyCombination exitCombinationMac = new KeyCodeCombination(KeyCode.W, KeyCombination.SHORTCUT_DOWN);
         KeyCombination exitCombinationWin = new KeyCodeCombination(KeyCode.F4, KeyCombination.ALT_DOWN);
+        KeyCode saveGameKeyCode = KeyCode.F5;
         if (exitCombinationMac.match(keyEvent)
                 || exitCombinationWin.match(keyEvent)
                 || keyEvent.getCode() == KeyCode.ESCAPE) {
             exit();
+        } else if (keyEvent.getCode() == saveGameKeyCode) {
+            tryToSaveGame();
         }
     }
 
@@ -59,9 +66,6 @@ public class GameLogic {
                 break;
             case F:
                 playerTurn(0, 0);
-                break;
-            case Z:
-                dbManager.saveGameState(map);
                 break;
         }
     }
@@ -211,11 +215,29 @@ public class GameLogic {
         return map.getPlayer().getCell().isDoorOneOfTheNeighbors();
     }
 
+    public boolean isPlayerAbleToSaveGame() {
+        return map.getPlayer().getCell().isBonfireOneOfTheNeighbours();
+    }
+
     public GameMap getGameMap() {
         return map;
     }
 
     private void exit() {
         System.exit(1);
+    }
+
+    private void tryToSaveGame() {
+        if (isPlayerAbleToSaveGame()) {
+            showSaveGameModal();
+        } else showCantSaveGameMessage();
+    }
+
+    private void showCantSaveGameMessage() {
+        ui.displayLog("You can't save game here! Go to the nearest bonfire.");
+    }
+
+    private void showSaveGameModal() {
+        new SaveGameModal(dbManager, map).show();
     }
 }
