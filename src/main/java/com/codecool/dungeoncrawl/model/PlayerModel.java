@@ -1,6 +1,7 @@
 package com.codecool.dungeoncrawl.model;
 
 import com.codecool.dungeoncrawl.logic.actors.characters.Player;
+import com.codecool.dungeoncrawl.logic.actors.items.Weapon;
 
 public class PlayerModel extends BaseModel {
     private String playerName;
@@ -9,6 +10,7 @@ public class PlayerModel extends BaseModel {
     private int strength;
     private int x;
     private int y;
+    private Weapon weapon;
 
 
     public PlayerModel(int hp, int currentHp, int strength, String playerName, int x, int y) {
@@ -27,6 +29,7 @@ public class PlayerModel extends BaseModel {
         this.hp = player.getHealth();
         this.currentHp = player.getCurrentHealth();
         this.strength = player.getStrength();
+        this.weapon = player.getWeapon();
     }
 
     public String getPlayerName() {
@@ -75,5 +78,9 @@ public class PlayerModel extends BaseModel {
 
     public void setStrength(int strength) {
         this.strength = strength;
+    }
+
+    public Weapon getWeapon() {
+        return weapon;
     }
 }
