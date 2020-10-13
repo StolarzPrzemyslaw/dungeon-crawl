@@ -6,8 +6,6 @@ import com.codecool.dungeoncrawl.view.Game;
 
 public abstract class Item extends Actor {
 
-    protected String obtainMessage = "You have obtained a " + name;
-
     public Item(Cell cell) {
         super(cell);
     }
@@ -22,6 +20,6 @@ public abstract class Item extends Actor {
     }
 
     public void showObtainMessage(Game ui) {
-        ui.displayLog(obtainMessage);
+        ui.displayLog("You have obtained a " + getName());
     }
 }
