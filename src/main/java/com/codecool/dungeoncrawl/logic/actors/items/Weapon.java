@@ -11,6 +11,7 @@ public abstract class Weapon extends Item implements Usable {
         super(cell);
     }
 
+    @Override
     public int getStatistic() {
         return statistic;
     }

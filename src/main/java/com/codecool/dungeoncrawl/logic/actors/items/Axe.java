@@ -8,7 +8,6 @@ public class Axe extends Weapon implements Usable {
         super(cell);
         this.statistic = 7;
         this.name = "Axe";
-        this.obtainMessage = "You have obtained a axe!";
     }
 
     public String getTileName() {
