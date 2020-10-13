@@ -25,6 +25,10 @@ public abstract class Person extends Actor {
         return currentHealth;
     }
 
+    public int getHealth() {
+        return health;
+    }
+
     public void setCurrentHealth(int currentHealth) {
         this.currentHealth = currentHealth;
     }
