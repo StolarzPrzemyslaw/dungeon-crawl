@@ -7,6 +7,7 @@ import com.codecool.dungeoncrawl.logic.actors.components.Combat;
 import com.codecool.dungeoncrawl.logic.actors.components.Inventory;
 import com.codecool.dungeoncrawl.logic.actors.items.Item;
 import com.codecool.dungeoncrawl.logic.actors.obstacles.Stairs;
+import com.codecool.dungeoncrawl.serializer.SerializerManager;
 import com.codecool.dungeoncrawl.view.FileChooser;
 import com.codecool.dungeoncrawl.view.Game;
 import com.codecool.dungeoncrawl.view.SaveGameModal;
@@ -34,16 +35,9 @@ public class GameLogic {
         map.getPlayer().setPlayerName(playerName);
     }
 
-    public void loadMapFromState(String mapName) {
+    public void loadGameFromState(String mapName, Player player) {
         map = MapLoader.loadMap(mapName);
-    }
-
-    public void loadPlayerFromState(Player player) {
         map.setPlayer(player);
-    }
-
-    public void loadInventoryFromState(Inventory inventory) {
-        map.getPlayer().setInventory(inventory);
     }
 
     public void onKeyReleased(KeyEvent keyEvent) {

@@ -6,6 +6,7 @@ import com.codecool.dungeoncrawl.logic.actors.characters.Player;
 import com.codecool.dungeoncrawl.logic.actors.components.Inventory;
 import com.codecool.dungeoncrawl.model.GameState;
 import com.codecool.dungeoncrawl.model.InventoryModel;
+import com.codecool.dungeoncrawl.model.PlayerModel;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
@@ -128,17 +129,22 @@ public class Main extends Application {
 
     private void prepareGameFromSaveState(GameState state) {
         Game game = new Game(this);
-        GameLogic gameLogic = new GameLogic(game, state.getPlayer().getPlayerName(), dbManager);
+        PlayerModel playerModel = state.getPlayer();
+        playerModel.setInventory(state.getPlayer().getInventory());
+        playerModel.setWeapon(state.getPlayer().getWeapon());
+
+        if (playerModel.getInventory() == null) {
+            playerModel.setInventory(dbManager.getInventoryModelForPlayer(playerModel.getInventoryId()));
+        }
+        if (playerModel.getWeapon() == null) {
+            playerModel.setWeapon(dbManager.getAlreadyEquippedWeaponBasedOnId(playerModel.getWeaponId()));
+        }
+
+        Player player = playerModel.getPlayer();
+
+        GameLogic gameLogic = new GameLogic(game, player.getName(), dbManager);
         game.setUpReferenceLogicForGetDataFromGame(gameLogic);
-
-        gameLogic.loadMapFromState(state.getCurrentMap());
-
-        Player player = dbManager.getPlayerBasedOnModel(state.getPlayer());
-        gameLogic.loadPlayerFromState(player);
-
-        InventoryModel inventoryModel = dbManager.getInventoryModelForPlayer(state.getPlayer().getInventoryId());
-        Inventory inventory = dbManager.getInventoryBasedOnModel(inventoryModel);
-        gameLogic.loadInventoryFromState(inventory);
+        gameLogic.loadGameFromState(state.getCurrentMap(), player);
 
         stage = game.generateUI(stage);
     }
