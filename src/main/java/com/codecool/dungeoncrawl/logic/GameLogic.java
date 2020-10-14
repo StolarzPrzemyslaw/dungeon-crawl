@@ -37,6 +37,9 @@ public class GameLogic {
 
     public void loadGameFromState(String mapName, Player player) {
         map = MapLoader.loadMap(mapName);
+        Cell tempCell = map.getCell(player.getX(), player.getY());
+        map.getPlayer().getCell().setActor(null);
+        player.setPlayerCell(tempCell);
         map.setPlayer(player);
     }
 
