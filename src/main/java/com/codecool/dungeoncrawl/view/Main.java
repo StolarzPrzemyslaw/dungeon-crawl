@@ -2,10 +2,9 @@ package com.codecool.dungeoncrawl.view;
 
 import com.codecool.dungeoncrawl.dao.GameDatabaseManager;
 import com.codecool.dungeoncrawl.logic.GameLogic;
-import com.codecool.dungeoncrawl.logic.GameMap;
 import com.codecool.dungeoncrawl.logic.actors.characters.Player;
 import com.codecool.dungeoncrawl.logic.actors.components.Inventory;
-import com.codecool.dungeoncrawl.model.GameState;
+import com.codecool.dungeoncrawl.model.GameStateModel;
 import com.codecool.dungeoncrawl.model.InventoryModel;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
@@ -107,20 +106,20 @@ public class Main extends Application {
     }
 
     private void loadGame() {
-        List<GameState> gameStates = dbManager.getAllGameStates();
-        for (GameState state : gameStates) {
+        List<GameStateModel> gameStates = dbManager.getAllGameStates();
+        for (GameStateModel state : gameStates) {
 //            if (state.getSaveName().equals(choiceBox.getValue())) {
 //                prepareGameFromSaveState(state);
 //            }
         }
     }
 
-    private void prepareGameFromSaveState(GameState state) {
+    private void prepareGameFromSaveState(GameStateModel state) {
         Game game = new Game(this);
         GameLogic gameLogic = new GameLogic(game, state.getPlayer().getPlayerName(), dbManager);
         game.setUpReferenceLogicForGetDataFromGame(gameLogic);
 
-        gameLogic.loadMapFromState(state.getCurrentMap());
+        gameLogic.loadMapFromState(state.getCurrentMap().getName());
 
         Player player = dbManager.getPlayerBasedOnModel(state.getPlayer());
         gameLogic.loadPlayerFromState(player);
