@@ -22,7 +22,7 @@ import java.util.List;
 public class GameLogic {
 
     private final Game ui;
-    private GameMap map = MapLoader.loadMap("level1.txt");
+    private GameMap map = MapLoader.loadMap(Map.LEVEL1);
     private final Combat combat;
     private final boolean cheatsEnabled;
     GameDatabaseManager dbManager;
@@ -35,8 +35,8 @@ public class GameLogic {
         map.getPlayer().setPlayerName(playerName);
     }
 
-    public void loadGameFromState(String mapName, Player player) {
-        map = MapLoader.loadMap(mapName);
+    public void loadGameFromState(Map loadedMap, Player player) {
+        map = MapLoader.loadMap(loadedMap);
         Cell tempCell = map.getCell(player.getX(), player.getY());
         map.getPlayer().getCell().setActor(null);
         player.setPlayerCell(tempCell);
@@ -128,12 +128,10 @@ public class GameLogic {
 
     private void loadNextMap() {
         Player temporaryPlayer = map.getPlayer();
-        if (map.getLevelName().equals("level1.txt")) {
-            map = MapLoader.loadMap("level2.txt");
-        } else if (map.getLevelName().equals("level2.txt")) {
-            map = MapLoader.loadMap("level3.txt");
-        } else {
-            map = MapLoader.loadMap("map.txt");
+        if (map.getLevelId() == 0) {
+            map = MapLoader.loadMap(Map.LEVEL2);
+        } else  {
+            map = MapLoader.loadMap(Map.LEVEL3);
         }
         map.getPlayer().setWeapon(temporaryPlayer.getWeapon());
         Cell temporaryCell = map.getPlayer().getCell();

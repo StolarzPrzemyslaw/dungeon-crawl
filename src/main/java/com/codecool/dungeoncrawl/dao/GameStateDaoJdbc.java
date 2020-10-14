@@ -31,7 +31,8 @@ public class GameStateDaoJdbc implements GameStateDao {
             statement.setString(4, state.getSaveName());
             statement.executeUpdate();
             ResultSet resultSet = statement.getGeneratedKeys();
-            resultSet.getInt(1);
+            resultSet.next();
+            state.setId(resultSet.getInt(1));
         } catch (SQLException exception) {
             throw new RuntimeException("Error while adding Game State", exception);
         }

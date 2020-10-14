@@ -12,16 +12,16 @@ import java.io.InputStream;
 import java.util.Scanner;
 
 public class MapLoader {
-    public static GameMap loadMap(String levelName) {
+    public static GameMap loadMap(Map mapType) {
 
-        InputStream is = MapLoader.class.getResourceAsStream("/" + levelName);
+        InputStream is = MapLoader.class.getResourceAsStream("/" + mapType.getName());
         Scanner scanner = new Scanner(is);
         int width = scanner.nextInt();
         int height = scanner.nextInt();
 
         scanner.nextLine();
 
-        GameMap map = new GameMap(width, height, CellType.EMPTY, levelName);
+        GameMap map = new GameMap(width, height, CellType.EMPTY, mapType);
         for (int y = 0; y < height; y++) {
             String line = scanner.nextLine();
             for (int x = 0; x < width; x++) {

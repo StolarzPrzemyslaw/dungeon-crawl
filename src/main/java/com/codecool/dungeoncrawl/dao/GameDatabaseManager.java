@@ -1,6 +1,7 @@
 package com.codecool.dungeoncrawl.dao;
 
 import com.codecool.dungeoncrawl.logic.GameMap;
+import com.codecool.dungeoncrawl.logic.Map;
 import com.codecool.dungeoncrawl.logic.actors.characters.Player;
 import com.codecool.dungeoncrawl.logic.actors.components.Inventory;
 import com.codecool.dungeoncrawl.model.GameStateModel;
@@ -13,6 +14,7 @@ import javax.sql.DataSource;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class GameDatabaseManager {
@@ -29,12 +31,15 @@ public class GameDatabaseManager {
         inventoryDao = new InventoryDaoJdbc(dataSource);
     }
 
-    public void saveGameState(GameMap map, String saveName) {
-//        PlayerModel player = savePlayer(map.getPlayer());
-//        GameState gameState = new GameState(map.getLevelName(), actualDate(), player, saveName);
-//        gameStateDao.add(gameState);
-//        System.out.println("Game saved as " + saveName + "!");
+    public void saveGameState(GameMap loadedMap, String saveName) {
+        Map currentMap = Arrays.stream(Map.values()).
+                filter(mapEntry -> mapEntry.getId() == loadedMap.getLevelId()).
+                findFirst().
+                orElseThrow(() -> new RuntimeException("Error while retrieving map with id: " + loadedMap.getLevelId()));
 
+        PlayerModel player = savePlayer(loadedMap.getPlayer());
+        GameStateModel gameState = new GameStateModel(currentMap, actualDate(), player, saveName);
+        gameStateDao.add(gameState);
     }
 
     public List<String> getAllSaveNames() {
@@ -56,10 +61,6 @@ public class GameDatabaseManager {
 
     public InventoryModel getInventoryModelForPlayer(int inventoryId) {
         return inventoryDao.get(inventoryId);
-    }
-
-    public Player getPlayerBasedOnModel(PlayerModel playerModel) {
-        return playerModel.getPlayer();
     }
 
     public ItemModel getAlreadyEquippedWeaponBasedOnId(int itemId) {
