@@ -26,6 +26,7 @@ public class Main extends Application {
 
     private Stage stage;
     private final Button startGameButton = new Button();
+    private final Button importGameStateButton = new Button();
     private final TextField inputNameOfCharacter = new TextField();
     private final ChoiceBox<String> choiceBox = new ChoiceBox<>();
     private final Label loadLabel = new Label();
@@ -59,7 +60,8 @@ public class Main extends Application {
         VBox UIContainer = setUpMainMenuContainer();
         setUpLoadLabel();
         setUpChoiceBox();
-        UIContainer.getChildren().addAll(inputNameOfCharacter, startGameButton, loadLabel, choiceBox);
+        setUpImportGameStateButton();
+        UIContainer.getChildren().addAll(inputNameOfCharacter, startGameButton, loadLabel, choiceBox, importGameStateButton);
         return UIContainer;
     }
 
@@ -80,6 +82,10 @@ public class Main extends Application {
         Label UIName = new Label("DUNGEON CRAWL");
         UIName.setTextFill(Color.web("#472D3C"));
         UIName.setPadding(new Insets(10));
+    }
+
+    private void setUpImportGameStateButton() {
+        importGameStateButton.setText("Import Game State");
     }
 
     private void setUpMainMenuContainerAttributes(VBox UIContainer) {
