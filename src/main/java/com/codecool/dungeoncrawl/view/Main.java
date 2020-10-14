@@ -3,9 +3,7 @@ package com.codecool.dungeoncrawl.view;
 import com.codecool.dungeoncrawl.dao.GameDatabaseManager;
 import com.codecool.dungeoncrawl.logic.GameLogic;
 import com.codecool.dungeoncrawl.logic.actors.characters.Player;
-import com.codecool.dungeoncrawl.logic.actors.components.Inventory;
 import com.codecool.dungeoncrawl.model.GameState;
-import com.codecool.dungeoncrawl.model.InventoryModel;
 import com.codecool.dungeoncrawl.model.PlayerModel;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
@@ -18,6 +16,7 @@ import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
@@ -32,6 +31,8 @@ public class Main extends Application {
     private final Label loadLabel = new Label();
     private Scene mainMenuScene;
     GameDatabaseManager dbManager;
+    private final Game game = new Game(this);
+    private final boolean isImportAction = true;
 
     public Stage getStage() {
         return stage;
@@ -89,9 +90,14 @@ public class Main extends Application {
     }
 
     private void setUpImportGameStateButton() {
-
         importGameStateButton.setText("Import Game State");
-        importGameStateButton.setOnAction(e -> new FileChooser(stage, "import").show());
+        importGameStateButton.setOnAction(e -> {
+            try {
+                new FileChooserWindow(stage, isImportAction, game).importExportFile();
+            } catch (IOException ioException) {
+                ioException.printStackTrace();
+            }
+        });
     }
 
     private void setUpMainMenuContainerAttributes(VBox UIContainer) {
@@ -128,7 +134,6 @@ public class Main extends Application {
     }
 
     private void prepareGameFromSaveState(GameState state) {
-        Game game = new Game(this);
         PlayerModel playerModel = state.getPlayer();
         playerModel.setInventory(state.getPlayer().getInventory());
         playerModel.setWeapon(state.getPlayer().getWeapon());
@@ -150,7 +155,6 @@ public class Main extends Application {
     }
 
     private void initializeNewGame() {
-        Game game = new Game(this);
         String playerName = inputNameOfCharacter.getText();
         GameLogic gameLogic = new GameLogic(game, playerName, dbManager);
         game.setUpReferenceLogicForGetDataFromGame(gameLogic);

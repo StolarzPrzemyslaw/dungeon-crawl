@@ -17,6 +17,7 @@ import javafx.stage.Modality;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -76,7 +77,13 @@ public class Game {
         scene = new Scene(borderPane);
         primaryStage.setScene(scene);
         scene.setOnKeyPressed(gameLogic::onKeyPressed);
-        scene.setOnKeyReleased(gameLogic::onKeyReleased);
+        scene.setOnKeyReleased(keyEvent -> {
+            try {
+                gameLogic.onKeyReleased(keyEvent);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
         centerStage(primaryStage, borderPane);
         primaryStage.setTitle("Dungeon Crawl");
         refresh();
