@@ -9,8 +9,10 @@ public class PlayerModel extends BaseModel {
     private final int strength;
     private final int x;
     private final int y;
-    private int inventoryId;
-    private int weaponId;
+    transient private int inventoryId;
+    transient private int weaponId;
+    private InventoryModel inventory;
+    private ItemModel weapon;
 
 
     public PlayerModel(int hp, int currentHp, int strength, String playerName, int posX, int posY, int inventoryId, int weaponId) {
@@ -31,6 +33,12 @@ public class PlayerModel extends BaseModel {
         this.hp = player.getHealth();
         this.currentHp = player.getCurrentHealth();
         this.strength = player.getStrength();
+    }
+
+    public PlayerModel(Player player, InventoryModel inventory, ItemModel weapon) {
+        this(player);
+        this.inventory = inventory;
+        this.weapon = weapon;
     }
 
     public String getPlayerName() {

@@ -3,6 +3,8 @@ package com.codecool.dungeoncrawl.logic.actors.items;
 import com.codecool.dungeoncrawl.logic.Cell;
 import com.codecool.dungeoncrawl.logic.actors.characters.Player;
 
+import java.io.Serializable;
+
 public abstract class Weapon extends Item implements Usable {
 
     protected int statistic;

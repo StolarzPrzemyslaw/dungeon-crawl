@@ -3,10 +3,12 @@ package com.codecool.dungeoncrawl.dao;
 import com.codecool.dungeoncrawl.logic.GameMap;
 import com.codecool.dungeoncrawl.logic.actors.characters.Player;
 import com.codecool.dungeoncrawl.logic.actors.components.Inventory;
+import com.codecool.dungeoncrawl.logic.actors.items.Item;
 import com.codecool.dungeoncrawl.model.GameState;
 import com.codecool.dungeoncrawl.model.InventoryModel;
 import com.codecool.dungeoncrawl.model.ItemModel;
 import com.codecool.dungeoncrawl.model.PlayerModel;
+import com.google.gson.Gson;
 import org.postgresql.ds.PGSimpleDataSource;
 
 import javax.sql.DataSource;
@@ -30,10 +32,11 @@ public class GameDatabaseManager {
     }
 
     public void saveGameState(GameMap map, String saveName) {
-        PlayerModel player = savePlayer(map.getPlayer());
-        GameState gameState = new GameState(map.getLevelName(), actualDate(), player, saveName);
-        gameStateDao.add(gameState);
-        System.out.println("Game saved as " + saveName + "!");
+//        PlayerModel player = savePlayer(map.getPlayer());
+//        GameState gameState = new GameState(map.getLevelName(), actualDate(), player, saveName);
+//        gameStateDao.add(gameState);
+//        System.out.println("Game saved as " + saveName + "!");
+
     }
 
     public void loadGameState(int saveId) {
