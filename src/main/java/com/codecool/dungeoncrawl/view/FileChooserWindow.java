@@ -32,7 +32,7 @@ public class FileChooserWindow {
 
         if (file != null) {
             if (isImportAction) {
-                SerializerManager.deserializeGameStateGson(file);
+                game.getMain().prepareGameFromSerializedSave(file);
             } else {
                 SerializerManager.serializeGameStateToFile(game.gameMap, file);
             }
