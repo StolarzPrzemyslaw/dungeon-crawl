@@ -2,7 +2,6 @@ package com.codecool.dungeoncrawl.view;
 
 import com.codecool.dungeoncrawl.dao.GameDatabaseManager;
 import com.codecool.dungeoncrawl.logic.GameLogic;
-import com.codecool.dungeoncrawl.logic.GameMap;
 import com.codecool.dungeoncrawl.logic.actors.characters.Player;
 import com.codecool.dungeoncrawl.logic.actors.components.Inventory;
 import com.codecool.dungeoncrawl.model.GameState;
@@ -32,6 +31,10 @@ public class Main extends Application {
     private final Label loadLabel = new Label();
     private Scene mainMenuScene;
     GameDatabaseManager dbManager;
+
+    public Stage getStage() {
+        return stage;
+    }
 
     @Override
     public void start(Stage stage) {
@@ -85,7 +88,9 @@ public class Main extends Application {
     }
 
     private void setUpImportGameStateButton() {
+
         importGameStateButton.setText("Import Game State");
+        importGameStateButton.setOnAction(e -> new FileChooser(stage, "import").show());
     }
 
     private void setUpMainMenuContainerAttributes(VBox UIContainer) {

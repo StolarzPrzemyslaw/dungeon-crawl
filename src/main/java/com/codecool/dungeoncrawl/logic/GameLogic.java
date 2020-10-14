@@ -7,6 +7,7 @@ import com.codecool.dungeoncrawl.logic.actors.components.Combat;
 import com.codecool.dungeoncrawl.logic.actors.components.Inventory;
 import com.codecool.dungeoncrawl.logic.actors.items.Item;
 import com.codecool.dungeoncrawl.logic.actors.obstacles.Stairs;
+import com.codecool.dungeoncrawl.view.FileChooser;
 import com.codecool.dungeoncrawl.view.Game;
 import com.codecool.dungeoncrawl.view.SaveGameModal;
 import javafx.scene.input.KeyCode;
@@ -73,9 +74,11 @@ public class GameLogic {
     }
 
     private void exportGameState() {
+        new FileChooser(ui.getMain().getStage(), "export").show();
     }
 
     private void importGameState() {
+        new FileChooser(ui.getMain().getStage(), "import").show();
     }
 
     public void onKeyPressed(KeyEvent keyEvent) {
