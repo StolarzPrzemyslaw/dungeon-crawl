@@ -4,6 +4,7 @@ import com.codecool.dungeoncrawl.logic.Cell;
 import com.codecool.dungeoncrawl.logic.GameLogic;
 import com.codecool.dungeoncrawl.logic.GameMap;
 import com.codecool.dungeoncrawl.logic.actors.characters.Person;
+import com.codecool.dungeoncrawl.logic.actors.characters.Player;
 import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
@@ -61,6 +62,10 @@ public class Game {
         this.gameMap = gameLogic.getGameMap();
     }
 
+    public void setUpNewPlayerPosition() {
+
+    }
+
     public Stage generateUI(Stage primaryStage) {
         SidePanel sidePanel = new SidePanel(this);
         BottomPanel bottomPanel = new BottomPanel(this);
@@ -113,6 +118,7 @@ public class Game {
         okButton.setAlignment(Pos.CENTER);
 
         dialog.showAndWait();
+        main.refreshChoiceBox();
         main.setMainMenuScene();
     }
 

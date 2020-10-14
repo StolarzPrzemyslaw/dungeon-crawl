@@ -46,6 +46,10 @@ public class Player extends Person {
         return chosenWeapon;
     }
 
+    public int getBaseStrength() {
+        return strength;
+    }
+
     @Override
     public int getStrength() {
         return chosenWeapon != null ? chosenWeapon.getStatistic() + strength : strength;
@@ -66,6 +70,8 @@ public class Player extends Person {
         this.currentHealth = this.health;
         chosenWeapon = new Dagger(cell);
         this.inventory.addItemToInventory(chosenWeapon);
-        cell.setActor(this);
+        if (cell != null) {
+            cell.setActor(this);
+        }
     }
 }

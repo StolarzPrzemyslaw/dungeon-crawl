@@ -56,10 +56,10 @@ public class ItemModel extends BaseModel {
 
     public Item getItem() {
         switch (name) {
+            case "Basic dagger":
+                return new Dagger(null);
             case "Axe":
                 return new Axe(null);
-            case "Dagger":
-                return new Dagger(null);
             case "Knife":
                 return new Knife(null);
             case "Sword":

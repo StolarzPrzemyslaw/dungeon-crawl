@@ -3,9 +3,7 @@ package com.codecool.dungeoncrawl.view;
 import com.codecool.dungeoncrawl.dao.GameDatabaseManager;
 import com.codecool.dungeoncrawl.logic.GameLogic;
 import com.codecool.dungeoncrawl.logic.actors.characters.Player;
-import com.codecool.dungeoncrawl.logic.actors.components.Inventory;
 import com.codecool.dungeoncrawl.model.GameStateModel;
-import com.codecool.dungeoncrawl.model.InventoryModel;
 import com.codecool.dungeoncrawl.model.PlayerModel;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
@@ -25,6 +23,7 @@ import java.util.Optional;
 public class Main extends Application {
 
     private Stage stage;
+    private final Game game = new Game(this);
     private final Button startGameButton = new Button();
     private final Button importGameStateButton = new Button();
     private final TextField inputNameOfCharacter = new TextField();
@@ -106,9 +105,13 @@ public class Main extends Application {
     }
 
     private void setUpChoiceBox() {
-        choiceBox.setItems(FXCollections.observableArrayList(dbManager.getAllSaveNames()));
+        refreshChoiceBox();
         choiceBox.setOnAction(e -> loadGame());
         choiceBox.setDisable(false);
+    }
+
+    public void refreshChoiceBox() {
+        choiceBox.setItems(FXCollections.observableArrayList(dbManager.getAllSaveNames()));
     }
 
     private void startNewGame() {
@@ -122,35 +125,28 @@ public class Main extends Application {
         List<GameStateModel> gameStates = dbManager.getAllGameStates();
         for (GameStateModel state : gameStates) {
             if (state.getSaveName().equals(choiceBox.getValue())) {
+                choiceBox.getSelectionModel().clearSelection();
                 prepareGameFromSaveState(state);
             }
         }
     }
 
+    private void prepareGameFromSerializedSave(GameStateModel state) {
+//        PlayerModel playerModel = state.getPlayer();
+//        playerModel.setInventory(state.getPlayer().getInventory());
+//        playerModel.setWeapon(state.getPlayer().getWeapon());
+    }
+
     private void prepareGameFromSaveState(GameStateModel state) {
-        Game game = new Game(this);
-        PlayerModel playerModel = state.getPlayer();
-        playerModel.setInventory(state.getPlayer().getInventory());
-        playerModel.setWeapon(state.getPlayer().getWeapon());
-
-        if (playerModel.getInventory() == null) {
-            playerModel.setInventory(dbManager.getInventoryModelForPlayer(playerModel.getInventoryId()));
-        }
-        if (playerModel.getWeapon() == null) {
-            playerModel.setWeapon(dbManager.getAlreadyEquippedWeaponBasedOnId(playerModel.getWeaponId()));
-        }
-
-        Player player = playerModel.getPlayer();
-
-        GameLogic gameLogic = new GameLogic(game, player.getName(), dbManager);
+        GameLogic gameLogic = new GameLogic(game, state.getPlayer().getPlayerName(), dbManager);
         game.setUpReferenceLogicForGetDataFromGame(gameLogic);
-        gameLogic.loadGameFromState(state.getCurrentMap().getName(), player);
+        gameLogic.loadGameFromState(state);
+        game.setUpNewPlayerPosition();
 
         stage = game.generateUI(stage);
     }
 
     private void initializeNewGame() {
-        Game game = new Game(this);
         String playerName = inputNameOfCharacter.getText();
         GameLogic gameLogic = new GameLogic(game, playerName, dbManager);
         game.setUpReferenceLogicForGetDataFromGame(gameLogic);

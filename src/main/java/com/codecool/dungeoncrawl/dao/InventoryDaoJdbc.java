@@ -1,6 +1,7 @@
 package com.codecool.dungeoncrawl.dao;
 
 import com.codecool.dungeoncrawl.model.InventoryModel;
+import com.codecool.dungeoncrawl.model.ItemModel;
 
 import javax.sql.DataSource;
 import java.sql.*;
@@ -10,9 +11,11 @@ import java.util.List;
 public class InventoryDaoJdbc implements InventoryDao {
 
     private final DataSource dataSource;
+    private final ItemDao itemDao;
 
-    public InventoryDaoJdbc(DataSource dataSource) {
+    public InventoryDaoJdbc(DataSource dataSource, ItemDao itemDao) {
         this.dataSource = dataSource;
+        this.itemDao = itemDao;
     }
 
     @Override
@@ -73,7 +76,9 @@ public class InventoryDaoJdbc implements InventoryDao {
 
     private InventoryModel createInventoryModelBasedOnData(ResultSet result) throws SQLException {
         int inventoryId = result.getInt("player_inventory_id");
+        List<ItemModel> items = itemDao.getAll(inventoryId);
         InventoryModel inventory = new InventoryModel();
+        inventory.setItems(items);
         inventory.setId(inventoryId);
         return inventory;
     }

@@ -31,7 +31,8 @@ public class GameStateDaoJdbc implements GameStateDao {
             statement.setString(4, state.getSaveName());
             statement.executeUpdate();
             ResultSet resultSet = statement.getGeneratedKeys();
-            resultSet.getInt(1);
+            resultSet.next();
+            state.setId(resultSet.getInt(1));
         } catch (SQLException exception) {
             throw new RuntimeException("Error while adding Game State", exception);
         }
@@ -60,7 +61,7 @@ public class GameStateDaoJdbc implements GameStateDao {
             PreparedStatement statement = connection.prepareStatement(sql);
             statement.setInt(1, id);
             ResultSet resultSet = statement.executeQuery();
-            if(!resultSet.next()) return null;
+            if (!resultSet.next()) return null;
             GameStateModel gameState = getGameStateModel(resultSet);
             gameState.setId(id);
             return gameState;
@@ -92,9 +93,9 @@ public class GameStateDaoJdbc implements GameStateDao {
         int currentMapId = resultSet.getInt(3);
         String saveName = resultSet.getString(4);
         Map currentMap = Arrays.stream(Map.values()).
-                            filter(mapEntry -> mapEntry.getId() == currentMapId).
-                            findFirst().
-                            orElseThrow(() -> new RuntimeException("Error while retrieving map with id: " + currentMapId));
+                filter(mapEntry -> mapEntry.getId() == currentMapId).
+                findFirst().
+                orElseThrow(() -> new RuntimeException("Error while retrieving map with id: " + currentMapId));
         PlayerModel playerModel = playerDao.get(playerId);
         return new GameStateModel(currentMap, savedAt, playerModel, saveName);
     }
