@@ -5,8 +5,8 @@ import com.codecool.dungeoncrawl.logic.actors.items.*;
 public class ItemModel extends BaseModel {
     private String name;
     private int statistic;
-    private Type itemType;
-    private int id;
+    transient private Type itemType;
+    transient private int id;
 
     public ItemModel(Item item) {
         this.name = item.getName();
