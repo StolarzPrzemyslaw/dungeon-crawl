@@ -12,7 +12,7 @@ import java.io.InputStream;
 import java.util.Scanner;
 
 public class MapLoader {
-    public static GameMap loadMap(Map mapType, boolean firstRun) {
+    public static GameMap loadMap(Map mapType, boolean isPlayerLoadedFromMap) {
 
         InputStream is = MapLoader.class.getResourceAsStream("/" + mapType.getName());
         Scanner scanner = new Scanner(is);
@@ -27,7 +27,7 @@ public class MapLoader {
             for (int x = 0; x < width; x++) {
                 if (x < line.length()) {
                     Cell cell = map.getCell(x, y);
-                    if (firstRun && x == mapType.getStartX() && y == mapType.getStartY()) {
+                    if (isPlayerLoadedFromMap && x == mapType.getStartX() && y == mapType.getStartY()) {
                         cell.setType(CellType.FLOOR);
                         map.setPlayer(new Player(cell));
                         continue;
