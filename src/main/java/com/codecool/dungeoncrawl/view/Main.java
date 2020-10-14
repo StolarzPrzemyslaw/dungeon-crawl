@@ -105,9 +105,13 @@ public class Main extends Application {
     }
 
     private void setUpChoiceBox() {
-        choiceBox.setItems(FXCollections.observableArrayList(dbManager.getAllSaveNames()));
+        refreshChoiceBox();
         choiceBox.setOnAction(e -> loadGame());
         choiceBox.setDisable(false);
+    }
+
+    public void refreshChoiceBox() {
+        choiceBox.setItems(FXCollections.observableArrayList(dbManager.getAllSaveNames()));
     }
 
     private void startNewGame() {
@@ -121,6 +125,7 @@ public class Main extends Application {
         List<GameStateModel> gameStates = dbManager.getAllGameStates();
         for (GameStateModel state : gameStates) {
             if (state.getSaveName().equals(choiceBox.getValue())) {
+                choiceBox.getSelectionModel().clearSelection();
                 prepareGameFromSaveState(state);
             }
         }

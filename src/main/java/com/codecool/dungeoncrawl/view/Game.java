@@ -118,6 +118,7 @@ public class Game {
         okButton.setAlignment(Pos.CENTER);
 
         dialog.showAndWait();
+        main.refreshChoiceBox();
         main.setMainMenuScene();
     }
 
