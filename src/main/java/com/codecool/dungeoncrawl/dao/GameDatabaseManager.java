@@ -1,6 +1,5 @@
 package com.codecool.dungeoncrawl.dao;
 
-import com.codecool.dungeoncrawl.logic.Cell;
 import com.codecool.dungeoncrawl.logic.GameMap;
 import com.codecool.dungeoncrawl.logic.Map;
 import com.codecool.dungeoncrawl.logic.actors.characters.Player;
@@ -77,16 +76,6 @@ public class GameDatabaseManager {
         return model;
     }
 
-    public InventoryModel getInventoryModelForPlayer(int inventoryId) {
-        return inventoryDao.get(inventoryId);
-    }
-
-    public ItemModel getAlreadyEquippedWeaponBasedOnId(int itemId) {
-        ItemModel model = itemDao.get(itemId);
-        model.setItemType(ItemModel.Type.USABLE);
-        return model;
-    }
-
     private int getWeaponInUseId(Player player, InventoryModel inventory) {
         int weaponId = 1;
         for (ItemModel item: inventory.getItems()) {
@@ -103,10 +92,6 @@ public class GameDatabaseManager {
         setUpItemsInInventoryModel(inventory, model);
         saveAllItemsInDatabase(model, model.getId());
         return model;
-    }
-
-    public Inventory getInventoryBasedOnModel(InventoryModel inventoryModel) {
-        return inventoryModel.getInventory();
     }
 
     private void saveAllItemsInDatabase(InventoryModel model, int inventoryId) {
