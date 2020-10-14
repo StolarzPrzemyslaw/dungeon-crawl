@@ -3,7 +3,7 @@ package com.codecool.dungeoncrawl.dao;
 import com.codecool.dungeoncrawl.logic.GameMap;
 import com.codecool.dungeoncrawl.logic.actors.characters.Player;
 import com.codecool.dungeoncrawl.logic.actors.components.Inventory;
-import com.codecool.dungeoncrawl.model.GameState;
+import com.codecool.dungeoncrawl.model.GameStateModel;
 import com.codecool.dungeoncrawl.model.InventoryModel;
 import com.codecool.dungeoncrawl.model.ItemModel;
 import com.codecool.dungeoncrawl.model.PlayerModel;
@@ -20,13 +20,11 @@ public class GameDatabaseManager {
     private ItemDao itemDao;
     private InventoryDao inventoryDao;
     private GameStateDao gameStateDao;
-    private MapDao mapDao;
 
     public void setup() throws SQLException {
         DataSource dataSource = connect();
-        mapDao = new MapDaoJdbc(dataSource);
-        gameStateDao = new GameStateDaoJdbc(dataSource);
         playerDao = new PlayerDaoJdbc(dataSource);
+        gameStateDao = new GameStateDaoJdbc(dataSource, playerDao);
         itemDao = new ItemDaoJdbc(dataSource);
         inventoryDao = new InventoryDaoJdbc(dataSource);
     }
@@ -43,7 +41,7 @@ public class GameDatabaseManager {
         return new ArrayList<>();
     }
 
-    public List<GameState> getAllGameStates() {
+    public List<GameStateModel> getAllGameStates() {
         return gameStateDao.getAll();
     }
 
@@ -103,13 +101,11 @@ public class GameDatabaseManager {
     }
 
     public boolean checkValidSaveName(String saveName) {
-//        List<GameState> gameStates = gameStateDao.getAll();
-//        gameStates.forEach(state -> {
-//            if (state.getSaveName.equals(saveName)) {
-//                return false;
-//            }
-//        });
-        return true;
+        List<GameStateModel> gameStates = gameStateDao.getAll();
+        return gameStates.stream()
+                .filter(gameState -> gameState.getSaveName().equals(saveName))
+                .findFirst()
+                .isEmpty();
     }
 
     private DataSource connect() throws SQLException {
