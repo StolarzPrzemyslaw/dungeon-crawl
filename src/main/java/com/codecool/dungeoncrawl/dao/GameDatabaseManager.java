@@ -20,9 +20,11 @@ public class GameDatabaseManager {
     private ItemDao itemDao;
     private InventoryDao inventoryDao;
     private GameStateDao gameStateDao;
+    private MapDao mapDao;
 
     public void setup() throws SQLException {
         DataSource dataSource = connect();
+        mapDao = new MapDaoJdbc(dataSource);
         gameStateDao = new GameStateDaoJdbc(dataSource);
         playerDao = new PlayerDaoJdbc(dataSource);
         itemDao = new ItemDaoJdbc(dataSource);
@@ -36,8 +38,12 @@ public class GameDatabaseManager {
         System.out.println("Game saved as " + saveName + "!");
     }
 
-    public void loadGameState(int saveId) {
-        
+    public List<String> getAllSaveNames() {
+        return new ArrayList<>();
+    }
+
+    public List<GameState> getAllGameStates() {
+        return gameStateDao.getAll();
     }
 
     public PlayerModel savePlayer(Player player) {
@@ -47,6 +53,14 @@ public class GameDatabaseManager {
         model.setWeaponId(getWeaponInUseId(player, inventory));
         playerDao.add(model);
         return model;
+    }
+
+    public InventoryModel getInventoryModelForPlayer(int inventoryId) {
+        return inventoryDao.get(inventoryId);
+    }
+
+    public Player getPlayerBasedOnModel(PlayerModel playerModel) {
+        return playerModel.getPlayer();
     }
 
     private int getWeaponInUseId(Player player, InventoryModel inventory) {
@@ -65,6 +79,10 @@ public class GameDatabaseManager {
         setUpItemsInInventoryModel(inventory, model);
         saveAllItemsInDatabase(model, model.getId());
         return model;
+    }
+
+    public Inventory getInventoryBasedOnModel(InventoryModel inventoryModel) {
+        return inventoryModel.getInventory();
     }
 
     private void saveAllItemsInDatabase(InventoryModel model, int inventoryId) {
@@ -86,7 +104,7 @@ public class GameDatabaseManager {
 //                return false;
 //            }
 //        });
-        return false;
+        return true;
     }
 
     private DataSource connect() throws SQLException {

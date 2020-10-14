@@ -7,7 +7,7 @@ import com.codecool.dungeoncrawl.logic.actors.items.*;
 
 public class Player extends Person {
 
-    private final Inventory inventory;
+    private Inventory inventory;
     private Weapon chosenWeapon;
 
     public Player(Cell cell) {
@@ -16,8 +16,7 @@ public class Player extends Person {
         createPlayer();
     }
 
-    public Player(Cell cell, Inventory inventory) {
-        super(cell);
+    public void setInventory(Inventory inventory) {
         this.inventory = inventory;
     }
 

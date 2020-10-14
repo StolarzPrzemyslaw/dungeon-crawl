@@ -1,5 +1,8 @@
 package com.codecool.dungeoncrawl.model;
 
+import com.codecool.dungeoncrawl.logic.Cell;
+import com.codecool.dungeoncrawl.logic.CellType;
+import com.codecool.dungeoncrawl.logic.GameMap;
 import com.codecool.dungeoncrawl.logic.actors.characters.Player;
 
 public class PlayerModel extends BaseModel {
@@ -31,6 +34,13 @@ public class PlayerModel extends BaseModel {
         this.hp = player.getHealth();
         this.currentHp = player.getCurrentHealth();
         this.strength = player.getStrength();
+    }
+
+    public Player getPlayer() {
+        Player player = new Player(null);
+        player.setStrength(strength);
+        player.setCurrentHealth(currentHp);
+        return player;
     }
 
     public String getPlayerName() {
