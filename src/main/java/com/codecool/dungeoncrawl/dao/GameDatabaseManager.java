@@ -20,11 +20,9 @@ public class GameDatabaseManager {
     private ItemDao itemDao;
     private InventoryDao inventoryDao;
     private GameStateDao gameStateDao;
-    private MapDao mapDao;
 
     public void setup() throws SQLException {
         DataSource dataSource = connect();
-        mapDao = new MapDaoJdbc(dataSource);
         playerDao = new PlayerDaoJdbc(dataSource);
         gameStateDao = new GameStateDaoJdbc(dataSource, playerDao);
         itemDao = new ItemDaoJdbc(dataSource);
