@@ -62,6 +62,10 @@ public class GameDatabaseManager {
         return playerModel.getPlayer();
     }
 
+    public ItemModel getAlreadyEquippedWeaponBasedOnId(int itemId) {
+        return itemDao.get(itemId);
+    }
+
     private int getWeaponInUseId(Player player, InventoryModel inventory) {
         int weaponId = 1;
         for (ItemModel item: inventory.getItems()) {
@@ -97,13 +101,11 @@ public class GameDatabaseManager {
     }
 
     public boolean checkValidSaveName(String saveName) {
-//        List<GameState> gameStates = gameStateDao.getAll();
-//        gameStates.forEach(state -> {
-//            if (state.getSaveName.equals(saveName)) {
-//                return false;
-//            }
-//        });
-        return true;
+        List<GameStateModel> gameStates = gameStateDao.getAll();
+        return gameStates.stream()
+                .filter(gameState -> gameState.getSaveName().equals(saveName))
+                .findFirst()
+                .isEmpty();
     }
 
     private DataSource connect() throws SQLException {

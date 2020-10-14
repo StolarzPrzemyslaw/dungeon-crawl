@@ -8,7 +8,6 @@ import java.util.List;
 
 public class InventoryModel extends BaseModel {
     private List<ItemModel> items;
-    transient private int id;
 
     public InventoryModel() {
 

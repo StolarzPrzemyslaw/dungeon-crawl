@@ -6,6 +6,7 @@ import com.codecool.dungeoncrawl.logic.actors.characters.Player;
 import com.codecool.dungeoncrawl.logic.actors.components.Inventory;
 import com.codecool.dungeoncrawl.model.GameStateModel;
 import com.codecool.dungeoncrawl.model.InventoryModel;
+import com.codecool.dungeoncrawl.model.PlayerModel;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
@@ -25,11 +26,16 @@ public class Main extends Application {
 
     private Stage stage;
     private final Button startGameButton = new Button();
+    private final Button importGameStateButton = new Button();
     private final TextField inputNameOfCharacter = new TextField();
     private final ChoiceBox<String> choiceBox = new ChoiceBox<>();
     private final Label loadLabel = new Label();
     private Scene mainMenuScene;
     GameDatabaseManager dbManager;
+
+    public Stage getStage() {
+        return stage;
+    }
 
     @Override
     public void start(Stage stage) {
@@ -58,7 +64,8 @@ public class Main extends Application {
         VBox UIContainer = setUpMainMenuContainer();
         setUpLoadLabel();
         setUpChoiceBox();
-        UIContainer.getChildren().addAll(inputNameOfCharacter, startGameButton, loadLabel, choiceBox);
+        setUpImportGameStateButton();
+        UIContainer.getChildren().addAll(inputNameOfCharacter, startGameButton, loadLabel, choiceBox, importGameStateButton);
         return UIContainer;
     }
 
@@ -79,6 +86,12 @@ public class Main extends Application {
         Label UIName = new Label("DUNGEON CRAWL");
         UIName.setTextFill(Color.web("#472D3C"));
         UIName.setPadding(new Insets(10));
+    }
+
+    private void setUpImportGameStateButton() {
+
+        importGameStateButton.setText("Import Game State");
+        importGameStateButton.setOnAction(e -> new FileChooser(stage, "import").show());
     }
 
     private void setUpMainMenuContainerAttributes(VBox UIContainer) {
@@ -108,25 +121,30 @@ public class Main extends Application {
     private void loadGame() {
         List<GameStateModel> gameStates = dbManager.getAllGameStates();
         for (GameStateModel state : gameStates) {
-//            if (state.getSaveName().equals(choiceBox.getValue())) {
-//                prepareGameFromSaveState(state);
-//            }
+            if (state.getSaveName().equals(choiceBox.getValue())) {
+                prepareGameFromSaveState(state);
+            }
         }
     }
 
     private void prepareGameFromSaveState(GameStateModel state) {
         Game game = new Game(this);
-        GameLogic gameLogic = new GameLogic(game, state.getPlayer().getPlayerName(), dbManager);
+        PlayerModel playerModel = state.getPlayer();
+        playerModel.setInventory(state.getPlayer().getInventory());
+        playerModel.setWeapon(state.getPlayer().getWeapon());
+
+        if (playerModel.getInventory() == null) {
+            playerModel.setInventory(dbManager.getInventoryModelForPlayer(playerModel.getInventoryId()));
+        }
+        if (playerModel.getWeapon() == null) {
+            playerModel.setWeapon(dbManager.getAlreadyEquippedWeaponBasedOnId(playerModel.getWeaponId()));
+        }
+
+        Player player = playerModel.getPlayer();
+
+        GameLogic gameLogic = new GameLogic(game, player.getName(), dbManager);
         game.setUpReferenceLogicForGetDataFromGame(gameLogic);
-
-        gameLogic.loadMapFromState(state.getCurrentMap().getName());
-
-        Player player = dbManager.getPlayerBasedOnModel(state.getPlayer());
-        gameLogic.loadPlayerFromState(player);
-
-        InventoryModel inventoryModel = dbManager.getInventoryModelForPlayer(state.getPlayer().getInventoryId());
-        Inventory inventory = dbManager.getInventoryBasedOnModel(inventoryModel);
-        gameLogic.loadInventoryFromState(inventory);
+        gameLogic.loadGameFromState(state.getCurrentMap(), player);
 
         stage = game.generateUI(stage);
     }
