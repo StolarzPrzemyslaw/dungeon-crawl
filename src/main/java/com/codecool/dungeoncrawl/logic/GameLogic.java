@@ -6,6 +6,8 @@ import com.codecool.dungeoncrawl.logic.actors.characters.*;
 import com.codecool.dungeoncrawl.logic.actors.components.Combat;
 import com.codecool.dungeoncrawl.logic.actors.items.Item;
 import com.codecool.dungeoncrawl.logic.actors.obstacles.Stairs;
+import com.codecool.dungeoncrawl.model.GameStateModel;
+import com.codecool.dungeoncrawl.model.PlayerModel;
 import com.codecool.dungeoncrawl.view.FileChooserWindow;
 import com.codecool.dungeoncrawl.view.Game;
 import com.codecool.dungeoncrawl.view.SaveGameModal;
@@ -21,7 +23,7 @@ import java.util.List;
 public class GameLogic {
 
     private final Game ui;
-    private GameMap map = MapLoader.loadMap("level1.txt");
+    private GameMap map = MapLoader.loadMap(Map.LEVEL1, true);
     private final Combat combat;
     private final boolean cheatsEnabled;
     GameDatabaseManager dbManager;
@@ -35,9 +37,17 @@ public class GameLogic {
         map.getPlayer().setPlayerName(playerName);
     }
 
-    public void loadGameFromState(String mapName, Player player) {
-        map = MapLoader.loadMap(mapName);
-        map.setPlayer(player);
+    public void loadGameFromState(GameStateModel gameState) {
+        Map mapToLoad = gameState.getCurrentMap();
+        map = MapLoader.loadMap(mapToLoad, false);
+        PlayerModel playerModel = gameState.getPlayer();
+        Cell playerCell = map.getCell(playerModel.getX(), playerModel.getY());
+        playerModel.setPlayerCell(playerCell);
+        map.setPlayer(playerModel.getPlayer());
+
+        ui.setMap(map);
+        ui.displayLog("You have loaded GameState!");
+        ui.refresh();
     }
 
     public void onKeyReleased(KeyEvent keyEvent) throws IOException {
@@ -125,12 +135,10 @@ public class GameLogic {
 
     private void loadNextMap() {
         Player temporaryPlayer = map.getPlayer();
-        if (map.getLevelName().equals("level1.txt")) {
-            map = MapLoader.loadMap("level2.txt");
-        } else if (map.getLevelName().equals("level2.txt")) {
-            map = MapLoader.loadMap("level3.txt");
-        } else {
-            map = MapLoader.loadMap("map.txt");
+        if (map.getLevelId() == 1) {
+            map = MapLoader.loadMap(Map.LEVEL2, true);
+        } else  {
+            map = MapLoader.loadMap(Map.LEVEL3, true);
         }
         map.getPlayer().setWeapon(temporaryPlayer.getWeapon());
         Cell temporaryCell = map.getPlayer().getCell();

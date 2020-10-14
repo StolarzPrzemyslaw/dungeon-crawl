@@ -2,7 +2,7 @@ package com.codecool.dungeoncrawl.serializer;
 
 import com.codecool.dungeoncrawl.logic.GameMap;
 import com.codecool.dungeoncrawl.logic.actors.items.Item;
-import com.codecool.dungeoncrawl.model.GameState;
+import com.codecool.dungeoncrawl.model.GameStateModel;
 import com.codecool.dungeoncrawl.model.InventoryModel;
 import com.codecool.dungeoncrawl.model.ItemModel;
 import com.codecool.dungeoncrawl.model.PlayerModel;
@@ -25,13 +25,13 @@ public class SerializerManager {
             items.add(new ItemModel(item));
         }
         inventoryModel.setItems(items);
-        PlayerModel playerModel = new PlayerModel(map.getPlayer(), inventoryModel, new ItemModel(map.getPlayer().getWeapon()));
+        PlayerModel playerModel = new PlayerModel(map.getPlayer());
 
         new Gson().toJson(playerModel, new FileWriter(filePath));
     }
 
-    public static GameState deserializeGameStateGson(String filePath) throws FileNotFoundException {
-        return new Gson().fromJson(new FileReader(filePath), GameState.class);
+    public static GameStateModel deserializeGameStateGson(String filePath) throws FileNotFoundException {
+        return new Gson().fromJson(new FileReader(filePath), GameStateModel.class);
     }
 
 }

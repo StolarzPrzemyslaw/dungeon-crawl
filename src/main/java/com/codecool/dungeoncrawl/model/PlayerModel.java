@@ -1,5 +1,6 @@
 package com.codecool.dungeoncrawl.model;
 
+import com.codecool.dungeoncrawl.logic.Cell;
 import com.codecool.dungeoncrawl.logic.actors.characters.Player;
 import com.codecool.dungeoncrawl.logic.actors.items.Weapon;
 
@@ -14,17 +15,18 @@ public class PlayerModel extends BaseModel {
     transient private int weaponId;
     private InventoryModel inventory;
     private ItemModel weapon;
+    private Cell playerCell;
 
 
-    public PlayerModel(int hp, int currentHp, int strength, String playerName, int posX, int posY, int inventoryId, int weaponId) {
+    public PlayerModel(int hp, int currentHp, int strength, String playerName, int posX, int posY, InventoryModel inventory, ItemModel weapon) {
         this.hp = hp;
         this.currentHp = currentHp;
         this.strength = strength;
         this.playerName = playerName;
         this.x = posX;
         this.y = posY;
-        this.inventoryId = inventoryId;
-        this.weaponId = weaponId;
+        this.inventory = inventory;
+        this.weapon = weapon;
     }
 
     public PlayerModel(Player player) {
@@ -33,17 +35,11 @@ public class PlayerModel extends BaseModel {
         this.y = player.getY();
         this.hp = player.getHealth();
         this.currentHp = player.getCurrentHealth();
-        this.strength = player.getStrength();
-    }
-
-    public PlayerModel(Player player, InventoryModel inventory, ItemModel weapon) {
-        this(player);
-        this.inventory = inventory;
-        this.weapon = weapon;
+        this.strength = player.getBaseStrength();
     }
 
     public Player getPlayer() {
-        Player player = new Player(null);
+        Player player = new Player(playerCell);
         player.setStrength(strength);
         player.setCurrentHealth(currentHp);
         if (inventory != null) {
@@ -53,6 +49,10 @@ public class PlayerModel extends BaseModel {
             player.setWeapon((Weapon) weapon.getItem());
         }
         return player;
+    }
+
+    public void setPlayerCell(Cell cell) {
+        this.playerCell = cell;
     }
 
     public String getPlayerName() {
@@ -95,19 +95,4 @@ public class PlayerModel extends BaseModel {
         this.weaponId = weaponId;
     }
 
-    public InventoryModel getInventory() {
-        return inventory;
-    }
-
-    public ItemModel getWeapon() {
-        return weapon;
-    }
-
-    public void setInventory(InventoryModel inventory) {
-        this.inventory = inventory;
-    }
-
-    public void setWeapon(ItemModel weapon) {
-        this.weapon = weapon;
-    }
 }

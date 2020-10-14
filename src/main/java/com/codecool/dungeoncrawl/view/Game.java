@@ -62,6 +62,10 @@ public class Game {
         this.gameMap = gameLogic.getGameMap();
     }
 
+    public void setUpNewPlayerPosition() {
+
+    }
+
     public Stage generateUI(Stage primaryStage) {
         SidePanel sidePanel = new SidePanel(this);
         BottomPanel bottomPanel = new BottomPanel(this);
@@ -120,6 +124,7 @@ public class Game {
         okButton.setAlignment(Pos.CENTER);
 
         dialog.showAndWait();
+        main.refreshChoiceBox();
         main.setMainMenuScene();
     }
 

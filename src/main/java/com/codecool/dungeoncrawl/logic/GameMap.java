@@ -10,12 +10,12 @@ public class GameMap {
     private final int width;
     private final int height;
     private final Cell[][] cells;
-    private final String levelName;
+    private final Map map;
 
     private Player player;
 
-    public GameMap(int width, int height, CellType defaultCellType, String levelName) {
-        this.levelName = levelName;
+    public GameMap(int width, int height, CellType defaultCellType, Map map) {
+        this.map = map;
         this.width = width;
         this.height = height;
         cells = new Cell[width][height];
@@ -26,8 +26,8 @@ public class GameMap {
         }
     }
 
-    public String getLevelName() {
-        return levelName;
+    public int getLevelId() {
+        return map.getId();
     }
 
     public List<Actor> getAllEnemiesOnMap(Class<?> className) {

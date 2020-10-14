@@ -113,7 +113,8 @@ public class SaveGameConfirmModal {
     }
 
     private void handleSaveButton() {
-        gameDbManager.saveGameState(map, saveName);
+        gameDbManager.prepareLoadedGameState(map, saveName);
+        gameDbManager.updateGameState();
         close();
     }
 }

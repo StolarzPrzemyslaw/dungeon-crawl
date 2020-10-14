@@ -120,7 +120,8 @@ public class SaveGameModal {
     private void handleSaveButton() {
         String saveName = textInput.getText();
         if (gameDbManager.checkValidSaveName(saveName)) {
-            gameDbManager.saveGameState(map, saveName);
+            gameDbManager.prepareLoadedGameState(map, saveName);
+            gameDbManager.saveGameState();
         } else {
             new SaveGameConfirmModal(gameDbManager, map, saveName).show();
         }

@@ -1,9 +1,10 @@
 package com.codecool.dungeoncrawl.dao;
 
 import com.codecool.dungeoncrawl.logic.GameMap;
+import com.codecool.dungeoncrawl.logic.Map;
 import com.codecool.dungeoncrawl.logic.actors.characters.Player;
 import com.codecool.dungeoncrawl.logic.actors.components.Inventory;
-import com.codecool.dungeoncrawl.model.GameState;
+import com.codecool.dungeoncrawl.model.GameStateModel;
 import com.codecool.dungeoncrawl.model.InventoryModel;
 import com.codecool.dungeoncrawl.model.ItemModel;
 import com.codecool.dungeoncrawl.model.PlayerModel;
@@ -13,37 +14,56 @@ import javax.sql.DataSource;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class GameDatabaseManager {
     private PlayerDao playerDao;
     private ItemDao itemDao;
     private InventoryDao inventoryDao;
     private GameStateDao gameStateDao;
-    private MapDao mapDao;
+    private GameStateModel gameState;
 
     public void setup() throws SQLException {
         DataSource dataSource = connect();
-        mapDao = new MapDaoJdbc(dataSource);
-        gameStateDao = new GameStateDaoJdbc(dataSource);
-        playerDao = new PlayerDaoJdbc(dataSource);
         itemDao = new ItemDaoJdbc(dataSource);
-        inventoryDao = new InventoryDaoJdbc(dataSource);
+        inventoryDao = new InventoryDaoJdbc(dataSource, itemDao);
+        playerDao = new PlayerDaoJdbc(dataSource, inventoryDao, itemDao);
+        gameStateDao = new GameStateDaoJdbc(dataSource, playerDao);
     }
 
-    public void saveGameState(GameMap map, String saveName) {
-//        PlayerModel player = savePlayer(map.getPlayer());
-//        GameState gameState = new GameState(map.getLevelName(), actualDate(), player, saveName);
-//        gameStateDao.add(gameState);
-//        System.out.println("Game saved as " + saveName + "!");
+    public void prepareLoadedGameState(GameMap loadedMap, String saveName) {
+        Map currentMap = Arrays.stream(Map.values()).
+                filter(mapEntry -> mapEntry.getId() == loadedMap.getLevelId()).
+                findFirst().
+                orElseThrow(() -> new RuntimeException("Error while retrieving map with id: " + loadedMap.getLevelId()));
 
+        PlayerModel player = savePlayer(loadedMap.getPlayer());
+
+        gameState = new GameStateModel(currentMap, actualDate(), player, saveName);
+        List<GameStateModel> gameStates = gameStateDao.getAll();
+        gameStates.stream()
+                .filter(state -> state.getSaveName().equals(saveName))
+                .findFirst()
+                .ifPresent(gameStateModel -> gameState.setId(gameStateModel.getId()));
+    }
+
+    public void saveGameState() {
+        gameStateDao.add(gameState);
+    }
+
+    public void updateGameState() {
+        gameStateDao.update(gameState);
     }
 
     public List<String> getAllSaveNames() {
-        return new ArrayList<>();
+        return gameStateDao.getAll().stream()
+                .map(GameStateModel::getSaveName)
+                .collect(Collectors.toList());
     }
 
-    public List<GameState> getAllGameStates() {
+    public List<GameStateModel> getAllGameStates() {
         return gameStateDao.getAll();
     }
 
@@ -54,18 +74,6 @@ public class GameDatabaseManager {
         model.setWeaponId(getWeaponInUseId(player, inventory));
         playerDao.add(model);
         return model;
-    }
-
-    public InventoryModel getInventoryModelForPlayer(int inventoryId) {
-        return inventoryDao.get(inventoryId);
-    }
-
-    public Player getPlayerBasedOnModel(PlayerModel playerModel) {
-        return playerModel.getPlayer();
-    }
-
-    public ItemModel getAlreadyEquippedWeaponBasedOnId(int itemId) {
-        return itemDao.get(itemId);
     }
 
     private int getWeaponInUseId(Player player, InventoryModel inventory) {
@@ -86,10 +94,6 @@ public class GameDatabaseManager {
         return model;
     }
 
-    public Inventory getInventoryBasedOnModel(InventoryModel inventoryModel) {
-        return inventoryModel.getInventory();
-    }
-
     private void saveAllItemsInDatabase(InventoryModel model, int inventoryId) {
         for (ItemModel item : model.getItems()) {
             itemDao.add(item, inventoryId);
@@ -103,13 +107,11 @@ public class GameDatabaseManager {
     }
 
     public boolean checkValidSaveName(String saveName) {
-//        List<GameState> gameStates = gameStateDao.getAll();
-//        gameStates.forEach(state -> {
-//            if (state.getSaveName.equals(saveName)) {
-//                return false;
-//            }
-//        });
-        return true;
+        List<GameStateModel> gameStates = gameStateDao.getAll();
+        return gameStates.stream()
+                .filter(gameState -> gameState.getSaveName().equals(saveName))
+                .findFirst()
+                .isEmpty();
     }
 
     private DataSource connect() throws SQLException {
