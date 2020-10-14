@@ -6,7 +6,6 @@ public class ItemModel extends BaseModel {
     private String name;
     private int statistic;
     transient private Type itemType;
-    transient private int id;
 
     public ItemModel(Item item) {
         this.name = item.getName();

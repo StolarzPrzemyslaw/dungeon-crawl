@@ -87,4 +87,12 @@ public class PlayerModel extends BaseModel {
     public void setWeaponId(int weaponId) {
         this.weaponId = weaponId;
     }
+
+    public InventoryModel getInventory() {
+        return inventory;
+    }
+
+    public ItemModel getWeapon() {
+        return weapon;
+    }
 }
