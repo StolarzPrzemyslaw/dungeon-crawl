@@ -8,6 +8,7 @@ import com.codecool.dungeoncrawl.logic.actors.components.Inventory;
 import com.codecool.dungeoncrawl.logic.actors.items.Item;
 import com.codecool.dungeoncrawl.logic.actors.obstacles.Stairs;
 import com.codecool.dungeoncrawl.serializer.SerializerManager;
+import com.codecool.dungeoncrawl.view.FileChooser;
 import com.codecool.dungeoncrawl.view.Game;
 import com.codecool.dungeoncrawl.view.SaveGameModal;
 import javafx.scene.input.KeyCode;
@@ -42,14 +43,36 @@ public class GameLogic {
     public void onKeyReleased(KeyEvent keyEvent) {
         KeyCombination exitCombinationMac = new KeyCodeCombination(KeyCode.W, KeyCombination.SHORTCUT_DOWN);
         KeyCombination exitCombinationWin = new KeyCodeCombination(KeyCode.F4, KeyCombination.ALT_DOWN);
-        KeyCode saveGameKeyCode = KeyCode.F5;
+
         if (exitCombinationMac.match(keyEvent)
                 || exitCombinationWin.match(keyEvent)
                 || keyEvent.getCode() == KeyCode.ESCAPE) {
             exit();
-        } else if (keyEvent.getCode() == saveGameKeyCode) {
-            tryToSaveGame();
+        } else {
+            triggerKeyPressedAction(keyEvent);
         }
+    }
+
+    private void triggerKeyPressedAction(KeyEvent keyEvent) {
+        KeyCode saveGameKeyCode = KeyCode.F5;
+        KeyCode exportGameStateKeyCode = KeyCode.F6;
+        KeyCode importGameStateKeyCode = KeyCode.F7;
+
+        if (keyEvent.getCode() == saveGameKeyCode) {
+            tryToSaveGame();
+        } else if (keyEvent.getCode() == exportGameStateKeyCode) {
+            exportGameState();
+        } else if (keyEvent.getCode() == importGameStateKeyCode) {
+            importGameState();
+        }
+    }
+
+    private void exportGameState() {
+        new FileChooser(ui.getMain().getStage(), "export").show();
+    }
+
+    private void importGameState() {
+        new FileChooser(ui.getMain().getStage(), "import").show();
     }
 
     public void onKeyPressed(KeyEvent keyEvent) {

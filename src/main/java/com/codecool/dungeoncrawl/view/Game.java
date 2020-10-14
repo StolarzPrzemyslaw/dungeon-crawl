@@ -48,6 +48,10 @@ public class Game {
     Label currentLog = new Label();
     ChoiceBox<String> itemsList = new ChoiceBox<>();
 
+    public Main getMain() {
+        return main;
+    }
+
     public Game(Main main) {
         this.main = main;
     }
