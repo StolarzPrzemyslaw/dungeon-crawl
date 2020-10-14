@@ -23,7 +23,7 @@ public class FileChooserWindow {
 
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle(name);
-        FileChooser.ExtensionFilter extensionFilter = new FileChooser.ExtensionFilter("json files(*.json)",
+        FileChooser.ExtensionFilter extensionFilter = new FileChooser.ExtensionFilter("JSON files",
                 "*.json");
         fileChooser.getExtensionFilters().add(extensionFilter);
 
@@ -31,10 +31,10 @@ public class FileChooserWindow {
                 : fileChooser.showSaveDialog(stage);
 
         if (file != null) {
-            if (name.equals("import")) {
-                SerializerManager.deserializeGameStateGson(file.getAbsolutePath());
+            if (isImportAction) {
+                SerializerManager.deserializeGameStateGson(file);
             } else {
-                SerializerManager.serializeGameStateToFile(game.gameMap, file.getAbsolutePath());
+                SerializerManager.serializeGameStateToFile(game.gameMap, file);
             }
         }
     }

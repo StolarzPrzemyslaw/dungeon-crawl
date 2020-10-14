@@ -95,4 +95,11 @@ public class PlayerModel extends BaseModel {
         this.weaponId = weaponId;
     }
 
+    public void setInventory(InventoryModel inventory) {
+        this.inventory = inventory;
+    }
+
+    public void setWeapon(ItemModel weapon) {
+        this.weapon = weapon;
+    }
 }
