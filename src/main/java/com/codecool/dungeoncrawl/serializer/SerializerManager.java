@@ -16,11 +16,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SerializerManager {
-    private GameState state;
-    private InventoryModel inventory;
-    private PlayerModel player;
 
-    public void serializeGameStateToFile(GameMap map, String filePath) throws IOException {
+    public static void serializeGameStateToFile(GameMap map, String filePath) throws IOException {
         // TODO add gameState to serialization
         InventoryModel inventoryModel = new InventoryModel();
         List<ItemModel> items = new ArrayList<>();
@@ -33,21 +30,8 @@ public class SerializerManager {
         new Gson().toJson(playerModel, new FileWriter(filePath));
     }
 
-    public void deserializeGameStateGson(String filePath) throws FileNotFoundException {
-        this.state = new Gson().fromJson(new FileReader(filePath), GameState.class);
-        this.player = state.getPlayer();
-        this.inventory = player.getInventory();
+    public static GameState deserializeGameStateGson(String filePath) throws FileNotFoundException {
+        return new Gson().fromJson(new FileReader(filePath), GameState.class);
     }
 
-    public GameState getStateModel() {
-        return state;
-    }
-
-    public PlayerModel getPlayerModel() {
-        return player;
-    }
-
-    public InventoryModel getInventoryModel() {
-        return inventory;
-    }
 }
