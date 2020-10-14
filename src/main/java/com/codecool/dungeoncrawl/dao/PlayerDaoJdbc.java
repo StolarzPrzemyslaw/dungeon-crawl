@@ -1,5 +1,8 @@
 package com.codecool.dungeoncrawl.dao;
 
+import com.codecool.dungeoncrawl.logic.actors.characters.Player;
+import com.codecool.dungeoncrawl.model.InventoryModel;
+import com.codecool.dungeoncrawl.model.ItemModel;
 import com.codecool.dungeoncrawl.model.PlayerModel;
 
 import javax.sql.DataSource;
@@ -9,9 +12,13 @@ import java.util.List;
 
 public class PlayerDaoJdbc implements PlayerDao {
     private final DataSource dataSource;
+    private final InventoryDao inventoryDao;
+    private final ItemDao itemDao;
 
-    public PlayerDaoJdbc(DataSource dataSource) {
+    public PlayerDaoJdbc(DataSource dataSource, InventoryDao inventoryDao, ItemDao itemDao) {
         this.dataSource = dataSource;
+        this.inventoryDao = inventoryDao;
+        this.itemDao = itemDao;
     }
 
     @Override
@@ -82,8 +89,12 @@ public class PlayerDaoJdbc implements PlayerDao {
         int posY = resultSet.getInt(7);
         int inventoryId = resultSet.getInt(8);
         int weaponId = resultSet.getInt(9);
-
-        return new PlayerModel(health, currentHealth, strength, name, posX, posY, inventoryId, weaponId);
+        InventoryModel inventory = inventoryDao.get(inventoryId);
+        ItemModel weapon = itemDao.get(weaponId);
+        PlayerModel player = new PlayerModel(health, currentHealth, strength, name, posX, posY, inventory, weapon);
+        player.setInventoryId(inventoryId);
+        player.setWeaponId(weaponId);
+        return player;
     }
 
     @Override

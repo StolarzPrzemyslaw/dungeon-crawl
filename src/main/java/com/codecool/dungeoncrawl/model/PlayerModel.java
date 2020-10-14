@@ -16,15 +16,15 @@ public class PlayerModel extends BaseModel {
     private ItemModel weapon;
 
 
-    public PlayerModel(int hp, int currentHp, int strength, String playerName, int posX, int posY, int inventoryId, int weaponId) {
+    public PlayerModel(int hp, int currentHp, int strength, String playerName, int posX, int posY, InventoryModel inventory, ItemModel weapon) {
         this.hp = hp;
         this.currentHp = currentHp;
         this.strength = strength;
         this.playerName = playerName;
         this.x = posX;
         this.y = posY;
-        this.inventoryId = inventoryId;
-        this.weaponId = weaponId;
+        this.inventory = inventory;
+        this.weapon = weapon;
     }
 
     public PlayerModel(Player player) {
@@ -34,12 +34,6 @@ public class PlayerModel extends BaseModel {
         this.hp = player.getHealth();
         this.currentHp = player.getCurrentHealth();
         this.strength = player.getStrength();
-    }
-
-    public PlayerModel(Player player, InventoryModel inventory, ItemModel weapon) {
-        this(player);
-        this.inventory = inventory;
-        this.weapon = weapon;
     }
 
     public Player getPlayer() {
@@ -95,19 +89,4 @@ public class PlayerModel extends BaseModel {
         this.weaponId = weaponId;
     }
 
-    public InventoryModel getInventory() {
-        return inventory;
-    }
-
-    public ItemModel getWeapon() {
-        return weapon;
-    }
-
-    public void setInventory(InventoryModel inventory) {
-        this.inventory = inventory;
-    }
-
-    public void setWeapon(ItemModel weapon) {
-        this.weapon = weapon;
-    }
 }

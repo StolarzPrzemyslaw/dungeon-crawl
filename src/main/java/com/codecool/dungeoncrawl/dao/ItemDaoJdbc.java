@@ -61,7 +61,7 @@ public class ItemDaoJdbc implements ItemDao {
     @Override
     public ItemModel get(int id) {
         try (Connection connection = dataSource.getConnection()) {
-            String sqlQuery = "SELECT player_inventory_id, name, statistic, type FROM item WHERE id = ?";
+            String sqlQuery = "SELECT id, player_inventory_id, name, statistic, type FROM item WHERE id = ?";
             PreparedStatement statement = connection.prepareStatement(sqlQuery);
             statement.setInt(1, id);
             ResultSet result = statement.executeQuery();
@@ -75,7 +75,7 @@ public class ItemDaoJdbc implements ItemDao {
     public List<ItemModel> getAll() {
         try (Connection connection = dataSource.getConnection()) {
             List<ItemModel> items = new ArrayList<>();
-            String sqlQuery = "SELECT id, name, statistic, type FROM item";
+            String sqlQuery = "SELECT id, player_inventory_id, name, statistic, type FROM item";
             ResultSet result = connection.createStatement().executeQuery(sqlQuery);
             while (result.next()) {
                 ItemModel item = createItemModelBasedOnData(result);
