@@ -12,7 +12,7 @@ import java.io.InputStream;
 import java.util.Scanner;
 
 public class MapLoader {
-    public static GameMap loadMap(Map mapType) {
+    public static GameMap loadMap(Map mapType, boolean firstRun) {
 
         InputStream is = MapLoader.class.getResourceAsStream("/" + mapType.getName());
         Scanner scanner = new Scanner(is);
@@ -27,6 +27,11 @@ public class MapLoader {
             for (int x = 0; x < width; x++) {
                 if (x < line.length()) {
                     Cell cell = map.getCell(x, y);
+                    if (firstRun && x == 2 && y == 2) {
+                        cell.setType(CellType.FLOOR);
+                        map.setPlayer(new Player(cell));
+                        continue;
+                    }
                     switch (line.charAt(x)) {
                         case ' ':
                             cell.setType(CellType.EMPTY);
@@ -88,7 +93,6 @@ public class MapLoader {
                             break;
                         case '@':
                             cell.setType(CellType.FLOOR);
-                            map.setPlayer(new Player(cell));
                             break;
                         default:
                             throw new RuntimeException("Unrecognized character: '" + line.charAt(x) + "'");

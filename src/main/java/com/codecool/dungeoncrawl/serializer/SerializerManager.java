@@ -25,7 +25,7 @@ public class SerializerManager {
             items.add(new ItemModel(item));
         }
         inventoryModel.setItems(items);
-        PlayerModel playerModel = new PlayerModel(map.getPlayer(), inventoryModel, new ItemModel(map.getPlayer().getWeapon()));
+        PlayerModel playerModel = new PlayerModel(map.getPlayer());
 
         new Gson().toJson(playerModel, new FileWriter(filePath));
     }

@@ -7,6 +7,8 @@ import com.codecool.dungeoncrawl.logic.actors.components.Combat;
 import com.codecool.dungeoncrawl.logic.actors.components.Inventory;
 import com.codecool.dungeoncrawl.logic.actors.items.Item;
 import com.codecool.dungeoncrawl.logic.actors.obstacles.Stairs;
+import com.codecool.dungeoncrawl.model.GameStateModel;
+import com.codecool.dungeoncrawl.model.PlayerModel;
 import com.codecool.dungeoncrawl.serializer.SerializerManager;
 import com.codecool.dungeoncrawl.view.FileChooser;
 import com.codecool.dungeoncrawl.view.Game;
@@ -22,7 +24,7 @@ import java.util.List;
 public class GameLogic {
 
     private final Game ui;
-    private GameMap map = MapLoader.loadMap(Map.LEVEL1);
+    private GameMap map = MapLoader.loadMap(Map.LEVEL1, true);
     private final Combat combat;
     private final boolean cheatsEnabled;
     GameDatabaseManager dbManager;
@@ -35,12 +37,17 @@ public class GameLogic {
         map.getPlayer().setPlayerName(playerName);
     }
 
-    public void loadGameFromState(Map loadedMap, Player player) {
-        map = MapLoader.loadMap(loadedMap);
-        Cell tempCell = map.getCell(player.getX(), player.getY());
-        map.getPlayer().getCell().setActor(null);
-        player.setPlayerCell(tempCell);
-        map.setPlayer(player);
+    public void loadGameFromState(GameStateModel gameState) {
+        Map mapToLoad = gameState.getCurrentMap();
+        map = MapLoader.loadMap(mapToLoad, false);
+        PlayerModel playerModel = gameState.getPlayer();
+        Cell playerCell = map.getCell(playerModel.getX(), playerModel.getY());
+        playerModel.setPlayerCell(playerCell);
+        map.setPlayer(playerModel.getPlayer());
+
+        ui.setMap(map);
+        ui.displayLog("You have loaded GameState!");
+        ui.refresh();
     }
 
     public void onKeyReleased(KeyEvent keyEvent) {
@@ -129,9 +136,9 @@ public class GameLogic {
     private void loadNextMap() {
         Player temporaryPlayer = map.getPlayer();
         if (map.getLevelId() == 0) {
-            map = MapLoader.loadMap(Map.LEVEL2);
+            map = MapLoader.loadMap(Map.LEVEL2, false);
         } else  {
-            map = MapLoader.loadMap(Map.LEVEL3);
+            map = MapLoader.loadMap(Map.LEVEL3, false);
         }
         map.getPlayer().setWeapon(temporaryPlayer.getWeapon());
         Cell temporaryCell = map.getPlayer().getCell();

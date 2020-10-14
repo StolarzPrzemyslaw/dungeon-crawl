@@ -1,5 +1,6 @@
 package com.codecool.dungeoncrawl.dao;
 
+import com.codecool.dungeoncrawl.logic.Cell;
 import com.codecool.dungeoncrawl.logic.GameMap;
 import com.codecool.dungeoncrawl.logic.Map;
 import com.codecool.dungeoncrawl.logic.actors.characters.Player;
@@ -16,6 +17,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class GameDatabaseManager {
     private PlayerDao playerDao;
@@ -26,10 +28,10 @@ public class GameDatabaseManager {
 
     public void setup() throws SQLException {
         DataSource dataSource = connect();
-        playerDao = new PlayerDaoJdbc(dataSource);
-        gameStateDao = new GameStateDaoJdbc(dataSource, playerDao);
         itemDao = new ItemDaoJdbc(dataSource);
-        inventoryDao = new InventoryDaoJdbc(dataSource);
+        inventoryDao = new InventoryDaoJdbc(dataSource, itemDao);
+        playerDao = new PlayerDaoJdbc(dataSource, inventoryDao, itemDao);
+        gameStateDao = new GameStateDaoJdbc(dataSource, playerDao);
     }
 
     public void prepareLoadedGameState(GameMap loadedMap, String saveName) {
@@ -57,7 +59,9 @@ public class GameDatabaseManager {
     }
 
     public List<String> getAllSaveNames() {
-        return new ArrayList<>();
+        return gameStateDao.getAll().stream()
+                .map(GameStateModel::getSaveName)
+                .collect(Collectors.toList());
     }
 
     public List<GameStateModel> getAllGameStates() {
@@ -78,7 +82,9 @@ public class GameDatabaseManager {
     }
 
     public ItemModel getAlreadyEquippedWeaponBasedOnId(int itemId) {
-        return itemDao.get(itemId);
+        ItemModel model = itemDao.get(itemId);
+        model.setItemType(ItemModel.Type.USABLE);
+        return model;
     }
 
     private int getWeaponInUseId(Player player, InventoryModel inventory) {

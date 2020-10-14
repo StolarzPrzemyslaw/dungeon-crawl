@@ -4,6 +4,7 @@ import com.codecool.dungeoncrawl.logic.Cell;
 import com.codecool.dungeoncrawl.logic.GameLogic;
 import com.codecool.dungeoncrawl.logic.GameMap;
 import com.codecool.dungeoncrawl.logic.actors.characters.Person;
+import com.codecool.dungeoncrawl.logic.actors.characters.Player;
 import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
@@ -59,6 +60,10 @@ public class Game {
     public void setUpReferenceLogicForGetDataFromGame(GameLogic gameLogic) {
         this.gameLogic = gameLogic;
         this.gameMap = gameLogic.getGameMap();
+    }
+
+    public void setUpNewPlayerPosition() {
+
     }
 
     public Stage generateUI(Stage primaryStage) {
