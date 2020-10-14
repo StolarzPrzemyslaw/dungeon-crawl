@@ -13,11 +13,9 @@ public class GameMap {
     private final String levelName;
 
     private Player player;
-    private final int levelNumber;
 
-    public GameMap(int width, int height, CellType defaultCellType, int levelNumber) {
-        this.levelName = "level" + levelNumber;
-        this.levelNumber = levelNumber;
+    public GameMap(int width, int height, CellType defaultCellType, String levelName) {
+        this.levelName = levelName;
         this.width = width;
         this.height = height;
         cells = new Cell[width][height];
@@ -30,10 +28,6 @@ public class GameMap {
 
     public String getLevelName() {
         return levelName;
-    }
-
-    public int getLevelNumber() {
-        return levelNumber;
     }
 
     public List<Actor> getAllEnemiesOnMap(Class<?> className) {

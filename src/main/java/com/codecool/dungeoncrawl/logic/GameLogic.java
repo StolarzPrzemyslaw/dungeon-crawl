@@ -4,6 +4,7 @@ import com.codecool.dungeoncrawl.dao.GameDatabaseManager;
 import com.codecool.dungeoncrawl.logic.actors.Actor;
 import com.codecool.dungeoncrawl.logic.actors.characters.*;
 import com.codecool.dungeoncrawl.logic.actors.components.Combat;
+import com.codecool.dungeoncrawl.logic.actors.components.Inventory;
 import com.codecool.dungeoncrawl.logic.actors.items.Item;
 import com.codecool.dungeoncrawl.logic.actors.obstacles.Stairs;
 import com.codecool.dungeoncrawl.view.Game;
@@ -19,7 +20,7 @@ import java.util.List;
 public class GameLogic {
 
     private final Game ui;
-    private GameMap map = MapLoader.loadMap(1);
+    private GameMap map = MapLoader.loadMap("level1.txt");
     private final Combat combat;
     private final boolean cheatsEnabled;
     GameDatabaseManager dbManager;
@@ -30,6 +31,18 @@ public class GameLogic {
         this.dbManager = dbManager;
         cheatsEnabled = playerName.equals("Andrzej") || playerName.equals("Marcin") || playerName.equals("Przemysław");
         map.getPlayer().setPlayerName(playerName);
+    }
+
+    public void loadMapFromState(String mapName) {
+        map = MapLoader.loadMap(mapName);
+    }
+
+    public void loadPlayerFromState(Player player) {
+        map.setPlayer(player);
+    }
+
+    public void loadInventoryFromState(Inventory inventory) {
+        map.getPlayer().setInventory(inventory);
     }
 
     public void onKeyReleased(KeyEvent keyEvent) {
@@ -95,7 +108,13 @@ public class GameLogic {
 
     private void loadNextMap() {
         Player temporaryPlayer = map.getPlayer();
-        map = MapLoader.loadMap(map.getLevelNumber() + 1);
+        if (map.getLevelName().equals("level1.txt")) {
+            map = MapLoader.loadMap("level2.txt");
+        } else if (map.getLevelName().equals("level2.txt")) {
+            map = MapLoader.loadMap("level3.txt");
+        } else {
+            map = MapLoader.loadMap("map.txt");
+        }
         map.getPlayer().setWeapon(temporaryPlayer.getWeapon());
         Cell temporaryCell = map.getPlayer().getCell();
         map.setPlayer(temporaryPlayer);

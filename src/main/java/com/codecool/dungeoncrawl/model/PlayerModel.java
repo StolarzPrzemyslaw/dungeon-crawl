@@ -41,6 +41,13 @@ public class PlayerModel extends BaseModel {
         this.weapon = weapon;
     }
 
+    public Player getPlayer() {
+        Player player = new Player(null);
+        player.setStrength(strength);
+        player.setCurrentHealth(currentHp);
+        return player;
+    }
+
     public String getPlayerName() {
         return playerName;
     }

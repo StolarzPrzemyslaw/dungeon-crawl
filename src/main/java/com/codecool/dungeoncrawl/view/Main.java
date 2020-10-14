@@ -2,7 +2,13 @@ package com.codecool.dungeoncrawl.view;
 
 import com.codecool.dungeoncrawl.dao.GameDatabaseManager;
 import com.codecool.dungeoncrawl.logic.GameLogic;
+import com.codecool.dungeoncrawl.logic.GameMap;
+import com.codecool.dungeoncrawl.logic.actors.characters.Player;
+import com.codecool.dungeoncrawl.logic.actors.components.Inventory;
+import com.codecool.dungeoncrawl.model.GameState;
+import com.codecool.dungeoncrawl.model.InventoryModel;
 import javafx.application.Application;
+import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -13,6 +19,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Optional;
 
 public class Main extends Application {
@@ -20,6 +27,8 @@ public class Main extends Application {
     private Stage stage;
     private final Button startGameButton = new Button();
     private final TextField inputNameOfCharacter = new TextField();
+    private final ChoiceBox<String> choiceBox = new ChoiceBox<>();
+    private final Label loadLabel = new Label();
     private Scene mainMenuScene;
     GameDatabaseManager dbManager;
 
@@ -48,7 +57,9 @@ public class Main extends Application {
 
     private VBox getMainMenuContainer() {
         VBox UIContainer = setUpMainMenuContainer();
-        UIContainer.getChildren().addAll(inputNameOfCharacter, startGameButton);
+        setUpLoadLabel();
+        setUpChoiceBox();
+        UIContainer.getChildren().addAll(inputNameOfCharacter, startGameButton, loadLabel, choiceBox);
         return UIContainer;
     }
 
@@ -59,6 +70,10 @@ public class Main extends Application {
         setUpInputFieldForName();
         createAndSetUpWindowName();
         return UIContainer;
+    }
+
+    private void setUpLoadLabel() {
+        loadLabel.setText("Or do you want to load a game?");
     }
 
     private void createAndSetUpWindowName() {
@@ -78,11 +93,43 @@ public class Main extends Application {
         startGameButton.setDisable(false);
     }
 
+    private void setUpChoiceBox() {
+        choiceBox.setItems(FXCollections.observableArrayList(dbManager.getAllSaveNames()));
+        choiceBox.setOnAction(e -> loadGame());
+        choiceBox.setDisable(false);
+    }
+
     private void startNewGame() {
         if (validation()) {
             initializeNewGame();
             stage.show();
         }
+    }
+
+    private void loadGame() {
+        List<GameState> gameStates = dbManager.getAllGameStates();
+        for (GameState state : gameStates) {
+//            if (state.getSaveName().equals(choiceBox.getValue())) {
+//                prepareGameFromSaveState(state);
+//            }
+        }
+    }
+
+    private void prepareGameFromSaveState(GameState state) {
+        Game game = new Game(this);
+        GameLogic gameLogic = new GameLogic(game, state.getPlayer().getPlayerName(), dbManager);
+        game.setUpReferenceLogicForGetDataFromGame(gameLogic);
+
+        gameLogic.loadMapFromState(state.getCurrentMap());
+
+        Player player = dbManager.getPlayerBasedOnModel(state.getPlayer());
+        gameLogic.loadPlayerFromState(player);
+
+        InventoryModel inventoryModel = dbManager.getInventoryModelForPlayer(state.getPlayer().getInventoryId());
+        Inventory inventory = dbManager.getInventoryBasedOnModel(inventoryModel);
+        gameLogic.loadInventoryFromState(inventory);
+
+        stage = game.generateUI(stage);
     }
 
     private void initializeNewGame() {
