@@ -27,7 +27,7 @@ public class MapLoader {
             for (int x = 0; x < width; x++) {
                 if (x < line.length()) {
                     Cell cell = map.getCell(x, y);
-                    if (firstRun && x == 2 && y == 2) {
+                    if (firstRun && x == mapType.getStartX() && y == mapType.getStartY()) {
                         cell.setType(CellType.FLOOR);
                         map.setPlayer(new Player(cell));
                         continue;

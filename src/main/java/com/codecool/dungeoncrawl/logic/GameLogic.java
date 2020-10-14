@@ -135,10 +135,10 @@ public class GameLogic {
 
     private void loadNextMap() {
         Player temporaryPlayer = map.getPlayer();
-        if (map.getLevelId() == 0) {
-            map = MapLoader.loadMap(Map.LEVEL2, false);
+        if (map.getLevelId() == 1) {
+            map = MapLoader.loadMap(Map.LEVEL2, true);
         } else  {
-            map = MapLoader.loadMap(Map.LEVEL3, false);
+            map = MapLoader.loadMap(Map.LEVEL3, true);
         }
         map.getPlayer().setWeapon(temporaryPlayer.getWeapon());
         Cell temporaryCell = map.getPlayer().getCell();
