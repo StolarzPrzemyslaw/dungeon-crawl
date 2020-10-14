@@ -2,7 +2,6 @@ package com.codecool.dungeoncrawl.view;
 
 import com.codecool.dungeoncrawl.dao.GameDatabaseManager;
 import com.codecool.dungeoncrawl.logic.GameLogic;
-import com.codecool.dungeoncrawl.logic.GameMap;
 import com.codecool.dungeoncrawl.logic.actors.characters.Player;
 import com.codecool.dungeoncrawl.logic.actors.components.Inventory;
 import com.codecool.dungeoncrawl.model.GameState;
@@ -26,11 +25,16 @@ public class Main extends Application {
 
     private Stage stage;
     private final Button startGameButton = new Button();
+    private final Button importGameStateButton = new Button();
     private final TextField inputNameOfCharacter = new TextField();
     private final ChoiceBox<String> choiceBox = new ChoiceBox<>();
     private final Label loadLabel = new Label();
     private Scene mainMenuScene;
     GameDatabaseManager dbManager;
+
+    public Stage getStage() {
+        return stage;
+    }
 
     @Override
     public void start(Stage stage) {
@@ -59,7 +63,8 @@ public class Main extends Application {
         VBox UIContainer = setUpMainMenuContainer();
         setUpLoadLabel();
         setUpChoiceBox();
-        UIContainer.getChildren().addAll(inputNameOfCharacter, startGameButton, loadLabel, choiceBox);
+        setUpImportGameStateButton();
+        UIContainer.getChildren().addAll(inputNameOfCharacter, startGameButton, loadLabel, choiceBox, importGameStateButton);
         return UIContainer;
     }
 
@@ -80,6 +85,12 @@ public class Main extends Application {
         Label UIName = new Label("DUNGEON CRAWL");
         UIName.setTextFill(Color.web("#472D3C"));
         UIName.setPadding(new Insets(10));
+    }
+
+    private void setUpImportGameStateButton() {
+
+        importGameStateButton.setText("Import Game State");
+        importGameStateButton.setOnAction(e -> new FileChooser(stage, "import").show());
     }
 
     private void setUpMainMenuContainerAttributes(VBox UIContainer) {
