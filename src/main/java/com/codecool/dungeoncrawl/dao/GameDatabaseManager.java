@@ -22,6 +22,7 @@ public class GameDatabaseManager {
     private ItemDao itemDao;
     private InventoryDao inventoryDao;
     private GameStateDao gameStateDao;
+    private GameStateModel gameState;
 
     public void setup() throws SQLException {
         DataSource dataSource = connect();
@@ -31,15 +32,28 @@ public class GameDatabaseManager {
         inventoryDao = new InventoryDaoJdbc(dataSource);
     }
 
-    public void saveGameState(GameMap loadedMap, String saveName) {
+    public void prepareLoadedGameState(GameMap loadedMap, String saveName) {
         Map currentMap = Arrays.stream(Map.values()).
                 filter(mapEntry -> mapEntry.getId() == loadedMap.getLevelId()).
                 findFirst().
                 orElseThrow(() -> new RuntimeException("Error while retrieving map with id: " + loadedMap.getLevelId()));
 
         PlayerModel player = savePlayer(loadedMap.getPlayer());
-        GameStateModel gameState = new GameStateModel(currentMap, actualDate(), player, saveName);
+
+        gameState = new GameStateModel(currentMap, actualDate(), player, saveName);
+        List<GameStateModel> gameStates = gameStateDao.getAll();
+        gameStates.stream()
+                .filter(state -> state.getSaveName().equals(saveName))
+                .findFirst()
+                .ifPresent(gameStateModel -> gameState.setId(gameStateModel.getId()));
+    }
+
+    public void saveGameState() {
         gameStateDao.add(gameState);
+    }
+
+    public void updateGameState() {
+        gameStateDao.update(gameState);
     }
 
     public List<String> getAllSaveNames() {
