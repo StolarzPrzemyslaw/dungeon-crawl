@@ -144,7 +144,7 @@ public class Main extends Application {
 
         GameLogic gameLogic = new GameLogic(game, player.getName(), dbManager);
         game.setUpReferenceLogicForGetDataFromGame(gameLogic);
-        gameLogic.loadGameFromState(state.getCurrentMap(), player);
+        gameLogic.loadGameFromState(state.getCurrentMap().getName(), player);
 
         stage = game.generateUI(stage);
     }
