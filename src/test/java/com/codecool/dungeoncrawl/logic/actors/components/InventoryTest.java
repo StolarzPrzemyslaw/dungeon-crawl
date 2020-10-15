@@ -3,6 +3,9 @@ package com.codecool.dungeoncrawl.logic.actors.components;
 import com.codecool.dungeoncrawl.logic.actors.items.*;
 import org.junit.jupiter.api.Test;
 
+import java.util.Arrays;
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class InventoryTest {
@@ -95,5 +98,51 @@ class InventoryTest {
         assertEquals(item5, inventory.getItems().get(2));
     }
 
-}
+    @Test
+    public void getAllItemNames_addMultipleItems_showListWithItemsNames() {
+        // arrange
+        Inventory inventory = new Inventory();
+        Item item1 = new Key(null);
+        Item item2 = new Axe(null);
+        Item item3 = new Dagger(null);
+        Item item4 = new Sword(null);
+        Item item5 = new Potion(null);
+        List<String> validNames = Arrays.asList(
+                item1.getName(),
+                item2.getName(),
+                item3.getName(),
+                item4.getName(),
+                item5.getName()
+        );
 
+        // act
+        inventory.addItem(item1);
+        inventory.addItem(item2);
+        inventory.addItem(item3);
+        inventory.addItem(item4);
+        inventory.addItem(item5);
+
+        // assert
+        assertEquals(5, inventory.getItems().size());
+        assertEquals(validNames, inventory.getAllItemNames());
+    }
+
+    @Test
+    public void inventory_addAllInventory_getAllItems() {
+        // arrange
+        Item item1 = new Axe(null);
+        Item item2 = new Axe(null);
+        Item item3 = new Sword(null);
+        Item item4 = new Sword(null);
+        Item item5 = new Potion(null);
+        List<Item> preparedItems = Arrays.asList(item1, item2, item3, item4, item5);
+
+        // act
+        Inventory inventory = new Inventory(preparedItems);
+        List<Item> items = inventory.getItems();
+
+        // assert
+        assertNotNull(items);
+        assertEquals(preparedItems, items);
+    }
+}

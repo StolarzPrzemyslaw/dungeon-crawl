@@ -15,10 +15,15 @@ public class Combat {
 
     public void simulateCombat(Person player, Person enemy) {
         enemy.setCurrentHealth(enemy.getCurrentHealth() - player.getStrength());
-        player.setCurrentHealth(player.getCurrentHealth() - enemy.getStrength());
-        ui.displayLog(player.getName() + " get " + enemy.getStrength() + " damage and " + enemy.getName() + " get " + player.getStrength() + " damage!");
         setPersonDeadStatus(player, enemy);
+        if (ui != null) {
+            ui.displayLog(player.getName() + " get " + enemy.getStrength() + " damage!");
+        }
+        player.setCurrentHealth(player.getCurrentHealth() - enemy.getStrength());
         setPersonDeadStatus(enemy, player);
+        if (ui != null) {
+            ui.displayLog(enemy.getName() + " get " + player.getStrength() + " damage!");
+        }
     }
 
     private void setPersonDeadStatus(Person player, Person enemy) {
@@ -33,11 +38,13 @@ public class Combat {
     }
 
     public void destroyPerson(Person player, Person enemy) {
-        if (enemy instanceof Player) {
-            ui.generateLoseScreen(player);
-        } else {
-            ((Enemy) enemy).runActionAfterDefeat(ui, (Player) player);
-            enemy.getCell().setActor(null);
+        if (ui != null) {
+            if (enemy instanceof Player) {
+                ui.generateLoseScreen(player);
+            } else {
+                ((Enemy) enemy).runActionAfterDefeat(ui, (Player) player);
+                enemy.getCell().setActor(null);
+            }
         }
     }
 }
