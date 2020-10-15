@@ -2,6 +2,7 @@ package com.codecool.dungeoncrawl.logic;
 
 import com.codecool.dungeoncrawl.logic.actors.Actor;
 import com.codecool.dungeoncrawl.logic.actors.characters.Enemy;
+import com.codecool.dungeoncrawl.logic.actors.items.Item;
 import com.codecool.dungeoncrawl.logic.actors.obstacles.Door;
 
 public class Cell implements Drawable {
@@ -112,5 +113,15 @@ public class Cell implements Drawable {
 
     private boolean isCellTypeBonfire(int dx, int dy) {
         return getNeighbor(dx, dy).getType().equals(CellType.BONFIRE);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return obj.getClass().isInstance(this)
+                && ((Cell) obj).getType().equals(this.getType())
+                && ((Cell) obj).getX() == this.getX()
+                && ((Cell) obj).getY() == this.getY()
+                && ((Cell) obj).gameMap == this.gameMap
+                && ((Cell) obj).getActor() == this.getActor();
     }
 }
