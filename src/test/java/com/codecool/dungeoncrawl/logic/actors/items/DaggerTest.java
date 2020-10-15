@@ -15,7 +15,7 @@ class DaggerTest {
     GameMap gameMap;
 
     @BeforeEach
-    void createPerson() {
+    void createDagger() {
         gameMap = new GameMap(30, 30, CellType.FLOOR, Map.LEVEL1);
         Cell cell = new Cell(gameMap, 2, 2, CellType.FLOOR);
         dagger = new Dagger(cell);

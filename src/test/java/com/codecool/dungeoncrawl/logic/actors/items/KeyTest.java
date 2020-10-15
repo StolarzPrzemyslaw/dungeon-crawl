@@ -10,24 +10,24 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class AxeTest {
-    Axe axe;
+class KeyTest {
+    Key key;
     GameMap gameMap;
 
     @BeforeEach
-    void createAxe() {
+    void createKey() {
         gameMap = new GameMap(30, 30, CellType.FLOOR, Map.LEVEL1);
         Cell cell = new Cell(gameMap, 2, 2, CellType.FLOOR);
-        axe = new Axe(cell);
+        key = new Key(cell);
     }
 
     @Test
     @Order(1)
-    void getTileName_Axe_ReturnsAxeString() {
+    void getTileName_Key_ReturnsKeyString() {
         //Arrange
-        String expectedTileName = "axe";
+        String expectedTileName = "key";
         //Act
-        String actualTileName = axe.getTileName();
+        String actualTileName = key.getTileName();
         //Assert
         assertEquals(expectedTileName, actualTileName);
     }
