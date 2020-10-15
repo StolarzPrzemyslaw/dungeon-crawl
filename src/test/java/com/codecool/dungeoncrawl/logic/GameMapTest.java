@@ -25,6 +25,11 @@ class GameMapTest {
     }
 
     @Test
+    public void getWidth_runGetWidthOnMap_ReturnValidValue() {
+        assertNotEquals(15, gameMap.getWidth());
+    }
+
+    @Test
     public void getWidth_runGetHeightOnMap_ReturnCorrectValue() {
         assertEquals(30, gameMap.getHeight());
     }
