@@ -6,7 +6,6 @@ import com.codecool.dungeoncrawl.logic.actors.items.Item;
 import com.codecool.dungeoncrawl.logic.actors.items.Weapon;
 import com.codecool.dungeoncrawl.model.GameStateModel;
 import com.codecool.dungeoncrawl.model.InventoryModel;
-import com.codecool.dungeoncrawl.model.ItemModel;
 import com.codecool.dungeoncrawl.model.PlayerModel;
 import com.google.gson.Gson;
 
