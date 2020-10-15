@@ -4,6 +4,7 @@ import com.codecool.dungeoncrawl.logic.actors.Actor;
 import com.codecool.dungeoncrawl.logic.actors.characters.Player;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class GameMap {
@@ -61,4 +62,19 @@ public class GameMap {
     public int getHeight() {
         return height;
     }
+
+    public Cell[][] getCells() {
+        return cells;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return obj.getClass().isInstance(this)
+                && ((GameMap) obj).getWidth() == this.getWidth()
+                && ((GameMap) obj).getHeight() == this.getHeight()
+                && ((GameMap) obj).getLevelId() == this.getLevelId()
+                && Arrays.deepEquals(((GameMap) obj).getCells(), this.getCells())
+                && ((GameMap) obj).getPlayer().equals(this.getPlayer());
+    }
+
 }
