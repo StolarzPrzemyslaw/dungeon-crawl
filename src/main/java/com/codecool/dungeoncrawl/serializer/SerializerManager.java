@@ -33,7 +33,7 @@ public class SerializerManager {
 
         GameStateModel gameStateModel = new GameStateModel(currentMap, new Date(System.currentTimeMillis()), playerModel, file.getName());
 
-        FileWriter writer = new FileWriter(file.getAbsolutePath());
+        FileWriter writer = new FileWriter(file.getAbsolutePath() + ".json");
         new Gson().toJson(gameStateModel, writer);
         writer.flush();
         writer.close();
