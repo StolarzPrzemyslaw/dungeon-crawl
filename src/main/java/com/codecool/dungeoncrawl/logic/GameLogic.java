@@ -19,6 +19,7 @@ import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class GameLogic {
@@ -135,17 +136,13 @@ public class GameLogic {
 
     private void loadNextMap() {
         Player temporaryPlayer = map.getPlayer();
-        switch (map.getLevelId()) {
-            case 1:
-                map = MapLoader.loadMap(Map.LEVEL2, true);
-                break;
-            case 2:
-                map = MapLoader.loadMap(Map.LEVEL3, true);
-                break;
-            case 3:
-                map = MapLoader.loadMap(Map.LEVEL4, true);
-                break;
-        }
+        int numberOfMap = map.getLevelId();
+        Map nextLevel = Arrays.stream(Map.values())
+                .filter(map -> map.getId() == numberOfMap + 1)
+                .findFirst()
+                .orElse(Map.LEVEL4);
+
+        map = MapLoader.loadMap(nextLevel, true);
         map.getPlayer().setWeapon(temporaryPlayer.getWeapon());
         Cell temporaryCell = map.getPlayer().getCell();
         map.setPlayer(temporaryPlayer);
