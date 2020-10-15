@@ -119,10 +119,12 @@ public class GameDatabaseManager {
         String dbName = System.getenv("DB_NAME");
         String user = System.getenv("DB_USER");
         String password = System.getenv("DB_PASSWORD");
+        String host = System.getenv("DB_HOST");
 
         dataSource.setDatabaseName(dbName);
         dataSource.setUser(user);
         dataSource.setPassword(password);
+        dataSource.setServerName(host);
 
         System.out.println("Trying to connect");
         dataSource.getConnection().close();
