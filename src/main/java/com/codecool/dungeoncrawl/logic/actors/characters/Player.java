@@ -69,7 +69,7 @@ public class Player extends Person {
         this.health = 20;
         this.currentHealth = this.health;
         chosenWeapon = new Dagger(cell);
-        this.inventory.addItemToInventory(chosenWeapon);
+        this.inventory.addItem(chosenWeapon);
         if (cell != null) {
             cell.setActor(this);
         }

@@ -5,7 +5,7 @@ import com.codecool.dungeoncrawl.logic.actors.characters.Player;
 import com.codecool.dungeoncrawl.logic.actors.items.Weapon;
 
 public class PlayerModel extends BaseModel {
-    private String playerName;
+    private final String playerName;
     private final int hp;
     private final int currentHp;
     private final int strength;
@@ -13,8 +13,8 @@ public class PlayerModel extends BaseModel {
     private final int y;
     transient private int inventoryId;
     transient private int weaponId;
-    private InventoryModel inventory;
-    private ItemModel weapon;
+    private final InventoryModel inventory;
+    private final ItemModel weapon;
     private Cell playerCell;
 
 
@@ -36,6 +36,8 @@ public class PlayerModel extends BaseModel {
         this.hp = player.getHealth();
         this.currentHp = player.getCurrentHealth();
         this.strength = player.getBaseStrength();
+        this.inventory = new InventoryModel(player.getInventory());
+        this.weapon = new ItemModel(player.getWeapon());
     }
 
     public Player getPlayer() {
@@ -43,12 +45,8 @@ public class PlayerModel extends BaseModel {
         player.setStrength(strength);
         player.setCurrentHealth(currentHp);
         player.setPlayerName(playerName);
-        if (inventory != null) {
-            player.setInventory(inventory.getInventory());
-        }
-        if (weapon != null) {
-            player.setWeapon((Weapon) weapon.getItem());
-        }
+        player.setInventory(inventory.getInventory());
+        player.setWeapon((Weapon) weapon.getItem());
         return player;
     }
 
@@ -94,17 +92,5 @@ public class PlayerModel extends BaseModel {
 
     public void setWeaponId(int weaponId) {
         this.weaponId = weaponId;
-    }
-
-    public void setInventory(InventoryModel inventory) {
-        this.inventory = inventory;
-    }
-
-    public void setWeapon(ItemModel weapon) {
-        this.weapon = weapon;
-    }
-
-    public void setPlayerName(String playerName) {
-        this.playerName = playerName;
     }
 }

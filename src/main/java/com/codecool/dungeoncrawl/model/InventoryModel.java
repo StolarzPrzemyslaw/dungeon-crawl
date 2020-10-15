@@ -7,10 +7,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class InventoryModel extends BaseModel {
-    private List<ItemModel> items;
+    private final List<ItemModel> items;
 
-    public InventoryModel() {
-
+    public InventoryModel(List<ItemModel> items, int inventoryId) {
+        this.items = items;
+        this.id = inventoryId;
     }
 
     public InventoryModel(Inventory inventory) {
@@ -21,29 +22,15 @@ public class InventoryModel extends BaseModel {
         this.items = itemsModels;
     }
 
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
     public List<ItemModel> getItems() {
         return items;
     }
 
-    public void setItems(List<ItemModel> items) {
-        this.items = items;
-    }
-
     public Inventory getInventory() {
-        Inventory inventory = new Inventory();
         List<Item> oldGoodItems = new ArrayList<>();
         for (ItemModel item : items) {
             oldGoodItems.add(item.getItem());
         }
-        inventory.setItems(oldGoodItems);
-        return inventory;
+        return new Inventory(oldGoodItems);
     }
 }

@@ -65,14 +65,18 @@ public class GameLogic {
     }
 
     private void triggerKeyPressedAction(KeyEvent keyEvent) throws IOException {
-        KeyCode importGameStateKeyCode = KeyCode.F7;
-
-        if (isPlayerAbleToSaveGame()) {
-            tryToSaveGame(keyEvent.getCode());
-        } else showCantSaveGameMessage();
-
-        if (keyEvent.getCode() == importGameStateKeyCode) {
-            importGameState();
+        switch (keyEvent.getCode()) {
+            case F5:
+                if (isPlayerAbleToSaveGame()) saveGameToDatabase();
+                else showCantSaveGameMessage();
+                break;
+            case F6:
+                if (isPlayerAbleToSaveGame()) exportGameState();
+                else showCantSaveGameMessage();
+                break;
+            case F7:
+                importGameState();
+                break;
         }
     }
 
@@ -267,21 +271,10 @@ public class GameLogic {
         System.exit(1);
     }
 
-    private void tryToSaveGame(KeyCode keyCode) throws IOException {
-        KeyCode saveGameKeyCode = KeyCode.F5;
-        KeyCode exportGameStateKeyCode = KeyCode.F6;
-        if (keyCode == saveGameKeyCode) {
-            showSaveGameModal();
-        } else if (keyCode == exportGameStateKeyCode) {
-            exportGameState();
-        }
-    }
+    private void saveGameToDatabase() {
+        new SaveGameModal(dbManager, map).show();    }
 
     private void showCantSaveGameMessage() {
         ui.displayLog("You can't save game here! Go to the nearest bonfire.");
-    }
-
-    private void showSaveGameModal() {
-        new SaveGameModal(dbManager, map).show();
     }
 }

@@ -77,9 +77,7 @@ public class InventoryDaoJdbc implements InventoryDao {
     private InventoryModel createInventoryModelBasedOnData(ResultSet result) throws SQLException {
         int inventoryId = result.getInt("player_inventory_id");
         List<ItemModel> items = itemDao.getAll(inventoryId);
-        InventoryModel inventory = new InventoryModel();
-        inventory.setItems(items);
-        inventory.setId(inventoryId);
+        InventoryModel inventory = new InventoryModel(items, inventoryId);
         return inventory;
     }
 

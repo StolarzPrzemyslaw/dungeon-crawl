@@ -6,50 +6,46 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Inventory {
-    private List<Item> listOfItems;
+    private List<Item> items;
 
     public Inventory() {
-        this.listOfItems = new ArrayList<>();
+        this.items = new ArrayList<>();
     }
 
-    public Inventory(List<Item> listOfItems) {
-        this.listOfItems = listOfItems;
+    public Inventory(List<Item> items) {
+        this.items = items;
     }
 
-    public void addItemToInventory(Item item) {
-        listOfItems.add(item);
+    public void addItem(Item item) {
+        items.add(item);
     }
 
-    public void removeItemFromInventory(Item item) {
-        listOfItems.remove(item);
+    public void removeItem(Item item) {
+        items.remove(item);
     }
 
-    public Item getItemByName(String itemName) {
-        for (Item item : listOfItems) {
-            if (item.getName().equals(itemName)) return item;
+    public void removeItem(String itemName) {
+        removeItem(getFirstMatchingItem(itemName));
+    }
+
+    public Item getFirstMatchingItem(String name) {
+        for (Item item : items) {
+            if (item.getName().equals(name)) return item;
         }
         return null;
     }
 
-    public void removeItemByName(String itemName) {
-        removeItemFromInventory(getItemByName(itemName));
+    public List<Item> getItems() {
+        return items;
     }
 
-    public boolean contains(String itemName) {
-        return getAllItemNames().contains(itemName);
+    public boolean contains(String name) {
+        return getAllItemNames().contains(name);
     }
 
     public List<String> getAllItemNames() {
         List<String> listOfNames = new ArrayList<>();
-        listOfItems.forEach(item -> listOfNames.add(item.getName()));
+        items.forEach(item -> listOfNames.add(item.getName()));
         return listOfNames;
-    }
-
-    public void setItems(List<Item> items) {
-        this.listOfItems = items;
-    }
-
-    public List<Item> getItems() {
-        return listOfItems;
     }
 }
