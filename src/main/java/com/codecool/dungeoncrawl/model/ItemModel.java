@@ -58,6 +58,6 @@ public class ItemModel extends BaseModel {
     }
 
     public enum Type {
-        CONSUMABLE, USABLE, NONE;
+        CONSUMABLE, USABLE, NONE
     }
 }

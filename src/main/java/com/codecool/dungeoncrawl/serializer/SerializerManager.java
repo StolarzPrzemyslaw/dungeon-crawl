@@ -35,8 +35,7 @@ public class SerializerManager {
 
     public static GameStateModel deserializeGameStateGson(File file) throws FileNotFoundException {
         FileReader reader = new FileReader(file.getAbsolutePath());
-        GameStateModel gameState = new Gson().fromJson(reader, GameStateModel.class);
-        return gameState;
+        return new Gson().fromJson(reader, GameStateModel.class);
     }
 
 }
