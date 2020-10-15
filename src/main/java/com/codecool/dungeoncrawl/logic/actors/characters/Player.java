@@ -30,12 +30,14 @@ public class Player extends Person {
 
     @Override
     public String getTileName() {
-        if (chosenWeapon instanceof Sword) {
-            return "playerLvL3";
-        } else if (chosenWeapon instanceof Axe) {
-            return "playerLvL2";
+        switch (chosenWeapon.getName()) {
+            case "Sword":
+                return "playerLvL3";
+            case "Axe":
+                return "playerLvL2";
+            default:
+                return "player";
         }
-        return "player";
     }
 
     public void setWeapon(Weapon weapon) {
