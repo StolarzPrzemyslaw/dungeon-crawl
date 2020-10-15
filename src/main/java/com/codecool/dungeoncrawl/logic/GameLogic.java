@@ -47,6 +47,7 @@ public class GameLogic {
         map.setPlayer(playerModel.getPlayer());
 
         ui.setMap(map);
+        ui.displayLog("");
         ui.displayLog("You have loaded GameState!");
         ui.refresh();
     }
