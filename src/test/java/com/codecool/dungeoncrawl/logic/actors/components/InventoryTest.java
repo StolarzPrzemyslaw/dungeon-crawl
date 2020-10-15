@@ -105,4 +105,14 @@ class InventoryTest {
         List<Item> itemsFromInventory = inventory.getItems();
         assertEquals(items, itemsFromInventory);
     }
+
+    @Test
+    public void equals_createdInventory_isThisInventory() {
+        assertTrue(inventory.equals(inventory));
+    }
+
+    @Test
+    public void equals_createdInventory_isNotThisInventory() {
+        assertNotEquals(new Inventory(), new Inventory());
+    }
 }
