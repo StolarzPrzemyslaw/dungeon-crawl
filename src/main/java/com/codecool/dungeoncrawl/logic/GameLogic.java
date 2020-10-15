@@ -65,15 +65,13 @@ public class GameLogic {
     }
 
     private void triggerKeyPressedAction(KeyEvent keyEvent) throws IOException {
-        KeyCode saveGameKeyCode = KeyCode.F5;
-        KeyCode exportGameStateKeyCode = KeyCode.F6;
         KeyCode importGameStateKeyCode = KeyCode.F7;
 
-        if (keyEvent.getCode() == saveGameKeyCode) {
-            tryToSaveGame();
-        } else if (keyEvent.getCode() == exportGameStateKeyCode) {
-            exportGameState();
-        } else if (keyEvent.getCode() == importGameStateKeyCode) {
+        if (isPlayerAbleToSaveGame()) {
+            tryToSaveGame(keyEvent.getCode());
+        } else showCantSaveGameMessage();
+
+        if (keyEvent.getCode() == importGameStateKeyCode) {
             importGameState();
         }
     }
@@ -269,10 +267,14 @@ public class GameLogic {
         System.exit(1);
     }
 
-    private void tryToSaveGame() {
-        if (isPlayerAbleToSaveGame()) {
+    private void tryToSaveGame(KeyCode keyCode) throws IOException {
+        KeyCode saveGameKeyCode = KeyCode.F5;
+        KeyCode exportGameStateKeyCode = KeyCode.F6;
+        if (keyCode == saveGameKeyCode) {
             showSaveGameModal();
-        } else showCantSaveGameMessage();
+        } else if (keyCode == exportGameStateKeyCode) {
+            exportGameState();
+        }
     }
 
     private void showCantSaveGameMessage() {
