@@ -5,6 +5,7 @@ import com.codecool.dungeoncrawl.logic.GameLogic;
 import com.codecool.dungeoncrawl.logic.actors.characters.Player;
 import com.codecool.dungeoncrawl.model.GameStateModel;
 import com.codecool.dungeoncrawl.model.PlayerModel;
+import com.codecool.dungeoncrawl.serializer.SerializerManager;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
@@ -16,6 +17,9 @@ import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
@@ -31,6 +35,7 @@ public class Main extends Application {
     private final Label loadLabel = new Label();
     private Scene mainMenuScene;
     GameDatabaseManager dbManager;
+    private final boolean isImportAction = true;
 
     public Stage getStage() {
         return stage;
@@ -88,9 +93,14 @@ public class Main extends Application {
     }
 
     private void setUpImportGameStateButton() {
-
         importGameStateButton.setText("Import Game State");
-        importGameStateButton.setOnAction(e -> new FileChooser(stage, "import").show());
+        importGameStateButton.setOnAction(e -> {
+            try {
+                new FileChooserWindow(stage, isImportAction, game).importExportFile();
+            } catch (IOException ioException) {
+                ioException.printStackTrace();
+            }
+        });
     }
 
     private void setUpMainMenuContainerAttributes(VBox UIContainer) {
@@ -131,19 +141,22 @@ public class Main extends Application {
         }
     }
 
-    private void prepareGameFromSerializedSave(GameStateModel state) {
-//        PlayerModel playerModel = state.getPlayer();
-//        playerModel.setInventory(state.getPlayer().getInventory());
-//        playerModel.setWeapon(state.getPlayer().getWeapon());
+    public void prepareGameFromSerializedSave(File file) throws FileNotFoundException {
+        GameStateModel state = SerializerManager.deserializeGameStateGson(file);
+        setUpGameGuidelines(state);
     }
 
-    private void prepareGameFromSaveState(GameStateModel state) {
+    private void setUpGameGuidelines(GameStateModel state) {
         GameLogic gameLogic = new GameLogic(game, state.getPlayer().getPlayerName(), dbManager);
         game.setUpReferenceLogicForGetDataFromGame(gameLogic);
         gameLogic.loadGameFromState(state);
         game.setUpNewPlayerPosition();
 
         stage = game.generateUI(stage);
+    }
+
+    private void prepareGameFromSaveState(GameStateModel state) {
+        setUpGameGuidelines(state);
     }
 
     private void initializeNewGame() {

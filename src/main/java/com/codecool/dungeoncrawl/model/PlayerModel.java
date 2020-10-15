@@ -5,7 +5,7 @@ import com.codecool.dungeoncrawl.logic.actors.characters.Player;
 import com.codecool.dungeoncrawl.logic.actors.items.Weapon;
 
 public class PlayerModel extends BaseModel {
-    private final String playerName;
+    private String playerName;
     private final int hp;
     private final int currentHp;
     private final int strength;
@@ -42,6 +42,7 @@ public class PlayerModel extends BaseModel {
         Player player = new Player(playerCell);
         player.setStrength(strength);
         player.setCurrentHealth(currentHp);
+        player.setPlayerName(playerName);
         if (inventory != null) {
             player.setInventory(inventory.getInventory());
         }
@@ -95,4 +96,15 @@ public class PlayerModel extends BaseModel {
         this.weaponId = weaponId;
     }
 
+    public void setInventory(InventoryModel inventory) {
+        this.inventory = inventory;
+    }
+
+    public void setWeapon(ItemModel weapon) {
+        this.weapon = weapon;
+    }
+
+    public void setPlayerName(String playerName) {
+        this.playerName = playerName;
+    }
 }

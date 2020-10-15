@@ -4,7 +4,6 @@ import com.codecool.dungeoncrawl.logic.Cell;
 import com.codecool.dungeoncrawl.logic.GameLogic;
 import com.codecool.dungeoncrawl.logic.GameMap;
 import com.codecool.dungeoncrawl.logic.actors.characters.Person;
-import com.codecool.dungeoncrawl.logic.actors.characters.Player;
 import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
@@ -18,6 +17,7 @@ import javafx.stage.Modality;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -81,7 +81,13 @@ public class Game {
         scene = new Scene(borderPane);
         primaryStage.setScene(scene);
         scene.setOnKeyPressed(gameLogic::onKeyPressed);
-        scene.setOnKeyReleased(gameLogic::onKeyReleased);
+        scene.setOnKeyReleased(keyEvent -> {
+            try {
+                gameLogic.onKeyReleased(keyEvent);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
         centerStage(primaryStage, borderPane);
         primaryStage.setTitle("Dungeon Crawl");
         refresh();

@@ -8,7 +8,6 @@ public class GameStateModel extends BaseModel {
     private Date savedAt;
     private Map currentMap;
     private PlayerModel player;
-
     private String saveName;
 
     public GameStateModel(Map currentMap, Date savedAt, PlayerModel player, String saveName) {

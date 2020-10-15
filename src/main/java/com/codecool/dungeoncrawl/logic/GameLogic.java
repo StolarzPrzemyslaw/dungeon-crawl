@@ -4,13 +4,11 @@ import com.codecool.dungeoncrawl.dao.GameDatabaseManager;
 import com.codecool.dungeoncrawl.logic.actors.Actor;
 import com.codecool.dungeoncrawl.logic.actors.characters.*;
 import com.codecool.dungeoncrawl.logic.actors.components.Combat;
-import com.codecool.dungeoncrawl.logic.actors.components.Inventory;
 import com.codecool.dungeoncrawl.logic.actors.items.Item;
 import com.codecool.dungeoncrawl.logic.actors.obstacles.Stairs;
 import com.codecool.dungeoncrawl.model.GameStateModel;
 import com.codecool.dungeoncrawl.model.PlayerModel;
-import com.codecool.dungeoncrawl.serializer.SerializerManager;
-import com.codecool.dungeoncrawl.view.FileChooser;
+import com.codecool.dungeoncrawl.view.FileChooserWindow;
 import com.codecool.dungeoncrawl.view.Game;
 import com.codecool.dungeoncrawl.view.SaveGameModal;
 import javafx.scene.input.KeyCode;
@@ -18,6 +16,7 @@ import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -29,6 +28,7 @@ public class GameLogic {
     private final Combat combat;
     private final boolean cheatsEnabled;
     GameDatabaseManager dbManager;
+    private final boolean isImportAction = true;
 
     public GameLogic(Game game, String playerName, GameDatabaseManager dbManager) {
         this.ui = game;
@@ -51,7 +51,7 @@ public class GameLogic {
         ui.refresh();
     }
 
-    public void onKeyReleased(KeyEvent keyEvent) {
+    public void onKeyReleased(KeyEvent keyEvent) throws IOException {
         KeyCombination exitCombinationMac = new KeyCodeCombination(KeyCode.W, KeyCombination.SHORTCUT_DOWN);
         KeyCombination exitCombinationWin = new KeyCodeCombination(KeyCode.F4, KeyCombination.ALT_DOWN);
 
@@ -64,26 +64,24 @@ public class GameLogic {
         }
     }
 
-    private void triggerKeyPressedAction(KeyEvent keyEvent) {
-        KeyCode saveGameKeyCode = KeyCode.F5;
-        KeyCode exportGameStateKeyCode = KeyCode.F6;
+    private void triggerKeyPressedAction(KeyEvent keyEvent) throws IOException {
         KeyCode importGameStateKeyCode = KeyCode.F7;
 
-        if (keyEvent.getCode() == saveGameKeyCode) {
-            tryToSaveGame();
-        } else if (keyEvent.getCode() == exportGameStateKeyCode) {
-            exportGameState();
-        } else if (keyEvent.getCode() == importGameStateKeyCode) {
+        if (isPlayerAbleToSaveGame()) {
+            tryToSaveGame(keyEvent.getCode());
+        } else showCantSaveGameMessage();
+
+        if (keyEvent.getCode() == importGameStateKeyCode) {
             importGameState();
         }
     }
 
-    private void exportGameState() {
-        new FileChooser(ui.getMain().getStage(), "export").show();
+    private void exportGameState() throws IOException {
+        new FileChooserWindow(ui.getMain().getStage(), !isImportAction, ui).importExportFile();
     }
 
-    private void importGameState() {
-        new FileChooser(ui.getMain().getStage(), "import").show();
+    private void importGameState() throws IOException {
+        new FileChooserWindow(ui.getMain().getStage(), isImportAction, ui).importExportFile();
     }
 
     public void onKeyPressed(KeyEvent keyEvent) {
@@ -269,10 +267,14 @@ public class GameLogic {
         System.exit(1);
     }
 
-    private void tryToSaveGame() {
-        if (isPlayerAbleToSaveGame()) {
+    private void tryToSaveGame(KeyCode keyCode) throws IOException {
+        KeyCode saveGameKeyCode = KeyCode.F5;
+        KeyCode exportGameStateKeyCode = KeyCode.F6;
+        if (keyCode == saveGameKeyCode) {
             showSaveGameModal();
-        } else showCantSaveGameMessage();
+        } else if (keyCode == exportGameStateKeyCode) {
+            exportGameState();
+        }
     }
 
     private void showCantSaveGameMessage() {

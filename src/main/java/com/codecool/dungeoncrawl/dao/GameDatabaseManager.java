@@ -135,6 +135,6 @@ public class GameDatabaseManager {
 
     private Date actualDate() {
         long millis=System.currentTimeMillis();
-        return new java.sql.Date(millis);
+        return new Date(millis);
     }
 }
