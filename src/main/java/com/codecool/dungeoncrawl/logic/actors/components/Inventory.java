@@ -48,4 +48,10 @@ public class Inventory {
         items.forEach(item -> listOfNames.add(item.getName()));
         return listOfNames;
     }
+
+    @Override
+    public boolean equals(Object anObject) {
+        return anObject.getClass().isInstance(this)
+                && ((Inventory) anObject).getItems().equals(this.getItems());
+    }
 }
