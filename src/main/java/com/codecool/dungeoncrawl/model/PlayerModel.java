@@ -94,3 +94,4 @@ public class PlayerModel extends BaseModel {
         this.weaponId = weaponId;
     }
 }
+

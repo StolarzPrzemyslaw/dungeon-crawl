@@ -53,11 +53,6 @@ public class ItemModelTest {
     }
 
     @Test
-    public void itemModelConstructorWithMultipleParameter_ItemIdNameStatisticType_returnItemModelWhichIsNull() {
-        assertNull(itemModel);
-    }
-
-    @Test
     public void getId_ItemIdNameStatisticType_returnItemModelId() {
         int expectedId = 1;
         itemModel = new ItemModel(1, "dagger", 4, "none");
