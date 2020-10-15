@@ -18,7 +18,6 @@ import java.util.List;
 public class SerializerManager {
 
     public static void serializeGameStateToFile(GameMap map, File file) throws IOException {
-        // TODO add gameState to serialization
         InventoryModel inventoryModel = new InventoryModel();
         List<ItemModel> items = new ArrayList<>();
         for (Item item: map.getPlayer().getInventory().getItems()) {
