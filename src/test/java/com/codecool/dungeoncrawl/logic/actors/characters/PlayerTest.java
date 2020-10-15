@@ -10,6 +10,7 @@ import com.codecool.dungeoncrawl.logic.actors.items.Dagger;
 import com.codecool.dungeoncrawl.logic.actors.items.Sword;
 import com.codecool.dungeoncrawl.logic.actors.items.Weapon;
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.function.Executable;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -186,6 +187,18 @@ class PlayerTest {
         player.healUp(healthRestored);
         //Assert
         assertEquals(expectedCurrentHealth, player.getCurrentHealth());
+    }
+
+    @Test
+    @Order(15)
+    void move_PlayerWithNullCell_ThrowsNullPointerException() {
+        //Arrange
+        player.setPlayerCell(null);
+        Class<NullPointerException> expectedException = NullPointerException.class;
+        //Act
+        Executable moveAction = () -> player.move(1, 1);
+        //Assert
+        assertThrows(expectedException, moveAction);
     }
 
 
