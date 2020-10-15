@@ -3,9 +3,9 @@ package com.codecool.dungeoncrawl.model;
 import com.codecool.dungeoncrawl.logic.actors.items.*;
 
 public class ItemModel extends BaseModel {
-    private String name;
-    private int statistic;
-    transient private Type itemType;
+    private final String name;
+    private final int statistic;
+    transient final private Type itemType;
 
     public ItemModel(Item item) {
         this.name = item.getName();
@@ -36,23 +36,9 @@ public class ItemModel extends BaseModel {
         return name;
     }
 
-    public void setName(String name) {this.name = name;}
-
     public int getStatistic() {return statistic;}
 
-    public void setStatistic(int statistic) {this.statistic = statistic;}
-
     public Type getItemType() {return itemType;}
-
-    public void setItemType(Type itemType) {this.itemType = itemType;}
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
 
     public Item getItem() {
         switch (name) {
