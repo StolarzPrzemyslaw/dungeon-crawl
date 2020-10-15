@@ -18,6 +18,7 @@ import javafx.scene.input.KeyEvent;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class GameLogic {
@@ -64,15 +65,13 @@ public class GameLogic {
     }
 
     private void triggerKeyPressedAction(KeyEvent keyEvent) throws IOException {
-        KeyCode saveGameKeyCode = KeyCode.F5;
-        KeyCode exportGameStateKeyCode = KeyCode.F6;
         KeyCode importGameStateKeyCode = KeyCode.F7;
 
-        if (keyEvent.getCode() == saveGameKeyCode) {
-            tryToSaveGame();
-        } else if (keyEvent.getCode() == exportGameStateKeyCode) {
-            exportGameState();
-        } else if (keyEvent.getCode() == importGameStateKeyCode) {
+        if (isPlayerAbleToSaveGame()) {
+            tryToSaveGame(keyEvent.getCode());
+        } else showCantSaveGameMessage();
+
+        if (keyEvent.getCode() == importGameStateKeyCode) {
             importGameState();
         }
     }
@@ -135,11 +134,13 @@ public class GameLogic {
 
     private void loadNextMap() {
         Player temporaryPlayer = map.getPlayer();
-        if (map.getLevelId() == 1) {
-            map = MapLoader.loadMap(Map.LEVEL2, true);
-        } else  {
-            map = MapLoader.loadMap(Map.LEVEL3, true);
-        }
+        int numberOfMap = map.getLevelId();
+        Map nextLevel = Arrays.stream(Map.values())
+                .filter(map -> map.getId() == numberOfMap + 1)
+                .findFirst()
+                .orElse(Map.LEVEL4);
+
+        map = MapLoader.loadMap(nextLevel, true);
         map.getPlayer().setWeapon(temporaryPlayer.getWeapon());
         Cell temporaryCell = map.getPlayer().getCell();
         map.setPlayer(temporaryPlayer);
@@ -266,10 +267,14 @@ public class GameLogic {
         System.exit(1);
     }
 
-    private void tryToSaveGame() {
-        if (isPlayerAbleToSaveGame()) {
+    private void tryToSaveGame(KeyCode keyCode) throws IOException {
+        KeyCode saveGameKeyCode = KeyCode.F5;
+        KeyCode exportGameStateKeyCode = KeyCode.F6;
+        if (keyCode == saveGameKeyCode) {
             showSaveGameModal();
-        } else showCantSaveGameMessage();
+        } else if (keyCode == exportGameStateKeyCode) {
+            exportGameState();
+        }
     }
 
     private void showCantSaveGameMessage() {
