@@ -18,20 +18,7 @@ import java.util.List;
 public class SerializerManager {
 
     public static void serializeGameStateToFile(GameMap map, File file) throws IOException {
-        InventoryModel inventoryModel = new InventoryModel();
-        List<ItemModel> items = new ArrayList<>();
-        for (Item item: map.getPlayer().getInventory().getItems()) {
-            items.add(new ItemModel(item));
-        }
-        inventoryModel.setItems(items);
-        PlayerModel playerModel = new PlayerModel(map.getPlayer());
-        playerModel.setInventory(inventoryModel);
-        setWeaponInUse(map, playerModel);
-        playerModel.getPlayer().setPlayerCell(map.getPlayer().getCell());
-
-        Map currentMap = getCurrentMap(map);
-
-        GameStateModel gameStateModel = new GameStateModel(currentMap, new Date(System.currentTimeMillis()), playerModel, file.getName());
+        GameStateModel gameStateModel = generateGameStateModel(map, file);
         if (!file.getName().toLowerCase().endsWith(".json")) {
             file = new File(file.getAbsolutePath() + ".json");
         }
@@ -39,6 +26,17 @@ public class SerializerManager {
         new Gson().toJson(gameStateModel, writer);
         writer.flush();
         writer.close();
+    }
+
+    private static GameStateModel generateGameStateModel(GameMap map, File file) {
+        InventoryModel inventoryModel = new InventoryModel(map.getPlayer().getInventory());
+        PlayerModel playerModel = new PlayerModel(map.getPlayer());
+        playerModel.setInventory(inventoryModel);
+        setWeaponInUse(map, playerModel);
+        playerModel.getPlayer().setPlayerCell(map.getPlayer().getCell());
+        Map currentMap = getCurrentMap(map);
+
+        return new GameStateModel(currentMap, new Date(System.currentTimeMillis()), playerModel, file.getName());
     }
 
     private static Map getCurrentMap(GameMap map) {
@@ -58,8 +56,7 @@ public class SerializerManager {
 
     public static GameStateModel deserializeGameStateGson(File file) throws FileNotFoundException {
         FileReader reader = new FileReader(file.getAbsolutePath());
-        GameStateModel gameState =  new Gson().fromJson(reader, GameStateModel.class);
-        return gameState;
+        return new Gson().fromJson(reader, GameStateModel.class);
     }
 
 }
