@@ -94,7 +94,7 @@ public class Cell implements Drawable {
         openDoorNextToPlayerBasedOnNextCell(1, 0);
         openDoorNextToPlayerBasedOnNextCell(0, -1);
         openDoorNextToPlayerBasedOnNextCell(0, 1);
-        gameMap.getPlayer().getInventory().removeItemByName("Key");
+        gameMap.getPlayer().getInventory().removeItem("Key");
     }
 
     public void openDoorNextToPlayerBasedOnNextCell(int dx, int dy) {

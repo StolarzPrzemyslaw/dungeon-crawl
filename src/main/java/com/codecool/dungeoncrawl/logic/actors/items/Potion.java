@@ -25,6 +25,6 @@ public class Potion extends Item implements Consumable {
     @Override
     public void consume(Player player) {
         player.healUp(healthRestored);
-        player.getInventory().removeItemFromInventory(this);
+        player.getInventory().removeItem(this);
     }
 }

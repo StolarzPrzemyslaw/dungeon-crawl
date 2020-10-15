@@ -89,7 +89,6 @@ public class GameDatabaseManager {
     public InventoryModel saveInventoryReturnInventoryId(Inventory inventory) {
         InventoryModel model = new InventoryModel(inventory);
         inventoryDao.add(model);
-        setUpItemsInInventoryModel(inventory, model);
         saveAllItemsInDatabase(model, model.getId());
         return model;
     }
@@ -98,12 +97,6 @@ public class GameDatabaseManager {
         for (ItemModel item : model.getItems()) {
             itemDao.add(item, inventoryId);
         }
-    }
-
-    private void setUpItemsInInventoryModel(Inventory inventory, InventoryModel model) {
-        List<ItemModel> items = new ArrayList<>();
-        inventory.getItems().forEach(item -> items.add(new ItemModel(item)));
-        model.setItems(items);
     }
 
     public boolean checkValidSaveName(String saveName) {

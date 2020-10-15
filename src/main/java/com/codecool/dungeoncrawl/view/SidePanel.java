@@ -164,7 +164,7 @@ public class SidePanel {
     }
 
     private Item getSelectedItem(GameMap map, ChoiceBox<String> itemsList) {
-        return map.getPlayer().getInventory().getItemByName(itemsList.getValue());
+        return map.getPlayer().getInventory().getFirstMatchingItem(itemsList.getValue());
     }
 
     private HBox generateChooseSection(ChoiceBox<String> itemsList, GameMap map) {
@@ -204,7 +204,7 @@ public class SidePanel {
             itemsList.getItems().add(item.toString());
         }
         item.showObtainMessage(game);
-        map.getPlayer().getInventory().addItemToInventory(item);
+        map.getPlayer().getInventory().addItem(item);
         map.getPlayer().setBackgroundCellActor(null);
         pickUpButton.setDisable(true);
         game.refresh();
