@@ -5,6 +5,7 @@ import com.codecool.dungeoncrawl.logic.actors.characters.Player;
 import com.codecool.dungeoncrawl.logic.actors.characters.Skeleton;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.function.Executable;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -51,5 +52,11 @@ class CombatTest {
     public void simulateCombat_validCombat_playerLives() {
         combat.simulateCombat(player, enemy);
         assertTrue(player.getCurrentHealth() > 0);
+    }
+
+    @Test
+    public void simulateCombat_invalidCombat_enemyDontExist() {
+        Executable executable = () -> combat.simulateCombat(player, null);
+        assertThrows(RuntimeException.class, executable);
     }
 }
