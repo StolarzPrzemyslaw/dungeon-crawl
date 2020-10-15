@@ -52,6 +52,11 @@ class InventoryTest {
     }
 
     @Test
+    public void getFirstMatchingItem_listIsEmpty_returnNull() {
+        assertNull(inventory.getFirstMatchingItem("Key"));
+    }
+
+    @Test
     public void addItemToInventory_getItemThatNotExist_throwsException() {
         Executable executable = () -> assertNotNull(inventory.getItems().get(0));
         assertThrows(IndexOutOfBoundsException.class, executable);
