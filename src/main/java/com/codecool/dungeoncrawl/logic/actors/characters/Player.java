@@ -76,4 +76,6 @@ public class Player extends Person {
             cell.setActor(this);
         }
     }
+
+
 }
