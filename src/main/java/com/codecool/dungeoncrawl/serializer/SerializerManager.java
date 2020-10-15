@@ -2,10 +2,7 @@ package com.codecool.dungeoncrawl.serializer;
 
 import com.codecool.dungeoncrawl.logic.GameMap;
 import com.codecool.dungeoncrawl.logic.Map;
-import com.codecool.dungeoncrawl.logic.actors.items.Item;
-import com.codecool.dungeoncrawl.logic.actors.items.Weapon;
 import com.codecool.dungeoncrawl.model.GameStateModel;
-import com.codecool.dungeoncrawl.model.InventoryModel;
 import com.codecool.dungeoncrawl.model.PlayerModel;
 import com.google.gson.Gson;
 
@@ -34,10 +31,7 @@ public class SerializerManager {
     }
 
     private static GameStateModel generateGameStateModel(GameMap map, File file) {
-        InventoryModel inventoryModel = new InventoryModel(map.getPlayer().getInventory());
         PlayerModel playerModel = new PlayerModel(map.getPlayer());
-        playerModel.getPlayer().setInventory(inventoryModel.getInventory());
-        setWeaponInUse(map, playerModel);
         playerModel.getPlayer().setPlayerCell(map.getPlayer().getCell());
         Map currentMap = getCurrentMap(map);
 
@@ -49,14 +43,6 @@ public class SerializerManager {
                 filter(mapEntry -> mapEntry.getId() == map.getLevelId()).
                 findFirst().
                 orElseThrow(() -> new RuntimeException("Error while retrieving map with id: " + map.getLevelId()));
-    }
-
-    private static void setWeaponInUse(GameMap map, PlayerModel playerModel) {
-        for (Item item: map.getPlayer().getInventory().getItems()) {
-            if (item.getName().equals(map.getPlayer().getWeapon().getName())){
-                playerModel.getPlayer().setWeapon((Weapon) item);
-            }
-        }
     }
 
     public static GameStateModel deserializeGameStateGson(File file) throws FileNotFoundException {
