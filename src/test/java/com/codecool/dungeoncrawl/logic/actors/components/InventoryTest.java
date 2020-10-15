@@ -16,7 +16,7 @@ class InventoryTest {
     private static List<Item> items;
 
     @BeforeEach
-    public void createEmptyInventory() {
+    public void prepareInventory() {
         inventory = new Inventory();
         items = new ArrayList<>();
         prepareItems();
