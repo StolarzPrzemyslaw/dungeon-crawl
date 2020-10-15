@@ -1,12 +1,11 @@
 package com.codecool.dungeoncrawl.logic.actors.components;
 
 import com.codecool.dungeoncrawl.logic.actors.items.*;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -19,13 +18,16 @@ class InventoryTest {
     @BeforeEach
     public void createEmptyInventory() {
         inventory = new Inventory();
-        items = Arrays.asList(
-                new Key(null),
-                new Axe(null),
-                new Dagger(null),
-                new Sword(null),
-                new Potion(null)
-        );
+        items = new ArrayList<>();
+        prepareItems();
+    }
+
+    private void prepareItems() {
+        items.add(new Key(null));
+        items.add(new Axe(null));
+        items.add(new Dagger(null));
+        items.add(new Sword(null));
+        items.add(new Potion(null));
     }
 
     @Test
@@ -73,9 +75,9 @@ class InventoryTest {
     @Test
     public void removeItemFromInventory_addMultipleItemsAndRemoveTwo_itemsInRightOrder() {
         items.forEach(item -> inventory.addItem(item));
-        inventory.removeItem(items.get(0));
-        inventory.removeItem(items.get(2));
-        items.remove(0);
+        inventory.removeItem(items.get(1));
+        inventory.removeItem(items.get(3));
+        items.remove(1);
         items.remove(2);
         List<Item> itemsFromInventory = inventory.getItems();
         assertEquals(items, itemsFromInventory);
@@ -84,9 +86,9 @@ class InventoryTest {
     @Test
     public void removeItemByName_addMultipleItemsAndRemoveOnlyTwo_threeItemsLeft() {
         items.forEach(item -> inventory.addItem(item));
-        inventory.removeItem("Key");
-        inventory.removeItem("Basic Dagger");
-        items.remove(0);
+        inventory.removeItem("Axe");
+        inventory.removeItem("Sword");
+        items.remove(1);
         items.remove(2);
         List<Item> itemsFromInventory = inventory.getItems();
         assertEquals(items, itemsFromInventory);
