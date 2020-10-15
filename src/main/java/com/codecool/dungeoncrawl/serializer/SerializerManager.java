@@ -11,19 +11,12 @@ import com.google.gson.Gson;
 
 import java.io.*;
 import java.sql.Date;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 public class SerializerManager {
 
     public static void serializeGameStateToFile(GameMap map, File file) throws IOException {
-        InventoryModel inventoryModel = new InventoryModel();
-        List<ItemModel> items = new ArrayList<>();
-        for (Item item: map.getPlayer().getInventory().getItems()) {
-            items.add(new ItemModel(item));
-        }
-        inventoryModel.setItems(items);
+        InventoryModel inventoryModel = new InventoryModel(map.getPlayer().getInventory());
         PlayerModel playerModel = new PlayerModel(map.getPlayer());
         playerModel.setInventory(inventoryModel);
         setWeaponInUse(map, playerModel);
