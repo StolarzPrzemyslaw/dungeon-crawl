@@ -18,6 +18,7 @@ import javafx.scene.input.KeyEvent;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class GameLogic {
@@ -133,11 +134,13 @@ public class GameLogic {
 
     private void loadNextMap() {
         Player temporaryPlayer = map.getPlayer();
-        if (map.getLevelId() == 1) {
-            map = MapLoader.loadMap(Map.LEVEL2, true);
-        } else  {
-            map = MapLoader.loadMap(Map.LEVEL3, true);
-        }
+        int numberOfMap = map.getLevelId();
+        Map nextLevel = Arrays.stream(Map.values())
+                .filter(map -> map.getId() == numberOfMap + 1)
+                .findFirst()
+                .orElse(Map.LEVEL4);
+
+        map = MapLoader.loadMap(nextLevel, true);
         map.getPlayer().setWeapon(temporaryPlayer.getWeapon());
         Cell temporaryCell = map.getPlayer().getCell();
         map.setPlayer(temporaryPlayer);
