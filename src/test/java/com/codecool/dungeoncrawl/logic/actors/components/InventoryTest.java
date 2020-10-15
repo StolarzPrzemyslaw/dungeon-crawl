@@ -1,7 +1,10 @@
 package com.codecool.dungeoncrawl.logic.actors.components;
 
 import com.codecool.dungeoncrawl.logic.actors.items.*;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.function.Executable;
 
 import java.util.Arrays;
 import java.util.List;
@@ -10,139 +13,89 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class InventoryTest {
 
-    @Test
-    public void addItemToInventory_addValidItem_existOnlyThatItem() {
-        // arrange
-        Inventory inventory = new Inventory();
-        Item item = new Key(null);
+    private static Inventory inventory;
+    private static List<Item> items;
 
-        // act
-        inventory.addItem(item);
-
-        // assert
-        assertEquals(1, inventory.getItems().size());
-        assertTrue(inventory.contains(item.getName()));
-        assertNotNull(inventory.getItems().get(0));
-        assertThrows(IndexOutOfBoundsException.class, () -> assertNotNull(inventory.getItems().get(1)));
-    }
-
-    @Test
-    public void addItemToInventory_addMultipleValidItem_itemsInInventoryInGoodOrder() {
-        // arrange
-        Inventory inventory = new Inventory();
-        Item item1 = new Key(null);
-        Item item2 = new Axe(null);
-        Item item3 = new Dagger(null);
-
-        // act
-        inventory.addItem(item1);
-        inventory.addItem(item2);
-        inventory.addItem(item3);
-
-        // assert
-        assertEquals(3, inventory.getItems().size());
-        assertEquals(item1, inventory.getItems().get(0));
-        assertEquals(item2, inventory.getItems().get(1));
-        assertEquals(item3, inventory.getItems().get(2));
-    }
-
-    @Test
-    public void removeItemFromInventory_addMultipleItemsAndRemoveOnlyTwo_ThreeItemsLeft() {
-        // arrange
-        Inventory inventory = new Inventory();
-        Item item1 = new Key(null);
-        Item item2 = new Axe(null);
-        Item item3 = new Dagger(null);
-        Item item4 = new Sword(null);
-        Item item5 = new Potion(null);
-
-        // act
-        inventory.addItem(item1);
-        inventory.addItem(item2);
-        inventory.addItem(item3);
-        inventory.addItem(item4);
-        inventory.addItem(item5);
-        inventory.removeItem(item3);
-        inventory.removeItem(item2);
-
-        // assert
-        assertEquals(3, inventory.getItems().size());
-        assertEquals(item1, inventory.getItems().get(0));
-        assertEquals(item4, inventory.getItems().get(1));
-        assertEquals(item5, inventory.getItems().get(2));
-    }
-
-    @Test
-    public void removeItemByName_addMultipleItemsAndRemoveOnlyTwo_ThreeItemsLeft() {
-        // arrange
-        Inventory inventory = new Inventory();
-        Item item1 = new Axe(null);
-        Item item2 = new Axe(null);
-        Item item3 = new Sword(null);
-        Item item4 = new Sword(null);
-        Item item5 = new Potion(null);
-
-        // act
-        inventory.addItem(item1);
-        inventory.addItem(item2);
-        inventory.addItem(item3);
-        inventory.addItem(item4);
-        inventory.addItem(item5);
-        inventory.removeItem("Axe");
-        inventory.removeItem("Sword");
-
-        // assert
-        assertEquals(3, inventory.getItems().size());
-        assertEquals(item2, inventory.getItems().get(0));
-        assertEquals(item4, inventory.getItems().get(1));
-        assertEquals(item5, inventory.getItems().get(2));
-    }
-
-    @Test
-    public void getAllItemNames_addMultipleItems_showListWithItemsNames() {
-        // arrange
-        Inventory inventory = new Inventory();
-        Item item1 = new Key(null);
-        Item item2 = new Axe(null);
-        Item item3 = new Dagger(null);
-        Item item4 = new Sword(null);
-        Item item5 = new Potion(null);
-        List<String> validNames = Arrays.asList(
-                item1.getName(),
-                item2.getName(),
-                item3.getName(),
-                item4.getName(),
-                item5.getName()
+    @BeforeEach
+    public void createEmptyInventory() {
+        inventory = new Inventory();
+        items = Arrays.asList(
+                new Key(null),
+                new Axe(null),
+                new Dagger(null),
+                new Sword(null),
+                new Potion(null)
         );
+    }
 
-        // act
-        inventory.addItem(item1);
-        inventory.addItem(item2);
-        inventory.addItem(item3);
-        inventory.addItem(item4);
-        inventory.addItem(item5);
+    @Test
+    public void addItemToInventory_addItem_itemExist() {
+        Item item = new Key(null);
+        inventory.addItem(item);
+        assertNotNull(inventory.getItems().get(0));
+    }
 
-        // assert
-        assertEquals(5, inventory.getItems().size());
-        assertEquals(validNames, inventory.getAllItemNames());
+    @Test
+    public void addItemToInventory_addItem_itemsListSizeEquals1() {
+        Item item = new Key(null);
+        inventory.addItem(item);
+        assertEquals(1, inventory.getItems().size());
+    }
+
+    @Test
+    public void addItemToInventory_addItem_listContainsThatItem() {
+        Item item = new Key(null);
+        inventory.addItem(item);
+        assertTrue(inventory.contains(item.getName()));
+    }
+
+    @Test
+    public void addItemToInventory_getItemThatNotExist_throwsException() {
+        Executable executable = () -> assertNotNull(inventory.getItems().get(0));
+        assertThrows(IndexOutOfBoundsException.class, executable);
+    }
+
+    @Test
+    public void addItemToInventory_addMultipleItems_listsEqual() {
+        items.forEach(item -> inventory.addItem(item));
+        List<Item> itemsFromInventory = inventory.getItems();
+        assertEquals(items, itemsFromInventory);
+    }
+
+    @Test
+    public void removeItemFromInventory_addMultipleItemsAndRemoveTwo_threeItemsLeft() {
+        items.forEach(item -> inventory.addItem(item));
+        inventory.removeItem(items.get(0));
+        inventory.removeItem(items.get(2));
+        assertEquals(3, inventory.getItems().size());
+    }
+
+    @Test
+    public void removeItemFromInventory_addMultipleItemsAndRemoveTwo_itemsInRightOrder() {
+        items.forEach(item -> inventory.addItem(item));
+        inventory.removeItem(items.get(0));
+        inventory.removeItem(items.get(2));
+        items.remove(0);
+        items.remove(2);
+        List<Item> itemsFromInventory = inventory.getItems();
+        assertEquals(items, itemsFromInventory);
+    }
+
+    @Test
+    public void removeItemByName_addMultipleItemsAndRemoveOnlyTwo_threeItemsLeft() {
+        items.forEach(item -> inventory.addItem(item));
+        inventory.removeItem("Key");
+        inventory.removeItem("Basic Dagger");
+        items.remove(0);
+        items.remove(2);
+        List<Item> itemsFromInventory = inventory.getItems();
+        assertEquals(items, itemsFromInventory);
     }
 
     @Test
     public void inventory_addAllInventory_getAllItems() {
-        // arrange
-        Item item1 = new Axe(null);
-        Item item2 = new Axe(null);
-        Item item3 = new Sword(null);
-        Item item4 = new Sword(null);
-        Item item5 = new Potion(null);
-        List<Item> preparedItems = Arrays.asList(item1, item2, item3, item4, item5);
-
-        // act
-        Inventory inventory = new Inventory(preparedItems);
-        List<Item> items = inventory.getItems();
-
-        // assert
-        assertNotNull(items);
-        assertEquals(preparedItems, items);
+        inventory = new Inventory(items);
+        List<Item> itemsFromInventory = inventory.getItems();
+        assertEquals(items, itemsFromInventory);
     }
 }
