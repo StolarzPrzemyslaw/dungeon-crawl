@@ -32,8 +32,10 @@ public class SerializerManager {
         Map currentMap = getCurrentMap(map);
 
         GameStateModel gameStateModel = new GameStateModel(currentMap, new Date(System.currentTimeMillis()), playerModel, file.getName());
-
-        FileWriter writer = new FileWriter(file.getAbsolutePath() + ".json");
+        if (!file.getName().toLowerCase().endsWith(".json")) {
+            file = new File(file.getAbsolutePath() + ".json");
+        }
+        FileWriter writer = new FileWriter(file);
         new Gson().toJson(gameStateModel, writer);
         writer.flush();
         writer.close();
