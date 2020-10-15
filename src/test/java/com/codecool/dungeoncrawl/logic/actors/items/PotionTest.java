@@ -16,7 +16,7 @@ class PotionTest {
     GameMap gameMap;
 
     @BeforeEach
-    void createSword() {
+    void createPotion() {
         gameMap = new GameMap(30, 30, CellType.FLOOR, Map.LEVEL1);
         Cell cell = new Cell(gameMap, 2, 2, CellType.FLOOR);
         potion = new Potion(cell);
